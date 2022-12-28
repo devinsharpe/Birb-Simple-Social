@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "npx lt --port 3000 --subdomain birb-dev & next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"
@@ -34,6 +34,7 @@
     "autoprefixer": "^10.4.7",
     "eslint": "^8.26.0",
     "eslint-config-next": "13.1.1",
+    "localtunnel": "^2.0.2",
     "postcss": "^8.4.14",
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",
