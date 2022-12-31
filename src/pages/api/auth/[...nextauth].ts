@@ -1,10 +1,30 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
+import AppleProvider from "next-auth/providers/apple";
 import DiscordProvider from "next-auth/providers/discord";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import jwt from "jsonwebtoken";
 
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
+
+const generateAppleSecret = () =>
+  jwt.sign(
+    {
+      iat: new Date().getTime() / 1000,
+    },
+    `${env.APPLE_PRIVATE_KEY}`,
+    {
+      audience: "https://appleid.apple.com",
+      issuer: env.APPLE_TEAM_ID,
+      expiresIn: env.NODE_ENV === "development" ? "24h" : "2h",
+      header: {
+        alg: "ES256",
+        kid: env.APPLE_KEY_ID,
+      },
+      subject: env.APPLE_SERVICE_ID,
+    }
+  );
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -19,6 +39,10 @@ export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
+    AppleProvider({
+      clientId: env.APPLE_SERVICE_ID,
+      clientSecret: generateAppleSecret(),
+    }),
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,

@@ -17,8 +17,12 @@ export const serverSchema = z.object({
     // Since NextAuth.js automatically uses the VERCEL_URL if present.
     (str) => process.env.VERCEL_URL ?? str,
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string() : z.string().url(),
+    process.env.VERCEL ? z.string() : z.string().url()
   ),
+  APPLE_SERVICE_ID: z.string(),
+  APPLE_KEY_ID: z.string(),
+  APPLE_PRIVATE_KEY: z.string(),
+  APPLE_TEAM_ID: z.string(),
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
 });
