@@ -1,6 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import AppleProvider from "next-auth/providers/apple";
-import DiscordProvider from "next-auth/providers/discord";
+import GoogleProvider from "next-auth/providers/google";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import jwt from "jsonwebtoken";
@@ -43,11 +43,10 @@ export const authOptions: NextAuthOptions = {
       clientId: env.APPLE_SERVICE_ID,
       clientSecret: generateAppleSecret(),
     }),
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
-    // ...add more providers here
   ],
 };
 

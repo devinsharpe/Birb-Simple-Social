@@ -1,4 +1,5 @@
 // @ts-check
+
 import { z } from "zod";
 
 /**
@@ -23,8 +24,8 @@ export const serverSchema = z.object({
   APPLE_KEY_ID: z.string(),
   APPLE_PRIVATE_KEY: z.string(),
   APPLE_TEAM_ID: z.string(),
-  DISCORD_CLIENT_ID: z.string(),
-  DISCORD_CLIENT_SECRET: z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
 });
 
 /**
