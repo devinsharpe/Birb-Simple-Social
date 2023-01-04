@@ -1,10 +1,15 @@
+import { signIn, useSession } from "next-auth/react";
+
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { NextPage } from "next";
 import React from "react";
+import Redirect from "../components/Redirect";
 
 const LoginPage: NextPage = () => {
+  const { data: sessionData } = useSession();
+  if (sessionData) return <Redirect href="/" />;
   return (
     <main className="flex h-full items-stretch">
       <section className="flex h-full w-full flex-col items-center justify-between">
@@ -25,7 +30,11 @@ const LoginPage: NextPage = () => {
               Birb &ndash; Simple Social
             </h3>
           </Link>
-          <button className="mx-auto flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-black bg-black py-4 px-6 text-white hover:border-zinc-800 hover:bg-zinc-800">
+
+          <button
+            onClick={() => signIn("apple")}
+            className="mx-auto flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-black bg-black py-4 px-6 text-white hover:border-zinc-800 hover:bg-zinc-800"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlSpace="preserve"
@@ -39,7 +48,10 @@ const LoginPage: NextPage = () => {
             </svg>
             <span className="font-semibold">Sign In With Apple</span>
           </button>
-          <button className="mx-auto box-border flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-black bg-white py-4 px-6 text-zinc-900 shadow-sm hover:border-zinc-800 hover:bg-zinc-100">
+          <button
+            onClick={() => signIn("google")}
+            className="mx-auto box-border flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-black bg-white py-4 px-6 text-zinc-900 shadow-sm hover:border-zinc-800 hover:bg-zinc-100"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
