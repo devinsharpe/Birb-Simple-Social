@@ -10,4 +10,5 @@ body {
 
 div#__next {
   height: 100%;
+  @apply bg-white text-white dark:bg-zinc-900 dark:text-zinc-100;
 }

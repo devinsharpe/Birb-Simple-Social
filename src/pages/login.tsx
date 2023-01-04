@@ -13,7 +13,7 @@ const LoginPage: NextPage = () => {
   return (
     <main className="flex h-full items-stretch">
       <section className="flex h-full w-full flex-col items-center justify-between">
-        <div className="relative h-32 w-full shrink-0 bg-zinc-200">
+        <div className="relative h-32 w-full shrink-0 bg-zinc-200 dark:bg-zinc-800">
           <div className="z-1 absolute left-1/2 right-1/2 -bottom-8 flex h-16 w-16 -translate-x-1/2 transform items-center justify-center rounded-full border-2 bg-white">
             <Image
               src={"icons/icon.svg"}
@@ -33,7 +33,7 @@ const LoginPage: NextPage = () => {
 
           <button
             onClick={() => signIn("apple")}
-            className="mx-auto flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-black bg-black py-4 px-6 text-white hover:border-zinc-800 hover:bg-zinc-800"
+            className="mx-auto flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-zinc-800 bg-zinc-800 py-4 px-6 text-white hover:border-zinc-700 hover:bg-zinc-700"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +83,7 @@ const LoginPage: NextPage = () => {
           </button>
         </div>
 
-        <div className="space-y-2 py-4 text-zinc-600">
+        <div className="space-y-2 py-4 text-zinc-600 dark:text-zinc-300">
           <p className="text-center text-sm">
             <Link href="/terms" className="underline">
               Terms &amp; Conditions
@@ -96,7 +96,7 @@ const LoginPage: NextPage = () => {
           <p className="text-center text-sm">&copy;Birb Social, 2023</p>
         </div>
       </section>
-      <section className="hidden h-full w-full bg-zinc-700 lg:block"></section>
+      <section className="hidden h-full w-full bg-zinc-800 lg:block"></section>
     </main>
   );
 };
