@@ -290,7 +290,7 @@ declare module "feather-icons-react" {
     | "zoom-in"
     | "zoom-out";
 
-  export interface FeatherIconProps {
+  interface FeatherIconProps {
     icon: Icon;
     size?: number;
     className?: string;
