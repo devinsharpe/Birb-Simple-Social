@@ -50,7 +50,7 @@ const LoginPage: NextPage = () => {
           </button>
           <button
             onClick={() => signIn("google")}
-            className="mx-auto box-border flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-black bg-white py-4 px-6 text-zinc-900 shadow-sm hover:border-zinc-800 hover:bg-zinc-100"
+            className="mx-auto box-border flex w-full max-w-md items-center justify-center space-x-2 rounded-md border-2 border-zinc-800 bg-white py-4 px-6 text-zinc-900 shadow-sm hover:border-zinc-800 hover:bg-zinc-200 dark:border-white dark:hover:border-zinc-200"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
