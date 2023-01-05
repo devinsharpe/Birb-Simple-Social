@@ -26,3 +26,15 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 ## How do I deploy this?
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
+## Development Setup
+
+### Environment Variables
+
+Environment file `./.env` can be found in the [Keybase app](https://keybase.io/)
+
+### Database
+
+```bash
+docker run --env=PG_VERSION=15.1-1.pgdg110+1 --env=PGDATA=/var/lib/postgresql/data --env=POSTGRES_PASSWORD=[POSTGRESPW] -p 5432:5432 --restart=no --label=''com.docker/featured-image=postgres:latest'' --runtime=runc -d postgres:latest --name PSQL
+```
