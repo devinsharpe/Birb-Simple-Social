@@ -6,19 +6,23 @@ import DocsNav from "../../components/docs/nav";
 import React from "react";
 import { useRouter } from "next/router";
 
-const TermsPage: NextPage<DocsPageProps> = ({ content, data, docs, slug }) => {
+const PrivacyPage: NextPage<DocsPageProps> = ({
+  content,
+  data,
+  docs,
+  slug,
+}) => {
   const router = useRouter();
-
   return (
     <>
       <DocsNav
         current={slug}
         docs={docs}
-        onDocSelect={(doc) => router.push(`/terms/${doc}`)}
+        onDocSelect={(doc) => router.push(`/privacy/${doc}`)}
       />
       <div className="mt-16 px-8 py-16">
         <h1 className="text-3xl font-bold tracking-wide">
-          Birb Social Terms & Conditions
+          Birb Social Privacy Policy
         </h1>
       </div>
       <div className="mx-8 rounded-md bg-zinc-200 p-4 dark:bg-zinc-800">
@@ -39,14 +43,14 @@ export const getStaticProps: GetStaticProps<
   DocsPageProps,
   SlugParams
 > = async ({ params }) => {
-  const files = await getDocs("terms");
+  const files = await getDocs("privacy");
   let filename: string;
   if (params?.slug && files.includes(params.slug + ".md"))
     filename = params.slug + ".md";
   else filename = files[0];
   return {
     props: {
-      ...(await processMarkdownFile(filename, "terms")),
+      ...(await processMarkdownFile(filename, "privacy")),
       docs: files.map((f) => cleanFilename(f)),
       slug: params?.slug,
     },
@@ -54,7 +58,7 @@ export const getStaticProps: GetStaticProps<
 };
 
 export const getStaticPaths = async () => {
-  const files = await getDocs("terms");
+  const files = await getDocs("privacy");
   return {
     paths: files.map((file) => ({
       params: {
@@ -65,4 +69,4 @@ export const getStaticPaths = async () => {
   };
 };
 
-export default TermsPage;
+export default PrivacyPage;
