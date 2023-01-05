@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   min-height: -webkit-fill-available;
   overflow-y: auto;
+  @apply bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100;
 }
 
 div#__next {
   height: 100%;
-  @apply bg-white text-white dark:bg-zinc-900 dark:text-zinc-100;
 }
