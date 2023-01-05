@@ -1,8 +1,20 @@
+import type { ParsedUrlQuery } from "querystring";
 import fs from "fs/promises";
 import html from "remark-html";
 import matter from "gray-matter";
 import path from "path";
 import { remark } from "remark";
+
+export interface DocsPageProps {
+  slug?: string;
+  docs: string[];
+  data: { createdDate: number; effectiveDate: number };
+  content: string;
+}
+
+export interface SlugParams extends ParsedUrlQuery {
+  slug?: string;
+}
 
 export const docsDir = path.join("src", "docs");
 
