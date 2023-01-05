@@ -36,5 +36,5 @@ Environment file `./.env` can be found in the [Keybase app](https://keybase.io/)
 ### Database
 
 ```bash
-docker run --env=PG_VERSION=15.1-1.pgdg110+1 --env=PGDATA=/var/lib/postgresql/data --env=POSTGRES_PASSWORD=[POSTGRESPW] -p 5432:5432 --restart=no --label=''com.docker/featured-image=postgres:latest'' --runtime=runc -d postgres:latest --name PSQL
+docker run --env=PG_VERSION=15.1-1.pgdg110+1 --env=PGDATA=/var/lib/postgresql/data --env=POSTGRES_PASSWORD=[POSTGRESPW] -p 5432:5432 --restart=no --label=''com.docker/featured-image=postgres:latest'' --runtime=runc -d postgres:latest
 ```
