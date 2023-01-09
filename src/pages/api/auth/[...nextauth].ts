@@ -1,12 +1,49 @@
-import NextAuth, { type NextAuthOptions } from "next-auth";
+import NextAuth, {
+  type Account,
+  type User,
+  type NextAuthOptions,
+} from "next-auth";
 import AppleProvider from "next-auth/providers/apple";
 import GoogleProvider from "next-auth/providers/google";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import jwt from "jsonwebtoken";
+import {
+  uniqueNamesGenerator,
+  Config,
+  adjectives,
+  colors,
+  animals,
+} from "unique-names-generator";
 
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
+
+const accountHandleRegex = /^@?(\w){1,15}$/;
+
+const customConfig: Config = {
+  dictionaries: [adjectives, colors],
+  separator: "-",
+  length: 2,
+};
+
+const setupAccount = async (user: User) => {
+  const account = await prisma.account.findFirstOrThrow({
+    where: { userId: user.id },
+  });
+  await prisma.profile.create({
+    data: {
+      firstName: "",
+      lastName: "",
+      handle: uniqueNamesGenerator(customConfig),
+      accountId: account.id,
+    },
+  });
+  console.log(account);
+  console.log(user);
+  console.log(uniqueNamesGenerator(customConfig));
+  return true;
+};
 
 const generateAppleSecret = () =>
   jwt.sign(
@@ -35,6 +72,7 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    signIn: ({ account, user }) => setupAccount(user),
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
