@@ -16,21 +16,44 @@ datasource db {
 
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
+  id                String    @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?   @db.Text
+  access_token      String?   @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?   @db.Text
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Profile           Profile[]
 
   @@unique([provider, providerAccountId])
+}
+
+model Profile {
+  avatarUrl       String?
+  firstName       String
+  lastName        String
+  handle          String    @unique
+  biograpy        String    @default("") @db.Text
+  birthday        DateTime?
+  location        String?
+  website         String?
+  canChangeHandle Boolean   @default(true)
+
+  relationshipCount Int @default(0)
+  postCount         Int @default(0)
+  mediaCount        Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  accountId String
 }
 
 model Session {
