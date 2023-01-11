@@ -1,0 +1,7 @@
+{
+    local_certs
+}
+
+birb-dev.lvh.me {
+    reverse_proxy 127.0.0.1:3000
+}
