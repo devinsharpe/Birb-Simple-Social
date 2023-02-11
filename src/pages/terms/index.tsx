@@ -2,7 +2,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import { cleanFilename, getDocs } from "../../utils/docs";
 
 import React from "react";
-import Redirect from "../../components/Redirect";
+import Redirect from "../../components/redirect";
 
 export interface TermsIndexPageProps {
   redirectSlug: string;

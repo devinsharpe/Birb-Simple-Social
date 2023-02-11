@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { NextPage } from "next";
 import React from "react";
-import Redirect from "../components/Redirect";
+import Redirect from "../components/redirect";
 
 const LoginPage: NextPage = () => {
   const { data: sessionData } = useSession();
