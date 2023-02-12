@@ -4,26 +4,36 @@ import FeatherIcon from "feather-icons-react";
 import { Fragment } from "react";
 
 export interface DialogMenuItemProps {
+  disabled?: boolean;
   icon: FeatherIcon.Icon;
   onClick: () => void;
   text: string;
 }
 
 const DialogMenuItem: React.FC<DialogMenuItemProps> = ({
+  disabled = false,
   icon,
   onClick,
   text,
 }) => {
   return (
-    <Menu.Item>
+    <Menu.Item disabled={disabled}>
       {({ active }) => (
         <button
           className={`${
-            active ? "bg-zinc-500 text-white" : "text-gray-900"
+            active
+              ? "bg-zinc-200 text-violet-800 dark:bg-zinc-700 dark:text-violet-200"
+              : "text-zinc-800 dark:text-zinc-200"
+          } ${
+            disabled && "opacity-50"
           } group flex w-full items-center gap-4 rounded px-2 py-2 text-sm`}
           onClick={onClick}
         >
-          <FeatherIcon icon={icon} size={20} />
+          <FeatherIcon
+            icon={icon}
+            size={20}
+            className={`${!disabled && "dark:group-hover:text-violet-400"}`}
+          />
           <span>{text}</span>
         </button>
       )}
@@ -38,13 +48,8 @@ const DialogMenu: React.FC<{
     <div className="text-right">
       <Menu as="div" className="relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center gap-4 px-4 py-2 text-sm text-white text-zinc-600 hover:text-zinc-800 dark:text-zinc-300">
-            <FeatherIcon
-              icon="menu"
-              size={20}
-              className="h-5 w-5"
-              aria-hidden="true"
-            />
+          <Menu.Button className="inline-flex w-full justify-center px-4 py-2 text-zinc-600 hover:text-zinc-800 dark:text-zinc-300 dark:hover:text-white">
+            <FeatherIcon icon="menu" size={24} aria-hidden="true" />
           </Menu.Button>
         </div>
         <Transition
@@ -56,7 +61,7 @@ const DialogMenu: React.FC<{
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded border bg-white py-1 shadow-lg focus:outline-none">
+          <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-zinc-400 rounded border border-zinc-400 bg-white py-1 shadow-lg focus:outline-none dark:divide-zinc-700 dark:border-zinc-700 dark:bg-zinc-800">
             {items.map((item, index) =>
               Array.isArray(item) ? (
                 <div className="px-2 py-1" key={index}>
