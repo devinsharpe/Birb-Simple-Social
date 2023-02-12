@@ -33,6 +33,22 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+model Profile {
+  id   String @id
+  user User   @relation(fields: [id], references: [id])
+
+  name       String
+  biography  String?
+  location   String?
+  website    String?
+  profileUrl String?
+  headerUrl  String?
+  birthdate  String?
+
+  followerCount  Int @default(0)
+  followingCount Int @default(0)
+}
+
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
@@ -49,6 +65,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Profile       Profile[]
 }
 
 model VerificationToken {
