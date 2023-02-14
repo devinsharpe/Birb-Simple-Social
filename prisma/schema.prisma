@@ -38,6 +38,7 @@ model Profile {
   user User   @relation(fields: [id], references: [id])
 
   name       String
+  handle     String  @unique
   biography  String?
   location   String?
   website    String?
@@ -45,8 +46,14 @@ model Profile {
   headerUrl  String?
   birthdate  String?
 
+  photoAvailable Int @default(1)
+  textAvailable  Int @default(3)
+
   followerCount  Int @default(0)
   followingCount Int @default(0)
+  postCount      Int @default(0)
+
+  canChangeHandle Boolean @default(true)
 }
 
 model Session {
