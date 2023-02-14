@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 
 const LoginModal = () => {
   return (
-    <DialogModal isDismissable name="login" title="Get Started">
+    <DialogModal isDismissable name="login" title="Log in to Birb">
       <div className="space-y-4 py-2">
         <button
           onClick={() => signIn("google")}
