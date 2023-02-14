@@ -1,10 +1,11 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
-
 import React from "react";
 import Navbar from "../components/Navbar";
 import LoginPrompt from "../components/LoginPrompt";
+import Hero from "../components/Hero";
+import DemoPosts from "../components/DemoPosts";
 
 const Home: NextPage = () => {
   const session = useSession();
@@ -19,8 +20,16 @@ const Home: NextPage = () => {
         />
       </Head>
       <main className="min-h-screen">
+        <section className="container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll py-16 dark:divide-zinc-600">
+          {session.status === "unauthenticated" && (
+            <>
+              <Hero />
+              <DemoPosts />
+            </>
+          )}
+        </section>
         <Navbar />
-        {session.status !== "authenticated" && <LoginPrompt />}
+        {session.status === "unauthenticated" && <LoginPrompt />}
       </main>
     </>
   );
