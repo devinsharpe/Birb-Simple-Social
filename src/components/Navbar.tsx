@@ -13,7 +13,7 @@ const Navbar = () => {
   const session = useSession();
   return (
     <>
-      <nav className="mt-4 flex h-10 w-full justify-center">
+      <nav className="fixed inset-x-0 top-0 flex h-10 w-full justify-center bg-white/50 py-8 backdrop-blur-md dark:bg-zinc-900/50">
         <div className="container flex items-center justify-between gap-4 px-4">
           <Image
             src={"icons/icon.svg"}
@@ -23,13 +23,6 @@ const Navbar = () => {
             alt="Birb Logo"
           />
           <div className="flex items-center gap-4 ">
-            <button
-              type="button"
-              aria-label="Search button"
-              className="rounded-lg p-1 text-zinc-600 hover:text-zinc-800 dark:text-zinc-300 dark:hover:text-white"
-            >
-              <FeatherIcon icon="search" size={24} />
-            </button>
             <DialogMenu
               items={[
                 [
@@ -37,12 +30,6 @@ const Navbar = () => {
                     icon: "home",
                     text: "Home",
                     onClick: console.log,
-                  },
-                  {
-                    icon: "users",
-                    text: "Circles",
-                    onClick: console.log,
-                    disabled: session.status !== "authenticated",
                   },
                   {
                     icon: "bell",
@@ -82,7 +69,9 @@ const Navbar = () => {
                   },
                 ],
               ]}
-            />
+            >
+              <FeatherIcon icon="menu" size={24} aria-hidden="true" />
+            </DialogMenu>
           </div>
         </div>
       </nav>
