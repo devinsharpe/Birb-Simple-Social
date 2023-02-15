@@ -21,6 +21,7 @@ const Navbar = () => {
             width={36}
             height={36}
             alt="Birb Logo"
+            priority
           />
           <div className="flex items-center gap-4 ">
             <DialogMenu
