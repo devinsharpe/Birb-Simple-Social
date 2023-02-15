@@ -9,7 +9,6 @@ import DemoPosts from "../components/DemoPosts";
 
 const Home: NextPage = () => {
   const session = useSession();
-
   return (
     <>
       <Head>
@@ -19,18 +18,17 @@ const Home: NextPage = () => {
           content="Birb, a different type of social network"
         />
       </Head>
-      <main className="min-h-screen">
-        <section className="container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll py-16 dark:divide-zinc-600">
-          {session.status === "unauthenticated" && (
-            <>
-              <Hero />
-              <DemoPosts />
-            </>
-          )}
-        </section>
-        <Navbar />
-        {session.status === "unauthenticated" && <LoginPrompt />}
-      </main>
+
+      <section className="hide-scrollbar container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll py-16 dark:divide-zinc-600">
+        {session.status === "unauthenticated" && (
+          <>
+            <Hero />
+            <DemoPosts />
+          </>
+        )}
+      </section>
+      <Navbar />
+      {session.status === "unauthenticated" && <LoginPrompt />}
     </>
   );
 };
