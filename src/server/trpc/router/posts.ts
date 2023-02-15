@@ -1,6 +1,9 @@
-import { Config, names, uniqueNamesGenerator } from "unique-names-generator";
-import { ILoremIpsumParams, loremIpsum } from "lorem-ipsum";
+import { names, uniqueNamesGenerator } from "unique-names-generator";
 import { publicProcedure, router } from "../trpc";
+
+import type { Config } from "unique-names-generator";
+import type { ILoremIpsumParams } from "lorem-ipsum";
+import { loremIpsum } from "lorem-ipsum";
 
 const nameConfig: Config = {
   dictionaries: [
