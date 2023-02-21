@@ -1,4 +1,5 @@
 import { signOut, useSession } from "next-auth/react";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import DialogMenu from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
@@ -6,17 +7,19 @@ import Image from "next/image";
 import LoginModal from "./modals/Login";
 import React from "react";
 import atoms from "../atoms";
-import { useSetAtom } from "jotai";
+import { useRouter } from "next/router";
 
 const Navbar = () => {
+  const profile = useAtomValue(atoms.profile);
+  const router = useRouter();
   const setModal = useSetAtom(atoms.modal);
   const session = useSession();
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 flex h-10 w-full justify-center bg-white/50 py-8 backdrop-blur-md dark:bg-zinc-900/50">
+      <nav className="fixed inset-x-0 top-0 z-10 flex h-10 w-full justify-center bg-white/50 py-8 backdrop-blur-md dark:bg-zinc-900/50">
         <div className="container flex items-center justify-between gap-4 px-4">
           <Image
-            src={"icons/icon.svg"}
+            src={"/icons/icon.svg"}
             fill={false}
             width={36}
             height={36}
@@ -33,7 +36,7 @@ const Navbar = () => {
                   {
                     icon: "home",
                     text: "Home",
-                    onClick: console.log,
+                    onClick: () => router.push("/"),
                   },
                   {
                     icon: "bell",
@@ -50,7 +53,9 @@ const Navbar = () => {
                   {
                     icon: "user",
                     text: "Profile",
-                    onClick: () => setModal("profile-edit"),
+                    onClick: () => {
+                      if (profile) router.push(`/@/${profile.handle}`);
+                    },
                     disabled: session.status !== "authenticated",
                   },
                 ],
@@ -58,7 +63,7 @@ const Navbar = () => {
                   {
                     icon: "settings",
                     text: "Settings",
-                    onClick: () => setModal("welcome"),
+                    onClick: console.log,
                     disabled: session.status !== "authenticated",
                   },
                   {
