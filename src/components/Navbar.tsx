@@ -3,7 +3,7 @@ import { signOut, useSession } from "next-auth/react";
 import DialogMenu from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import LoginModal from "./modals/login";
+import LoginModal from "./modals/Login";
 import React from "react";
 import atoms from "../atoms";
 import { useSetAtom } from "jotai";
