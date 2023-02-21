@@ -1,7 +1,7 @@
 import { type FC } from "react";
 
 declare module "feather-icons-react" {
-  type Icon =
+  export type Icon =
     | "activity"
     | "airplay"
     | "alert-circle"
@@ -290,7 +290,7 @@ declare module "feather-icons-react" {
     | "zoom-in"
     | "zoom-out";
 
-  interface FeatherIconProps {
+  export interface FeatherIconProps {
     icon: Icon;
     size?: number;
     className?: string;
@@ -299,5 +299,5 @@ declare module "feather-icons-react" {
   }
 
   const FeatherIcon: FC<FeatherIconProps>;
-  export = FeatherIcon;
+  export default FeatherIcon;
 }

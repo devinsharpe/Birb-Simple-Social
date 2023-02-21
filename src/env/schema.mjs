@@ -26,6 +26,10 @@ export const serverSchema = z.object({
   APPLE_TEAM_ID: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  S3_UPLOAD_KEY: z.string(),
+  S3_UPLOAD_SECRET: z.string(),
+  S3_UPLOAD_BUCKET: z.string(),
+  S3_UPLOAD_REGION: z.string(),
 });
 
 /**
