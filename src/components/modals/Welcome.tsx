@@ -23,24 +23,25 @@ const WelcomeModal = () => {
           Don&apos;t worry about the <em>perfect</em> image
         </h4>
         <p>
-          Birb keeps things simple by archiving all posts older than a week
-          automatically. You don't have to worry about what people will think in
-          a month, 6 months, or a year from now.
+          Birb simplifies things by automatically archiving all posts that are
+          more than a week old. This means that you can rest easy, without
+          having to concern yourself with how your posts will be perceived in
+          the future, be it a month, six months, or even a year from now.
         </p>
         <h4 className="text-xl font-bold uppercase text-violet-700 dark:text-violet-400 md:text-2xl">
           We limited the metrics
         </h4>
         <p>
-          What&apos;s the point of collecting all of that information? Social
-          media is for keeping friends in the loop and celebrating when
-          accomplishments happen.
+          Why bother amassing all that data? After all, the purpose of social
+          media is to keep your friends updated and to celebrate your
+          achievements.
         </p>
         <h4 className="text-xl font-bold uppercase text-violet-700 dark:text-violet-400 md:text-2xl">
           We hid the cookie jar
         </h4>
         <p>
-          Yeah, the kids and our non-existent sales team aren&apos;t happy, but
-          we prefer to keep our scope focused on our primary goals.
+          Although our non-existent sales team and the kids may not be pleased,
+          we prioritize keeping our focus on our primary objectives.
         </p>
 
         <div className="flex items-center justify-center">
