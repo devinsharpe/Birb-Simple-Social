@@ -44,23 +44,29 @@ const DialogModal: React.FC<{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-lg border border-zinc-200 bg-white p-6 text-left align-middle shadow-lg transition-all dark:border-zinc-700 dark:bg-zinc-800">
-                  <button
-                    type="button"
-                    className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-zinc-200"
-                    onClick={() => setModal(undefined)}
-                  >
-                    <FeatherIcon icon="x" size={20} />
-                  </button>
-                  <div className="w-full pb-4">
+                <Dialog.Panel className="relative max-h-[85vh] w-full max-w-lg transform overflow-hidden rounded-lg border border-zinc-200 bg-white text-left align-middle shadow-lg transition-all dark:border-zinc-700 dark:bg-zinc-800">
+                  <div className="absolute inset-x-0 top-0 z-[2] flex w-full items-center justify-between bg-white/50 py-4 px-6 backdrop-blur-md dark:bg-zinc-800/50">
                     <Dialog.Title
                       as="h3"
                       className="text-lg font-medium leading-6 text-zinc-800 dark:text-zinc-200"
                     >
                       {title}
                     </Dialog.Title>
+                    {isDismissable ? (
+                      <button
+                        type="button"
+                        className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-zinc-200"
+                        onClick={() => setModal(undefined)}
+                      >
+                        <FeatherIcon icon="x" size={20} />
+                      </button>
+                    ) : (
+                      <div className="h-8"></div>
+                    )}
                   </div>
-                  {children}
+                  <section className="max-h-[85vh] overflow-y-auto px-6 pt-20 pb-8">
+                    {children}
+                  </section>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
