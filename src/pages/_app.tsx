@@ -8,6 +8,9 @@ import { trpc } from "../utils/trpc";
 import "../styles/globals.css";
 import React from "react";
 import Head from "next/head";
+import ProfileAtomProvider from "../components/providers/ProfileAtom";
+import ProfileModal from "../components/modals/Profile";
+import WelcomeModal from "../components/modals/Welcome";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +31,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
             }
           `}
         </style>
+        <ProfileAtomProvider />
+        <ProfileModal />
+        <WelcomeModal />
         <main className="min-h-screen">
           <Component {...pageProps} />
         </main>
