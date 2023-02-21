@@ -4,6 +4,7 @@ import React from "react";
 const TextInput: React.FC<{
   icon?: FeatherIcon.Icon;
   id: string;
+  isTextArea?: boolean;
   isValid?: boolean;
   label: string;
   maxLength?: number;
@@ -16,6 +17,7 @@ const TextInput: React.FC<{
 }> = ({
   icon,
   id,
+  isTextArea = false,
   isValid = true,
   label,
   maxLength,
@@ -26,11 +28,11 @@ const TextInput: React.FC<{
 }) => {
   return (
     <fieldset
-      className={`relative focus-within:text-violet-600 dark:focus-within:text-violet-400 ${
+      className={`relative  focus-within:text-violet-600 dark:focus-within:text-violet-400 ${
         !isValid && "text-rose-600 dark:text-rose-400"
       } ${props.disabled && "cursor-not-allowed opacity-75"}`}
     >
-      <div className="absolute inset-x-0 top-1 flex w-full items-center justify-between px-3 text-sm font-medium">
+      <div className="absolute left-[1px] right-[1px] top-[1px] flex items-center justify-between rounded-md bg-white px-3 text-sm font-medium dark:bg-zinc-800">
         <label htmlFor={id}>{label}</label>
         {maxLength && (
           <span className="opacity-75">
@@ -38,19 +40,35 @@ const TextInput: React.FC<{
           </span>
         )}
       </div>
-      <input
-        type="text"
-        id={id}
-        name={name}
-        className={`w-full rounded-md bg-transparent pt-6 text-zinc-800 focus:border-violet-600 dark:text-white dark:focus:border-violet-400 ${
-          icon && "pl-8"
-        } ${!isValid && "border-rose-600 dark:border-rose-400"} ${
-          props.disabled && "cursor-not-allowed"
-        }`}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        {...props}
-      />
+      {isTextArea ? (
+        <textarea
+          id={id}
+          name={name}
+          className={`h-24 w-full rounded-md bg-transparent pt-6 text-zinc-800 focus:border-violet-600 dark:text-white dark:focus:border-violet-400 ${
+            icon && "pl-8"
+          } ${!isValid && "border-rose-600 dark:border-rose-400"} ${
+            props.disabled && "cursor-not-allowed"
+          }`}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          {...props}
+        />
+      ) : (
+        <input
+          type="text"
+          id={id}
+          name={name}
+          className={`w-full rounded-md bg-white pt-6 text-zinc-800 focus:border-violet-600 dark:bg-zinc-800 dark:text-white dark:focus:border-violet-400 ${
+            icon && "pl-8"
+          } ${!isValid && "border-rose-600 dark:border-rose-400"} ${
+            props.disabled && "cursor-not-allowed"
+          }`}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          {...props}
+        />
+      )}
+
       {icon && (
         <FeatherIcon
           icon={icon}
