@@ -27,7 +27,11 @@ const Navbar = () => {
             priority
           />
           <div className="flex items-center gap-4 ">
-            <button type="button" className="rounded-md p-2">
+            <button
+              type="button"
+              className="rounded-md p-2"
+              onClick={() => setModal("search")}
+            >
               <FeatherIcon icon="search" size={24} />
             </button>
             <DialogMenu

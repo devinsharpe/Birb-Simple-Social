@@ -10,7 +10,8 @@ const DialogModal: React.FC<{
   children: JSX.Element;
   title: string;
   isDismissable?: boolean;
-}> = ({ children, isDismissable = true, name, title }) => {
+  position?: "top" | "middle" | "bottom";
+}> = ({ children, isDismissable = true, name, position = "middle", title }) => {
   const [modal, setModal] = useAtom(atoms.modal);
 
   return (
@@ -33,7 +34,13 @@ const DialogModal: React.FC<{
             <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
+          <div
+            className={`fixed inset-x-0 overflow-y-auto ${
+              position === "top" ? "top-4" : ""
+            } ${position === "middle" ? "inset-y-0" : ""} ${
+              position === "bottom" ? "bottom-4" : ""
+            }`}
+          >
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
@@ -44,7 +51,9 @@ const DialogModal: React.FC<{
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="relative max-h-[85vh] w-full max-w-lg transform overflow-hidden rounded-lg border border-zinc-200 bg-white text-left align-middle shadow-lg transition-all dark:border-zinc-700 dark:bg-zinc-800">
+                <Dialog.Panel
+                  className={`relative max-h-[85vh] w-full max-w-lg transform overflow-hidden rounded-lg border border-zinc-200 bg-white text-left shadow-lg transition-all dark:border-zinc-700 dark:bg-zinc-800`}
+                >
                   <div className="absolute inset-x-0 top-0 z-[2] flex w-full items-center justify-between bg-white/50 py-4 px-6 backdrop-blur-md dark:bg-zinc-800/50">
                     <Dialog.Title
                       as="h3"

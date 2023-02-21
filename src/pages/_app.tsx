@@ -11,6 +11,7 @@ import Head from "next/head";
 import ProfileAtomProvider from "../components/providers/ProfileAtom";
 import ProfileModal from "../components/modals/Profile";
 import WelcomeModal from "../components/modals/Welcome";
+import SearchModal from "../components/modals/Search";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         </style>
         <ProfileAtomProvider />
         <ProfileModal />
+        <SearchModal />
         <WelcomeModal />
         <main className="min-h-screen">
           <Component {...pageProps} />
