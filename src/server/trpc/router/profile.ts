@@ -122,7 +122,7 @@ export const profileRouter = router({
       z.strictObject({
         name: z.string().max(50),
         handle: z.string().max(24),
-        biography: z.string().max(150),
+        biography: z.string().max(300),
         birthdate: z.string().max(10),
         location: z.string().max(50),
         website: z.string(),

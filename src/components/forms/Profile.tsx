@@ -77,7 +77,7 @@ const ProfileForm: React.FC<{
         }}
       >
         <div className="relative mb-16">
-          <div className="relative aspect-video w-full overflow-hidden rounded-md ">
+          <div className="relative aspect-[7/3] w-full overflow-hidden rounded-md ">
             <img
               src={
                 profile.headerUrl ||
@@ -146,10 +146,13 @@ const ProfileForm: React.FC<{
         />
         <TextInput
           id="profile-biography"
+          isTextArea
           label="Biography"
-          maxLength={150}
+          maxLength={300}
           name="biography"
-          onChange={(val) => onChange({ ...profile, biography: val })}
+          onChange={(val) =>
+            onChange({ ...profile, biography: val.slice(0, 300) })
+          }
           placeholder="It was the best of times. It was the worst of times..."
           value={profile.biography || ""}
         />

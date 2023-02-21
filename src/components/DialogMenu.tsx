@@ -63,7 +63,7 @@ const DialogMenu: React.FC<{
 }> = ({ children, className, items }) => {
   return (
     <div className="text-right">
-      <Menu as="div" className="relative inline-block text-left">
+      <Menu as="div" className="relative z-10 inline-block text-left">
         <div>
           <DialogMenuButton className={className}>{children}</DialogMenuButton>
         </div>
