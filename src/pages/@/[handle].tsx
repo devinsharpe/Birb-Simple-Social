@@ -22,7 +22,7 @@ const BlankHeader: React.FC<{
   const router = useRouter();
   return (
     <>
-      <div className="relative mx-auto mb-16">
+      <div className="relative mx-auto mb-16 pt-4">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <img
             src="https://source.unsplash.com/random/1920×1080/?cat"
@@ -75,7 +75,7 @@ const ProfileHeader: React.FC<{
 }> = ({ isEditable = false, onEditClick, profile }) => {
   return (
     <>
-      <div className="relative mx-auto mb-16">
+      <div className="relative mx-auto mb-16 pt-4">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <img
             src={
