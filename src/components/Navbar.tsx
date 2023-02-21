@@ -56,15 +56,15 @@ const Navbar = () => {
                 ],
                 [
                   {
-                    icon: "help-circle",
-                    text: "About Birb",
-                    onClick: () => setModal("welcome"),
-                  },
-                  {
                     icon: "settings",
                     text: "Settings",
                     onClick: () => setModal("welcome"),
                     disabled: session.status !== "authenticated",
+                  },
+                  {
+                    icon: "help-circle",
+                    text: "About Birb",
+                    onClick: () => setModal("welcome"),
                   },
                   {
                     icon:

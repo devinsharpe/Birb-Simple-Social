@@ -1,3 +1,4 @@
+import FeatherIcon from "feather-icons-react";
 import React from "react";
 import atoms from "../atoms";
 import { useSetAtom } from "jotai";
@@ -16,6 +17,13 @@ const LoginPrompt = () => {
         </h4>
       </div>
       <div className="flex w-full items-center gap-2 md:w-auto">
+        <button
+          type="button"
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white font-semibold text-zinc-700 hover:bg-zinc-100 hover:text-black md:h-9 md:w-9"
+          onClick={() => setModal("welcome")}
+        >
+          <FeatherIcon icon="help-circle" size={20} />
+        </button>
         <button
           type="button"
           className="w-full rounded-full bg-white px-4 py-1 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 hover:text-black md:w-auto md:py-2"
