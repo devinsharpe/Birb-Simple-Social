@@ -24,6 +24,9 @@ const Navbar = () => {
             priority
           />
           <div className="flex items-center gap-4 ">
+            <button type="button" className="rounded-md p-2">
+              <FeatherIcon icon="search" size={24} />
+            </button>
             <DialogMenu
               items={[
                 [
@@ -47,15 +50,20 @@ const Navbar = () => {
                   {
                     icon: "user",
                     text: "Profile",
-                    onClick: console.log,
+                    onClick: () => setModal("profile-edit"),
                     disabled: session.status !== "authenticated",
                   },
                 ],
                 [
                   {
+                    icon: "help-circle",
+                    text: "About Birb",
+                    onClick: () => setModal("welcome"),
+                  },
+                  {
                     icon: "settings",
                     text: "Settings",
-                    onClick: console.log,
+                    onClick: () => setModal("welcome"),
                     disabled: session.status !== "authenticated",
                   },
                   {
