@@ -1,15 +1,18 @@
 import DialogMenu from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
+import Image from "next/image";
 import React from "react";
 import { trpc } from "../utils/trpc";
 
 const DemoPost: React.FC<{
   post: {
     id: number;
+    age: number;
     profile: {
       handle: string;
       name: string;
     };
+    photo?: string;
     text: string;
     commentCount: number;
     likedByUser: boolean;
@@ -26,7 +29,7 @@ const DemoPost: React.FC<{
             {post.profile.name}
           </h4>
           <h5 className="text-sm text-zinc-600 dark:text-zinc-400">
-            2 hours ago
+            {post.age} hour{post.age > 1 && "s"} ago
           </h5>
         </div>
         <DialogMenu
@@ -54,7 +57,18 @@ const DemoPost: React.FC<{
           <FeatherIcon icon="more-horizontal" size={24} />
         </DialogMenu>
       </div>
-      <div className="pl-12">
+      <div className="space-y-4 pl-12">
+        {post.photo && (
+          <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-md">
+            <Image
+              src={post.photo}
+              alt="demo post photo"
+              width={512}
+              height={512}
+              className="h-full w-full object-cover object-center"
+            />
+          </div>
+        )}
         <p className="max-w-xl">{post.text}</p>
       </div>
       <div className="flex items-center space-x-6 pl-12">
