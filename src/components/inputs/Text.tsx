@@ -32,7 +32,7 @@ const TextInput: React.FC<{
         !isValid && "text-rose-600 dark:text-rose-400"
       } ${props.disabled && "cursor-not-allowed opacity-75"}`}
     >
-      <div className="absolute left-[1px] right-[1px] top-[1px] flex items-center justify-between rounded-md bg-white px-3 text-sm font-medium dark:bg-zinc-800">
+      <div className="absolute left-[1px] right-[1px] top-[1px] flex items-center justify-between rounded-md bg-white px-3 py-1 text-sm font-medium dark:bg-zinc-800">
         <label htmlFor={id}>{label}</label>
         {maxLength && (
           <span className="opacity-75">
