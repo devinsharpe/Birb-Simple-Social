@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useAtom, useAtomValue } from "jotai";
 
 import DialogModal from "../DialogModal";
-import { Profile } from "@prisma/client";
+import type { Profile } from "@prisma/client";
 import ProfileForm from "../forms/Profile";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
+import { useAtom } from "jotai";
 
 const ProfileModal = () => {
   const [profileAtom, setProfileAtom] = useAtom(atoms.profile);
@@ -17,7 +17,7 @@ const ProfileModal = () => {
     if (modal === "profile-edit" && profileAtom) {
       setProfile(profileAtom);
     }
-  }, [modal]);
+  }, [modal, profileAtom]);
 
   const saveProfile = useCallback(async () => {
     if (profile) {
@@ -34,7 +34,7 @@ const ProfileModal = () => {
       setProfileAtom(newProfile || profileAtom);
       setModal(undefined);
     }
-  }, [profile]);
+  }, [profile, profileAtom, saveProfileMutation, setModal, setProfileAtom]);
 
   return (
     <>
