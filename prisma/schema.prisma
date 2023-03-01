@@ -55,6 +55,56 @@ model Profile {
   postCount      Int @default(0)
 
   canChangeHandle Boolean @default(true)
+
+  followers ProfileRelationship[] @relation("followers")
+  following ProfileRelationship[] @relation("following")
+
+  followerRequests  RelationshipRequest[] @relation("followerRequests")
+  followingRequests RelationshipRequest[] @relation("followingRequests")
+}
+
+enum RequestStatus {
+  PENDING   @map("PENDING")
+  ACCEPTED  @map("ACCEPTED")
+  CANCELLED @map("CANCELLED")
+  DENIED    @map("DENIED")
+}
+
+enum RelationshipType {
+  FOLLOW @map("FOLLOW")
+  BLOCK  @map("BLOCK")
+}
+
+model RelationshipRequest {
+  id String @id @default(cuid())
+
+  status RequestStatus @default(PENDING)
+
+  followerId  String
+  followingId String
+
+  follower  Profile @relation("followerRequests", fields: [followerId], references: [id], onDelete: Cascade)
+  following Profile @relation("followingRequests", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProfileRelationship {
+  id String @id @default(cuid())
+
+  type RelationshipType @default(FOLLOW)
+
+  followerId  String
+  followingId String
+
+  follower  Profile @relation("followers", fields: [followerId], references: [id], onDelete: Cascade)
+  following Profile @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  requestedAt DateTime
+
+  @@unique([followerId, followingId])
 }
 
 model Session {
