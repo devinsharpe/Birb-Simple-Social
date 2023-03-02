@@ -68,6 +68,8 @@ enum RequestStatus {
   ACCEPTED  @map("ACCEPTED")
   CANCELLED @map("CANCELLED")
   DENIED    @map("DENIED")
+  REMOVED   @map("REMOVED")
+  FORCED    @map("FORCE_REMOVED")
 }
 
 enum RelationshipType {
@@ -103,8 +105,6 @@ model ProfileRelationship {
 
   createdAt   DateTime @default(now())
   requestedAt DateTime
-
-  @@unique([followerId, followingId])
 }
 
 model Session {
