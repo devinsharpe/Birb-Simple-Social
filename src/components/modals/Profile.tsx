@@ -31,7 +31,7 @@ const ProfileModal = () => {
         avatarUrl: profile.avatarUrl || "",
         headerUrl: profile.headerUrl || "",
       });
-      setProfileAtom(newProfile || profileAtom);
+      if (newProfile) setProfileAtom(newProfile);
       setModal(undefined);
     }
   }, [profile, profileAtom, saveProfileMutation, setModal, setProfileAtom]);
