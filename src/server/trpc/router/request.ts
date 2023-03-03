@@ -130,7 +130,7 @@ export const requestRouter = router({
               id: request.followingId,
             },
             data: {
-              ...(await getRelationshipCounts(request.followerId)),
+              ...(await getRelationshipCounts(request.followingId)),
             },
           });
           await ctx.prisma.relationshipRequest.update({
