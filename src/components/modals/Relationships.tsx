@@ -78,9 +78,8 @@ const RelationshipModal: React.FC<{
 
   return (
     <DialogModal
-      title={`${profile.name} ${
-        type === "FOLLOWER" ? "Followers" : "Following"
-      }`}
+      title={`${profile.name} ${type === "FOLLOWER" ? "Followers" : "Following"
+        }`}
       name={modalKey}
     >
       <section className="h-full divide-y divide-zinc-300 overflow-y-auto dark:divide-zinc-600">
@@ -96,19 +95,19 @@ const RelationshipModal: React.FC<{
                 profile={
                   type === "FOLLOWER"
                     ? {
-                        avatarUrl:
-                          relationship.follower.avatarUrl ??
-                          "https://source.unsplash.com/random/600×600/?cat",
-                        handle: relationship.follower.handle,
-                        name: relationship.follower.name,
-                      }
+                      avatarUrl:
+                        relationship.follower.avatarUrl ??
+                        "https://source.unsplash.com/random/600×600/?cat",
+                      handle: relationship.follower.handle,
+                      name: relationship.follower.name,
+                    }
                     : {
-                        avatarUrl:
-                          relationship.following.avatarUrl ??
-                          "https://source.unsplash.com/random/600×600/?cat",
-                        handle: relationship.following.handle,
-                        name: relationship.following.name,
-                      }
+                      avatarUrl:
+                        relationship.following.avatarUrl ??
+                        "https://source.unsplash.com/random/600×600/?cat",
+                      handle: relationship.following.handle,
+                      name: relationship.following.name,
+                    }
                 }
               />
             ))}

@@ -35,11 +35,9 @@ const DialogModal: React.FC<{
           </Transition.Child>
 
           <div
-            className={`fixed inset-x-0 overflow-y-auto ${
-              position === "top" ? "top-4" : ""
-            } ${position === "middle" ? "inset-y-0" : ""} ${
-              position === "bottom" ? "bottom-4" : ""
-            }`}
+            className={`fixed inset-x-0 overflow-y-auto ${position === "top" ? "top-4" : ""
+              } ${position === "middle" ? "inset-y-0" : ""} ${position === "bottom" ? "bottom-4" : ""
+              }`}
           >
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child

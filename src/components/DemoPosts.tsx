@@ -76,9 +76,8 @@ const DemoPost: React.FC<{
           <FeatherIcon
             icon="thumbs-up"
             size={16}
-            className={`${
-              post.likedByUser && "fill-zinc-800 dark:fill-zinc-200"
-            }`}
+            className={`${post.likedByUser && "fill-zinc-800 dark:fill-zinc-200"
+              }`}
           />
         </button>
         <button type="button" className="rounded p-2">

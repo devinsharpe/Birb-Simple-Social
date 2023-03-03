@@ -20,21 +20,18 @@ const DialogMenuItem: React.FC<DialogMenuItemProps> = ({
     <Menu.Item disabled={disabled}>
       {({ active }) => (
         <button
-          className={`${
-            active
-              ? "bg-zinc-200 text-violet-800 dark:bg-zinc-700 dark:text-violet-200"
-              : "text-zinc-800 dark:text-zinc-200"
-          } ${
-            disabled && "opacity-50"
-          } group flex w-full items-center gap-4 rounded px-2 py-2 text-sm`}
+          className={`${active
+            ? "bg-zinc-200 text-violet-800 dark:bg-zinc-700 dark:text-violet-200"
+            : "text-zinc-800 dark:text-zinc-200"
+            } ${disabled && "opacity-50"
+            } group flex w-full items-center gap-4 rounded px-2 py-2 text-sm`}
           onClick={onClick}
         >
           <FeatherIcon
             icon={icon}
             size={20}
-            className={`shrink-0 ${
-              !disabled && "dark:group-hover:text-violet-400"
-            }`}
+            className={`shrink-0 ${!disabled && "dark:group-hover:text-violet-400"
+              }`}
           />
           <span className="whitespace-nowrap">{text}</span>
         </button>
