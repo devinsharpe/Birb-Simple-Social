@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "lt": "npx lt --port 3000 --subdomain birb-dev",
     "dev": "next dev",
     "generate": "prisma generate",
     "postinstall": "prisma generate",
