@@ -9,3 +9,32 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Result {
+  id        String  @id @default(cuid())
+  text      String
+  threshold Int
+  hasMatch  Boolean @default(false)
+
+  probabilities Probability[] @relation("probabilities")
+}
+
+enum ProbabilityLabel {
+  IDENTITY_ATTACK  @map("indentity_attack")
+  INSULT           @map("insult")
+  OBSCENE          @map("obscene")
+  SEVERE_TOXICITY  @map("severe_toxicity")
+  SEXUAL_EXPLICITY @map("sexual_explicit")
+  THREAT           @map("threat")
+  TOXICITY         @map("toxicity")
+}
+
+model Probability {
+  id         String  @id @default(cuid())
+  label      String
+  match      Boolean
+  confidence Decimal
+
+  resultId String
+  result   Result @relation("probabilities", fields: [resultId], references: [id], onDelete: Cascade)
+}
