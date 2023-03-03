@@ -1,5 +1,5 @@
 import { names, uniqueNamesGenerator } from "unique-names-generator";
-import { protectedProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 import type { Config } from "unique-names-generator";
 import { z } from "zod";
@@ -101,7 +101,7 @@ export const profileRouter = router({
       return result;
     }
   }),
-  searchProfiles: protectedProcedure
+  searchProfiles: publicProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const result = await ctx.prisma.profile.findMany({

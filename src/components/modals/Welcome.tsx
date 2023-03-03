@@ -11,7 +11,7 @@ const WelcomeModal = () => {
     <DialogModal name="welcome" title="Welcome to Birb">
       <section className="space-y-2">
         <h3 className="text-xl font-bold text-zinc-600 dark:text-zinc-400 md:text-2xl">
-          What's different
+          What&apos;s different
           <span className="text-violet-600 dark:text-violet-400"> @ </span>
           Birb?
         </h3>

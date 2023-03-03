@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import DialogModal from "../DialogModal";
 import FeatherIcon from "feather-icons-react";
-import { Profile } from "@prisma/client";
+import Image from "next/image";
+import type { Profile } from "@prisma/client";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
@@ -18,13 +19,15 @@ const ProfileSearchItem: React.FC<{
       onClick={() => onClick(profile.handle)}
     >
       <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
-        <img
+        <Image
           src={
             profile.avatarUrl ||
             "https //source.unsplash.com/random/600×600/?cat"
           }
           alt={`${profile.name}'s avatar image`}
           className="h-full w-full object-cover object-center"
+          width={128}
+          height={128}
         />
       </div>
       <div className="w-full">
@@ -55,6 +58,7 @@ const SearchModal = () => {
       setProfiles([]);
     }
     return () => setProfiles([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (
@@ -74,6 +78,7 @@ const SearchModal = () => {
         <div className="space-y-2 pt-2">
           {profiles.map((profile) => (
             <ProfileSearchItem
+              key={profile.id}
               onClick={(handle) => {
                 setModal(undefined);
                 router.push(`/@/${handle}`);

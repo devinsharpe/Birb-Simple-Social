@@ -45,7 +45,7 @@ const Navbar = () => {
                   {
                     icon: "bell",
                     text: "Notifications",
-                    onClick: console.log,
+                    onClick: () => router.push("/notifications"),
                     disabled: session.status !== "authenticated",
                   },
                   {
