@@ -41,52 +41,52 @@ const ProfileActionButton: React.FC<{
   onFollow,
   onUnfollow,
 }) => {
-    if (isUser) {
-      return (
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
-          onClick={onEditClick}
-        >
-          <FeatherIcon icon="user" size={20} />
-          <span>Edit</span>
-        </button>
-      );
-    } else if (isFollowing) {
-      return (
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
-          onClick={onUnfollow}
-        >
-          <FeatherIcon icon="zap" size={20} />
-          <span>Following</span>
-        </button>
-      );
-    } else if (hasRequest) {
-      return (
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
-          onClick={onCancel}
-        >
-          <FeatherIcon icon="clock" size={20} />
-          <span>Pending</span>
-        </button>
-      );
-    } else {
-      return (
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
-          onClick={onFollow}
-        >
-          <FeatherIcon icon="zap" size={20} />
-          <span>Follow</span>
-        </button>
-      );
-    }
-  };
+  if (isUser) {
+    return (
+      <button
+        type="button"
+        className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
+        onClick={onEditClick}
+      >
+        <FeatherIcon icon="user" size={20} />
+        <span>Edit</span>
+      </button>
+    );
+  } else if (isFollowing) {
+    return (
+      <button
+        type="button"
+        className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
+        onClick={onUnfollow}
+      >
+        <FeatherIcon icon="zap" size={20} />
+        <span>Following</span>
+      </button>
+    );
+  } else if (hasRequest) {
+    return (
+      <button
+        type="button"
+        className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
+        onClick={onCancel}
+      >
+        <FeatherIcon icon="clock" size={20} />
+        <span>Pending</span>
+      </button>
+    );
+  } else {
+    return (
+      <button
+        type="button"
+        className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
+        onClick={onFollow}
+      >
+        <FeatherIcon icon="zap" size={20} />
+        <span>Follow</span>
+      </button>
+    );
+  }
+};
 
 const BlankHeader: React.FC<{
   handle: string;
@@ -177,126 +177,132 @@ const ProfileHeader: React.FC<{
   hasRequest,
   sessionStatus,
 }) => {
-    return (
-      <>
-        <div className="relative mx-auto mb-16 pt-4">
-          <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
-            <Image
-              src={
-                profile.headerUrl ||
-                "https://source.unsplash.com/random/600×600/?cat"
-              }
-              alt={`${profile.name}'s header image`}
-              className="h-full w-full object-cover object-center"
-              width={2520}
-              height={1080}
-            />
-          </div>
-
-          <div className="absolute inset-x-0 -bottom-12 left-1/2 z-[1] h-28 w-28 -translate-x-1/2 transform overflow-hidden rounded-full border-4 border-white object-center dark:border-zinc-900">
-            <Image
-              src={
-                profile.avatarUrl ||
-                "https://source.unsplash.com/random/600×600/?cat"
-              }
-              alt={`${profile.name}'s avatar image`}
-              className="h-full w-full object-cover object-center"
-              width={256}
-              height={256}
-            />
-          </div>
+  return (
+    <>
+      <div className="relative mx-auto mb-16 pt-4">
+        <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
+          <Image
+            src={
+              profile.headerUrl ||
+              "https://source.unsplash.com/random/600×600/?cat"
+            }
+            alt={`${profile.name}'s header image`}
+            className="h-full w-full object-cover object-center"
+            width={2520}
+            height={1080}
+          />
         </div>
 
-        <div className="flex items-center justify-between py-2 px-4 text-zinc-800 dark:text-zinc-200 md:-mt-12">
-          <div>
-            <h2 className="text-2xl font-medium">{profile.name}</h2>
-            <h3 className="font-light text-zinc-600 dark:text-zinc-400">
-              @{profile.handle}
-            </h3>
-          </div>
-          {sessionStatus === "authenticated" && (
-            <ProfileActionButton
-              isUser={isUser}
-              isFollowing={isFollowing}
-              hasRequest={hasRequest}
-              onCancel={onCancelClick}
-              onEditClick={onEditClick}
-              onFollow={onFollowClick}
-              onUnfollow={onUnfollowClick}
-            />
+        <div className="absolute inset-x-0 -bottom-12 left-1/2 z-[1] h-28 w-28 -translate-x-1/2 transform overflow-hidden rounded-full border-4 border-white object-center dark:border-zinc-900">
+          <Image
+            src={
+              profile.avatarUrl ||
+              "https://source.unsplash.com/random/600×600/?cat"
+            }
+            alt={`${profile.name}'s avatar image`}
+            className="h-full w-full object-cover object-center"
+            width={256}
+            height={256}
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between py-2 px-4 text-zinc-800 dark:text-zinc-200 md:-mt-12">
+        <div>
+          <h2 className="text-2xl font-medium">{profile.name}</h2>
+          <h3 className="font-light text-zinc-600 dark:text-zinc-400">
+            @{profile.handle}
+          </h3>
+        </div>
+        {sessionStatus === "authenticated" && (
+          <ProfileActionButton
+            isUser={isUser}
+            isFollowing={isFollowing}
+            hasRequest={hasRequest}
+            onCancel={onCancelClick}
+            onEditClick={onEditClick}
+            onFollow={onFollowClick}
+            onUnfollow={onUnfollowClick}
+          />
+        )}
+      </div>
+
+      <p className="px-4 py-2 text-zinc-800 dark:text-zinc-200">
+        {profile.biography}
+      </p>
+
+      {(profile.website || profile.location) && (
+        <div className="flex flex-wrap items-center gap-4 px-4 py-2 text-zinc-600 dark:text-zinc-400">
+          {!!profile.website && (
+            <div className="flex items-center gap-2 underline">
+              <FeatherIcon icon="link" size={16} />
+              <h4>
+                <a href={formatUrl(profile.website).toString()} target="_blank">
+                  {profile.website}
+                </a>
+              </h4>
+            </div>
+          )}
+
+          {!!profile.location && (
+            <div className="flex items-center gap-2">
+              <FeatherIcon icon="map-pin" size={16} />
+              <h4>{profile.location}</h4>
+            </div>
+          )}
+
+          {!!profile.birthdate && (
+            <div className="flex items-center gap-2">
+              <FeatherIcon icon="gift" size={16} />
+              <h4>
+                {new Date(
+                  profile.birthdate.replaceAll("-", "/")
+                ).toLocaleDateString()}
+              </h4>
+            </div>
           )}
         </div>
+      )}
 
-        <p className="px-4 py-2 text-zinc-800 dark:text-zinc-200">
-          {profile.biography}
-        </p>
-
-        {(profile.website || profile.location) && (
-          <div className="flex flex-wrap items-center gap-4 px-4 py-2 text-zinc-600 dark:text-zinc-400">
-            {!!profile.website && (
-              <div className="flex items-center gap-2 underline">
-                <FeatherIcon icon="link" size={16} />
-                <h4>
-                  <a href={formatUrl(profile.website).toString()} target="_blank">
-                    {profile.website}
-                  </a>
-                </h4>
-              </div>
-            )}
-
-            {!!profile.location && (
-              <div className="flex items-center gap-2">
-                <FeatherIcon icon="map-pin" size={16} />
-                <h4>{profile.location}</h4>
-              </div>
-            )}
-
-            {!!profile.birthdate && (
-              <div className="flex items-center gap-2">
-                <FeatherIcon icon="gift" size={16} />
-                <h4>
-                  {new Date(
-                    profile.birthdate.replaceAll("-", "/")
-                  ).toLocaleDateString()}
-                </h4>
-              </div>
-            )}
-          </div>
-        )}
-
-        <div className="mt-4 flex w-full items-center justify-around divide-x divide-zinc-200 px-2 dark:divide-zinc-700">
-          <div className="w-full p-2 text-center">
-            <h4 className="font-semibold text-black dark:text-white">
-              {profile.postCount}
-            </h4>
-            <h5 className="text-sm text-zinc-600 dark:text-zinc-300">Posts</h5>
-          </div>
-          <div
-            className="group w-full cursor-pointer p-2 text-center"
-            onClick={() => onFollowingClick()}
-          >
-            <h4 className="font-semibold text-black dark:text-white">
-              {profile.followingCount}
-            </h4>
-            <h5 className="text-sm text-zinc-600 group-hover:underline dark:text-zinc-300">
-              Following
-            </h5>
-          </div>
-          <div
-            className="group w-full cursor-pointer p-2 text-center"
-            onClick={() => onFollowerClick()}
-          >
-            <h4 className="font-semibold text-black dark:text-white">
-              {profile.followerCount}
-            </h4>
-            <h5 className="text-sm text-zinc-600 group-hover:underline dark:text-zinc-300">
-              Followers
-            </h5>
-          </div>
+      <div className="mt-4 flex w-full items-center justify-around divide-x divide-zinc-200 px-2 dark:divide-zinc-700">
+        <div className="w-full p-2 text-center">
+          <h4 className="font-semibold text-black dark:text-white">
+            {profile.postCount}
+          </h4>
+          <h5 className="text-sm text-zinc-600 dark:text-zinc-300">Posts</h5>
         </div>
-      </>
-    );
-  };
+        <button
+          type="button"
+          aria-label="View following"
+          className="group w-full cursor-pointer p-2 text-center"
+          onClick={() => onFollowingClick()}
+          disabled={sessionStatus !== "authenticated"}
+        >
+          <h4 className="font-semibold text-black dark:text-white">
+            {profile.followingCount}
+          </h4>
+          <h5 className="text-sm text-zinc-600 group-hover:underline dark:text-zinc-300">
+            Following
+          </h5>
+        </button>
+        <button
+          type="button"
+          aria-label="View followers"
+          className="group w-full cursor-pointer p-2 text-center"
+          onClick={() => onFollowerClick()}
+          disabled={sessionStatus !== "authenticated"}
+        >
+          <h4 className="font-semibold text-black dark:text-white">
+            {profile.followerCount}
+          </h4>
+          <h5 className="text-sm text-zinc-600 group-hover:underline dark:text-zinc-300">
+            Followers
+          </h5>
+        </button>
+      </div>
+    </>
+  );
+};
 
 const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
   const session = useSession();
