@@ -47,9 +47,6 @@ model Profile {
   headerUrl String? @default("https://source.unsplash.com/random/1920×1080/?cat")
   birthdate String?
 
-  photoAvailable Int @default(1)
-  textAvailable  Int @default(3)
-
   followerCount  Int @default(0)
   followingCount Int @default(0)
   postCount      Int @default(0)
@@ -61,6 +58,9 @@ model Profile {
 
   followerRequests  RelationshipRequest[] @relation("followerRequests")
   followingRequests RelationshipRequest[] @relation("followingRequests")
+  posts             Post[]                @relation("profilePosts")
+  postMentions      PostMention[]         @relation("profileMentions")
+  postReactions     PostReaction[]        @relation("postReactions")
 }
 
 enum RequestStatus {
@@ -105,6 +105,72 @@ model ProfileRelationship {
 
   createdAt   DateTime @default(now())
   requestedAt DateTime
+}
+
+enum PostReviewStatus {
+  PROCESSING      @map("PROCESSING")
+  APPROVED        @map("APPROVED")
+  APPEALED        @map("APPEALED")
+  REJECTED_AUTO   @map("REJECTED_AUTO")
+  REJECTED_MANUAL @map("REJECTED_MANUAL")
+}
+
+enum PostType {
+  IMAGE @map("IMAGE")
+  TEXT  @map("TEXT")
+}
+
+model Post {
+  id           String           @id @default(cuid())
+  text         String           @db.VarChar(300)
+  location     String           @db.VarChar(32)
+  reviewStatus PostReviewStatus @default(PROCESSING)
+  likeCount    Int              @default(0)
+  commentCount Int              @default(0)
+  updateCount  Int              @default(0)
+  type         PostType         @default(TEXT)
+  profileId    String
+
+  autoReviewedAt   DateTime?
+  manualReviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  mentions  PostMention[]  @relation("mentions")
+  postedBy  Profile        @relation("profilePosts", fields: [profileId], references: [id], onDelete: Cascade)
+  reactions PostReaction[] @relation("reactions")
+}
+
+model PostMention {
+  id        String @id @default(cuid())
+  postId    String
+  profileId String
+
+  post    Post    @relation("mentions", fields: [postId], references: [id], onDelete: Cascade)
+  profile Profile @relation("profileMentions", fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+enum Reaction {
+  DOWNCAST        @map("DOWNCAST")
+  FIRE            @map("FIRE")
+  HEART_EYES      @map("HEART_EYES")
+  JOY             @map("JOY")
+  PINCHED_FINGERS @map("PINCHED_FINGERS")
+  SMILE           @map("SMILE")
+  THUMBS_UP       @map("THUMBS_UP")
+}
+
+model PostReaction {
+  id        String   @id @default(cuid())
+  reaction  Reaction
+  postId    String
+  profileId String
+
+  createdAt DateTime @default(now())
+
+  post    Post    @relation("reactions", fields: [postId], references: [id], onDelete: Cascade)
+  profile Profile @relation("postReactions", fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Session {
