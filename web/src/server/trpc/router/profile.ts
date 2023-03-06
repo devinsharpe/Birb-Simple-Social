@@ -104,18 +104,23 @@ export const profileRouter = router({
   searchProfiles: publicProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const result = await ctx.prisma.profile.findMany({
-        take: 10,
-        where: {
-          handle: {
-            search: input,
+      try {
+        const result = await ctx.prisma.profile.findMany({
+          take: 10,
+          where: {
+            handle: {
+              search: input.trim().replace(/[\s\n\t]/g, ":*&") + ":*",
+            },
+            name: {
+              search: input.trim().replace(/[\s\n\t]/g, ":*&") + ":*",
+            },
           },
-          name: {
-            search: input,
-          },
-        },
-      });
-      return result;
+        });
+        return result;
+      } catch (err) {
+        console.log(err);
+        return [];
+      }
     }),
   updateProfile: protectedProcedure
     .input(
