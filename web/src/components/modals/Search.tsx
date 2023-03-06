@@ -50,14 +50,21 @@ const SearchModal = () => {
   const setModal = useSetAtom(atoms.modal);
 
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     if (value) {
-      searchProfiles
-        .mutateAsync(value)
-        .then((profiles) => setProfiles(profiles));
+      timeout = setTimeout(() => {
+        searchProfiles
+          .mutateAsync(value)
+          .then((profiles) => setProfiles(profiles));
+      }, 250);
     } else {
       setProfiles([]);
     }
-    return () => setProfiles([]);
+    return () => {
+      if (timeout) clearTimeout(timeout);
+      searchProfiles.reset();
+      setProfiles([]);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
