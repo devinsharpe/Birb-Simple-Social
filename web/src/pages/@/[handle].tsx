@@ -12,12 +12,15 @@ import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import LoginPrompt from "../../components/LoginPrompt";
 import Navbar from "../../components/Navbar";
-import RelationshipModal from "../../components/modals/Relationships";
+import RelationshipModal, {
+  KEY_OPTIONS,
+} from "../../components/modals/Relationships";
 import atoms from "../../atoms";
 import { prisma } from "../../server/db/client";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { KEY as PROFILE_KEY } from "../../components/modals/Profile";
 
 interface PageProps {
   handle: string;
@@ -304,6 +307,8 @@ const ProfileHeader: React.FC<{
   );
 };
 
+const UNFOLLOW_KEY = "profile-confirm-unfollow";
+
 const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
   const session = useSession();
   const userProfile = useAtomValue(atoms.profile);
@@ -366,18 +371,18 @@ const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
       {profile && (
         <>
           <RelationshipModal
-            type="FOLLOWER"
+            type={KEY_OPTIONS.follower}
             profile={{ id: profile.id, name: profile.name }}
           />
           <RelationshipModal
-            type="FOLLOWING"
+            type={KEY_OPTIONS.following}
             profile={{ id: profile.id, name: profile.name }}
           />
           <DialogConfirm
             confirmText="Unfollow"
             denyText="Cancel"
             disabled={unfollowProfile.isLoading || removeFollower.isLoading}
-            name="profile-confirm-unfollow"
+            name={UNFOLLOW_KEY}
             text={`In order to see ${profile.name}'s posts, you will have to follow them again.`}
             title={`Unfollow ${profile.name}?`}
             onConfirm={() => handleUnfollow()}
@@ -405,11 +410,11 @@ const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
         {profile ? (
           <ProfileHeader
             onCancelClick={handleCancelClick}
-            onEditClick={() => setModal("profile-edit")}
+            onEditClick={() => setModal(PROFILE_KEY)}
             onFollowClick={handleFollowClick}
             onFollowerClick={() => setModal("profile-followers")}
             onFollowingClick={() => setModal("profile-following")}
-            onUnfollowClick={() => setModal("profile-confirm-unfollow")}
+            onUnfollowClick={() => setModal(UNFOLLOW_KEY)}
             profile={profile}
             isUser={!!userProfile && profile.id === userProfile.id}
             isFollowing={!!relationship}

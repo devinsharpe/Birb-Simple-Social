@@ -3,9 +3,11 @@ import Link from "next/link";
 import React from "react";
 import { signIn } from "next-auth/react";
 
+export const KEY = "login";
+
 const LoginModal = () => {
   return (
-    <DialogModal isDismissable name="login" title="Log in to Birb">
+    <DialogModal isDismissable name={KEY} title="Log in to Birb">
       <div className="space-y-4 py-2">
         <button
           onClick={() => signIn("google")}

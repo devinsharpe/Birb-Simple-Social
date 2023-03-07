@@ -9,6 +9,11 @@ import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
 
+export enum KEY_OPTIONS {
+  follower = "FOLLOWER",
+  following = "FOLLOWING",
+}
+
 const ProfileItem: React.FC<{
   onClick: () => void;
   profile: {
@@ -51,7 +56,7 @@ const RelationshipModal: React.FC<{
     id: string;
     name: string;
   };
-  type: "FOLLOWER" | "FOLLOWING";
+  type: KEY_OPTIONS;
 }> = ({ profile, type }) => {
   const modalKey =
     type === "FOLLOWER" ? "profile-followers" : "profile-following";
@@ -78,8 +83,9 @@ const RelationshipModal: React.FC<{
 
   return (
     <DialogModal
-      title={`${profile.name} ${type === "FOLLOWER" ? "Followers" : "Following"
-        }`}
+      title={`${profile.name} ${
+        type === "FOLLOWER" ? "Followers" : "Following"
+      }`}
       name={modalKey}
     >
       <section className="h-full divide-y divide-zinc-300 overflow-y-auto dark:divide-zinc-600">
@@ -95,19 +101,19 @@ const RelationshipModal: React.FC<{
                 profile={
                   type === "FOLLOWER"
                     ? {
-                      avatarUrl:
-                        relationship.follower.avatarUrl ??
-                        "https://source.unsplash.com/random/600×600/?cat",
-                      handle: relationship.follower.handle,
-                      name: relationship.follower.name,
-                    }
+                        avatarUrl:
+                          relationship.follower.avatarUrl ??
+                          "https://source.unsplash.com/random/600×600/?cat",
+                        handle: relationship.follower.handle,
+                        name: relationship.follower.name,
+                      }
                     : {
-                      avatarUrl:
-                        relationship.following.avatarUrl ??
-                        "https://source.unsplash.com/random/600×600/?cat",
-                      handle: relationship.following.handle,
-                      name: relationship.following.name,
-                    }
+                        avatarUrl:
+                          relationship.following.avatarUrl ??
+                          "https://source.unsplash.com/random/600×600/?cat",
+                        handle: relationship.following.handle,
+                        name: relationship.following.name,
+                      }
                 }
               />
             ))}

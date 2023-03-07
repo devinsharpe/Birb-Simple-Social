@@ -2,6 +2,8 @@ import FeatherIcon from "feather-icons-react";
 import React from "react";
 import atoms from "../atoms";
 import { useSetAtom } from "jotai";
+import { KEY as WELCOME_KEY } from "./modals/Welcome";
+import { KEY as LOGIN_KEY } from "./modals/Login";
 
 const LoginPrompt = () => {
   const setModal = useSetAtom(atoms.modal);
@@ -20,14 +22,14 @@ const LoginPrompt = () => {
         <button
           type="button"
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white font-semibold text-zinc-700 hover:bg-zinc-100 hover:text-black md:h-9 md:w-9"
-          onClick={() => setModal("welcome")}
+          onClick={() => setModal(WELCOME_KEY)}
         >
           <FeatherIcon icon="help-circle" size={20} />
         </button>
         <button
           type="button"
           className="w-full rounded-full bg-white px-4 py-1 text-sm font-semibold text-zinc-700 hover:bg-zinc-100 hover:text-black md:w-auto md:py-2"
-          onClick={() => setModal("login")}
+          onClick={() => setModal(LOGIN_KEY)}
         >
           Log In/Sign Up
         </button>
