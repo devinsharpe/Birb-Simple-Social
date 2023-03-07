@@ -4,7 +4,6 @@ import { useAtomValue, useSetAtom } from "jotai";
 import DialogMenu from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import LoginModal from "./modals/Login";
 import React from "react";
 import atoms from "../atoms";
 import { useRouter } from "next/router";
@@ -93,7 +92,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <LoginModal />
     </>
   );
 };
