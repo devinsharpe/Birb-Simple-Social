@@ -2,6 +2,7 @@ import FeatherIcon from "feather-icons-react";
 import React from "react";
 
 const TextInput: React.FC<{
+  fieldsetClassName?: string;
   icon?: FeatherIcon.Icon;
   id: string;
   isTextArea?: boolean;
@@ -15,6 +16,7 @@ const TextInput: React.FC<{
   value: string;
   [key: string]: any;
 }> = ({
+  fieldsetClassName,
   icon,
   id,
   isTextArea = false,
@@ -28,9 +30,11 @@ const TextInput: React.FC<{
 }) => {
   return (
     <fieldset
-      className={`relative  focus-within:text-violet-600 dark:focus-within:text-violet-400 ${
+      className={`relative focus-within:text-violet-600 dark:focus-within:text-violet-400 ${
         !isValid && "text-rose-600 dark:text-rose-400"
-      } ${props.disabled && "cursor-not-allowed opacity-75"}`}
+      } ${
+        props.disabled && "cursor-not-allowed opacity-75"
+      } ${fieldsetClassName}`}
     >
       <div className="absolute left-[1px] right-[1px] top-[0.5px] flex items-center justify-between rounded-md bg-white px-3 py-1 text-sm font-medium dark:bg-zinc-800">
         <label htmlFor={id}>{label}</label>
