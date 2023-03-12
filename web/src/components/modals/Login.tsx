@@ -9,7 +9,7 @@ const LoginModal = () => {
       <div className="space-y-4 py-2">
         <button
           onClick={() => signIn("google")}
-          className="mx-auto flex w-full max-w-md items-center justify-center space-x-2 rounded bg-white py-4 px-6 text-zinc-700 hover:bg-zinc-200 hover:text-black "
+          className="flex w-full items-center justify-center space-x-2 rounded bg-white py-4 px-6 text-zinc-700 hover:bg-zinc-200 hover:text-black"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
