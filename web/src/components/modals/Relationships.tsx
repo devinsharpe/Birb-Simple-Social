@@ -95,28 +95,42 @@ const RelationshipModal: React.FC<{
           </div>
         ) : (
           <>
-            {relationships.map((relationship) => (
-              <ProfileItem
-                onClick={() => setModal(undefined)}
-                profile={
-                  type === "FOLLOWER"
-                    ? {
-                        avatarUrl:
-                          relationship.follower.avatarUrl ??
-                          "https://source.unsplash.com/random/600×600/?cat",
-                        handle: relationship.follower.handle,
-                        name: relationship.follower.name,
-                      }
-                    : {
-                        avatarUrl:
-                          relationship.following.avatarUrl ??
-                          "https://source.unsplash.com/random/600×600/?cat",
-                        handle: relationship.following.handle,
-                        name: relationship.following.name,
-                      }
-                }
-              />
-            ))}
+            {relationships.length ? (
+              <>
+                {relationships.map((relationship) => (
+                  <ProfileItem
+                    key={relationship.id}
+                    onClick={() => setModal(undefined)}
+                    profile={
+                      type === "FOLLOWER"
+                        ? {
+                            avatarUrl:
+                              relationship.follower.avatarUrl ??
+                              "https://source.unsplash.com/random/600×600/?cat",
+                            handle: relationship.follower.handle,
+                            name: relationship.follower.name,
+                          }
+                        : {
+                            avatarUrl:
+                              relationship.following.avatarUrl ??
+                              "https://source.unsplash.com/random/600×600/?cat",
+                            handle: relationship.following.handle,
+                            name: relationship.following.name,
+                          }
+                    }
+                  />
+                ))}
+              </>
+            ) : (
+              <div className="">
+                <h4 className="text-lg font-bold text-black dark:text-white md:text-2xl">
+                  Uh oh! We didn&apos;t find anyone here
+                </h4>
+                <h5 className="font-medium text-zinc-700 dark:text-zinc-400 md:text-lg">
+                  It seems like someone has room for friends
+                </h5>
+              </div>
+            )}
           </>
         )}
       </section>
