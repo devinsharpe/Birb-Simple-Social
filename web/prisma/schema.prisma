@@ -38,14 +38,15 @@ model Profile {
   id   String @id
   user User   @relation(fields: [id], references: [id])
 
-  name      String
-  handle    String  @unique
-  biography String?
-  location  String?
-  website   String?
-  avatarUrl String? @default("https://source.unsplash.com/random/600×600/?cat")
-  headerUrl String? @default("https://source.unsplash.com/random/1920×1080/?cat")
-  birthdate String?
+  name             String
+  handle           String
+  normalizedHandle String  @unique
+  biography        String?
+  location         String?
+  website          String?
+  avatarUrl        String? @default("https://source.unsplash.com/random/600×600/?cat")
+  headerUrl        String? @default("https://source.unsplash.com/random/1920×1080/?cat")
+  birthdate        String?
 
   followerCount  Int @default(0)
   followingCount Int @default(0)
