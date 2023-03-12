@@ -3,7 +3,6 @@ import { trpc } from "../../utils/trpc";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useSetAtom } from "jotai";
-import { KEY as WELCOME_KEY } from "../modals/Welcome";
 
 const ProfileAtomProvider = () => {
   const setProfile = useSetAtom(atoms.profile);
@@ -15,7 +14,6 @@ const ProfileAtomProvider = () => {
 
   useEffect(() => {
     setProfile(profile.data || undefined);
-    if (profile.data?.canChangeHandle) setModal(WELCOME_KEY);
   }, [profile, setModal, setProfile]);
 
   return null;
