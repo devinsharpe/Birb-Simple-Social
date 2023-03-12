@@ -1,8 +1,8 @@
 import { RelationshipType } from ".prisma/client";
 import { prisma } from "../server/db/client";
 
-export const HANDLE_REGEX = /^(?<!\w)@[\w+]{1,24}$/;
-export const HANDLE_REGEX_CLEAN = /^(?<!\w)[\w+]{1,24}$/;
+export const HANDLE_REGEX = /^(?<!\w)@[\w]{1,24}$/;
+export const HANDLE_REGEX_CLEAN = /^(?<!\w)[\w]{1,24}$/;
 
 export const getRelationshipCounts = async (id: string) => {
   const followerCount = await prisma.profileRelationship.count({
