@@ -135,12 +135,12 @@ const PostForm: React.FC<PostFormProps> = ({
           />
           <input
             type="text"
-            className="w-full rounded border-none bg-transparent pl-8 outline-none focus:ring-0"
+            className="w-full rounded border-none bg-transparent pl-8 outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
             placeholder="Location"
             onChange={(e) => onChange({ ...post, location: e.target.value })}
             value={post.location}
           />
-          <span className="right-0 text-sm opacity-75">
+          <span className="right-0 text-sm opacity-50">
             {post.location.length}/32
           </span>
         </fieldset>
