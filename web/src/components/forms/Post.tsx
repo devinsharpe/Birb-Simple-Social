@@ -74,6 +74,7 @@ const PostEditor: React.FC<{
 
 interface PostFormProps {
   post: SimplePost;
+  isLoading: boolean;
   onCancel: () => void;
   onChange: (post: SimplePost) => void;
   onSubmit: (post: SimplePost) => void;
@@ -81,6 +82,7 @@ interface PostFormProps {
 
 const PostForm: React.FC<PostFormProps> = ({
   post,
+  isLoading,
   onCancel,
   onChange,
   onSubmit,
@@ -88,7 +90,7 @@ const PostForm: React.FC<PostFormProps> = ({
   const [showLocationInput, setShowLocationInput] = useState(false);
   return (
     <form
-      className="relative space-y-4 px-2"
+      className="relative px-2 space-y-4"
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(post);
@@ -111,7 +113,8 @@ const PostForm: React.FC<PostFormProps> = ({
       <div className="flex items-center justify-between gap-4 pt-4 dark:border-zinc-700">
         <p className="text-sm opacity-50">{post.text.length}/300</p>
         <button
-          className="rounded-md p-1"
+          type="button"
+          className="p-1 rounded-md"
           onClick={() => setShowLocationInput(!showLocationInput)}
         >
           {showLocationInput ? (
@@ -135,7 +138,7 @@ const PostForm: React.FC<PostFormProps> = ({
           />
           <input
             type="text"
-            className="w-full rounded border-none bg-transparent pl-8 outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
+            className="w-full pl-8 bg-transparent border-none rounded outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
             placeholder="Location"
             onChange={(e) => onChange({ ...post, location: e.target.value })}
             value={post.location}
@@ -148,20 +151,30 @@ const PostForm: React.FC<PostFormProps> = ({
 
       <div className="flex gap-4">
         <button
+          disabled={isLoading}
           type="button"
-          className="flex aspect-square shrink-0 items-center justify-center rounded-full bg-zinc-200 py-1 px-2 text-zinc-800 transition-colors duration-100 hover:bg-zinc-300 focus:bg-zinc-700 dark:bg-zinc-600 dark:text-white dark:hover:bg-zinc-700"
+          className="flex items-center justify-center px-2 py-1 transition-colors duration-100 rounded-full aspect-square shrink-0 bg-zinc-200 text-zinc-800 hover:bg-zinc-300 focus:bg-zinc-700 dark:bg-zinc-600 dark:text-white dark:hover:bg-zinc-700"
           onClick={onCancel}
         >
           <FeatherIcon icon="x" size={20} />
           <span className="sr-only">Close</span>
         </button>
         <button
-          type="button"
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-violet-600 py-1 text-white transition-colors duration-100 hover:bg-violet-700 focus:bg-violet-700"
-          disabled={post.text.length > 300 || post.text.length === 0}
+          type="submit"
+          className={`relative flex w-full items-center justify-center gap-2 rounded-full bg-violet-600 py-1 text-white transition-colors duration-100 hover:bg-violet-700 focus:bg-violet-700 ${
+            isLoading ? "text-transparent" : ""
+          }`}
+          disabled={
+            post.text.length > 300 || post.text.length === 0 || isLoading
+          }
         >
           <FeatherIcon icon="edit-3" size={20} />
           <span>Post</span>
+          {isLoading && (
+            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 ">
+              <FeatherIcon icon="loader" className="text-white" size={16} />
+            </span>
+          )}
         </button>
       </div>
     </form>
