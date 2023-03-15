@@ -1,13 +1,13 @@
 import { names, uniqueNamesGenerator } from "unique-names-generator";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
-import { z } from "zod";
 import type { Config } from "unique-names-generator";
+import { HANDLE_REGEX } from "../../../utils/profiles";
 import type { ILoremIpsumParams } from "lorem-ipsum";
+import { PostType } from "@prisma/client";
 import { examplePosts } from "../../../utils/posts";
 import { loremIpsum } from "lorem-ipsum";
-import { PostType } from "@prisma/client";
-import { HANDLE_REGEX } from "../../../utils/profiles";
+import { z } from "zod";
 
 const nameConfig: Config = {
   dictionaries: [
@@ -71,6 +71,9 @@ const textConfig: ILoremIpsumParams = {
   units: "words",
 };
 
+export const IMAGE_POST_LIMIT = 1;
+export const TEXT_POST_LIMIT = 3;
+
 function shuffle(array: typeof examplePosts) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -81,12 +84,38 @@ function shuffle(array: typeof examplePosts) {
 }
 
 export const postsRouter = router({
+  availableCount: protectedProcedure.mutation(async ({ ctx }) => {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    const imageCount = await ctx.prisma.post.count({
+      where: {
+        profileId: ctx.session.user.id,
+        createdAt: {
+          gt: date,
+        },
+        type: PostType.IMAGE,
+      },
+    });
+    const textCount = await ctx.prisma.post.count({
+      where: {
+        profileId: ctx.session.user.id,
+        createdAt: {
+          gt: date,
+        },
+        type: PostType.TEXT,
+      },
+    });
+    return {
+      image: Math.max(IMAGE_POST_LIMIT - imageCount, 0),
+      text: Math.max(TEXT_POST_LIMIT - textCount, 0),
+    };
+  }),
   create: protectedProcedure
     .input(
       z.strictObject({
         text: z.string().max(300),
         location: z.string().max(32).default(""),
-        type: z.enum([PostType.IMAGE, PostType.TEXT]).default("TEXT"),
+        type: z.enum([PostType.IMAGE, PostType.TEXT]).default(PostType.TEXT),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -94,6 +123,7 @@ export const postsRouter = router({
         data: {
           ...input,
           profileId: ctx.session.user.id,
+          updatedAt: new Date(),
         },
       });
       const handles = input.text.match(HANDLE_REGEX);
@@ -101,17 +131,32 @@ export const postsRouter = router({
         const profiles = await ctx.prisma.profile.findMany({
           where: {
             handle: {
-              in: handles.map((handle) => handle.replace("@", "")),
+              in: handles.map((handle) => handle.trim().replace("@", "")),
             },
           },
         });
         for (const profile of profiles) {
-          await ctx.prisma.postMention.create({
-            data: {
-              postId: post.id,
-              profileId: profile.id,
+          const relationship = await ctx.prisma.profileRelationship.findFirst({
+            where: {
+              OR: [
+                {
+                  followerId: ctx.session.user.id,
+                  followingId: profile.id,
+                },
+                {
+                  followerId: profile.id,
+                  followingId: ctx.session.user.id,
+                },
+              ],
             },
           });
+          if (relationship || ctx.session.user.id === profile.id)
+            await ctx.prisma.postMention.create({
+              data: {
+                postId: post.id,
+                profileId: profile.id,
+              },
+            });
         }
       }
       await ctx.prisma.profile.update({
