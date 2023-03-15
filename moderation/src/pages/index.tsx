@@ -66,9 +66,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="w-full flex flex-col items-center py-4">
+      <main className="flex flex-col items-center w-full py-4">
         <form
-          className="container max-w-xl w-full"
+          className="container w-full max-w-xl"
           onSubmit={(e) => {
             e.preventDefault();
             if (!loading) handleSubmit(text);
@@ -77,7 +77,7 @@ export default function Home() {
           <fieldset>
             <label
               htmlFor="post-text"
-              className="block font-semibold text-center pb-2"
+              className="block pb-2 font-semibold text-center"
             >
               Enter text below
             </label>
@@ -87,11 +87,11 @@ export default function Home() {
                 id="post-text"
                 onChange={(e) => setText(e.target.value)}
                 value={text}
-                className="rounded-l-md w-full"
+                className="w-full rounded-l-md"
               />
               <button
                 type="submit"
-                className="flex px-4 items-center bg-violet-700 text-white rounded-r-md justify-center w-24"
+                className="flex items-center justify-center w-24 px-4 text-white bg-violet-700 rounded-r-md"
                 disabled={loading}
               >
                 {loading ? (
@@ -103,16 +103,19 @@ export default function Home() {
             </div>
           </fieldset>
         </form>
-        <section className="w-full rounded-md py-4 bg-zinc-100 container max-w-xl mt-4 border border-zinc-300 divide-y divide-zinc-300">
+        <section className="container w-full max-w-xl py-4 mt-4 border divide-y rounded-md bg-zinc-100 border-zinc-300 divide-zinc-300">
           {history.map((result) => (
-            <div className="w-full px-4 py-2">
+            <div className="w-full px-4 py-2" key={result.id}>
               <p>
                 {result.hasMatch ? "❌" : "✅"}&nbsp;
                 <span className="font-semibold">{result.text}</span>
               </p>
               <div className="divide-y divide-zinc-300">
                 {result.probabilities.map((prob) => (
-                  <div className="px-2 py-1 flex items-center gap-2 text-sm">
+                  <div
+                    className="flex items-center gap-2 px-2 py-1 text-sm"
+                    key={prob.id}
+                  >
                     <p
                       className={`w-full ${prob.match ? "font-semibold" : ""}`}
                     >
