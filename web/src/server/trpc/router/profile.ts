@@ -3,6 +3,7 @@ import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 import type { Config } from "unique-names-generator";
 import { z } from "zod";
+import { HANDLE_REGEX_CLEAN } from "../../../utils/profiles";
 
 export const nameConfig: Config = {
   dictionaries: [
@@ -65,19 +66,15 @@ export const profileRouter = router({
   checkProfileHandle: protectedProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
-      const userProfile = await ctx.prisma.profile.findFirst({
-        where: {
-          id: ctx.session.user.id,
-        },
-      });
       const handleProfile = await ctx.prisma.profile.findFirst({
         where: {
-          handle: input.toLowerCase(),
+          normalizedHandle: input.toLowerCase(),
         },
       });
-      if (handleProfile && userProfile && handleProfile.id === userProfile.id)
-        return true;
-      else return !handleProfile;
+      return (
+        (!!!handleProfile || handleProfile.id === ctx.session.user.id) &&
+        HANDLE_REGEX_CLEAN.test(input)
+      );
     }),
   getProfile: protectedProcedure.query(async ({ ctx }) => {
     const profile = await ctx.prisma.profile.findFirst({
@@ -86,16 +83,15 @@ export const profileRouter = router({
       },
     });
 
-    if (profile) {
-      return profile;
-    } else {
+    if (profile) return profile;
+    else {
+      const handle = uniqueNamesGenerator(nameConfig).toLowerCase();
       const result = await ctx.prisma.profile.create({
         data: {
           id: ctx.session.user.id,
           name: "",
-          handle: uniqueNamesGenerator(nameConfig)
-            .toLowerCase()
-            .replaceAll("_", "-"),
+          handle,
+          normalizedHandle: handle,
         },
       });
       return result;
@@ -126,7 +122,7 @@ export const profileRouter = router({
     .input(
       z.strictObject({
         name: z.string().max(50),
-        handle: z.string().max(24),
+        handle: z.string().max(24).regex(HANDLE_REGEX_CLEAN),
         biography: z.string().max(300),
         birthdate: z.string().max(10),
         location: z.string().max(50),
@@ -148,6 +144,14 @@ export const profileRouter = router({
             ...input,
             canChangeHandle:
               input.handle === oldProfile.handle && oldProfile.canChangeHandle,
+            handle:
+              oldProfile.canChangeHandle && input.handle
+                ? input.handle.trim()
+                : oldProfile.handle,
+            normalizedHandle:
+              oldProfile.canChangeHandle && input.handle
+                ? input.handle.trim().toLowerCase()
+                : oldProfile.normalizedHandle,
           },
         });
         return profile;

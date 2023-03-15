@@ -4,6 +4,7 @@ import FeatherIcon from "feather-icons-react";
 import { Fragment } from "react";
 import atoms from "../atoms/";
 import { useAtom } from "jotai";
+import { createPortal } from "react-dom";
 
 const DialogModal: React.FC<{
   name: string;
@@ -13,8 +14,8 @@ const DialogModal: React.FC<{
   position?: "top" | "middle" | "bottom";
 }> = ({ children, isDismissable = true, name, position = "middle", title }) => {
   const [modal, setModal] = useAtom(atoms.modal);
-
-  return (
+  if (typeof window === "undefined") return null;
+  return createPortal(
     <>
       <Transition appear show={modal === name} as={Fragment}>
         <Dialog
@@ -35,9 +36,11 @@ const DialogModal: React.FC<{
           </Transition.Child>
 
           <div
-            className={`fixed inset-x-0 overflow-y-auto ${position === "top" ? "top-4" : ""
-              } ${position === "middle" ? "inset-y-0" : ""} ${position === "bottom" ? "bottom-4" : ""
-              }`}
+            className={`fixed inset-x-0 overflow-y-auto ${
+              position === "top" ? "top-4" : ""
+            } ${position === "middle" ? "inset-y-0" : ""} ${
+              position === "bottom" ? "bottom-4" : ""
+            }`}
           >
             <div className="flex min-h-full items-center justify-center p-4 text-center">
               <Transition.Child
@@ -80,7 +83,8 @@ const DialogModal: React.FC<{
           </div>
         </Dialog>
       </Transition>
-    </>
+    </>,
+    document.body
   );
 };
 

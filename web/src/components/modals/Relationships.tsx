@@ -9,6 +9,11 @@ import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
 
+export enum KEY_OPTIONS {
+  follower = "FOLLOWER",
+  following = "FOLLOWING",
+}
+
 const ProfileItem: React.FC<{
   onClick: () => void;
   profile: {
@@ -51,7 +56,7 @@ const RelationshipModal: React.FC<{
     id: string;
     name: string;
   };
-  type: "FOLLOWER" | "FOLLOWING";
+  type: KEY_OPTIONS;
 }> = ({ profile, type }) => {
   const modalKey =
     type === "FOLLOWER" ? "profile-followers" : "profile-following";
@@ -78,8 +83,9 @@ const RelationshipModal: React.FC<{
 
   return (
     <DialogModal
-      title={`${profile.name} ${type === "FOLLOWER" ? "Followers" : "Following"
-        }`}
+      title={`${profile.name} ${
+        type === "FOLLOWER" ? "Followers" : "Following"
+      }`}
       name={modalKey}
     >
       <section className="h-full divide-y divide-zinc-300 overflow-y-auto dark:divide-zinc-600">
@@ -89,28 +95,42 @@ const RelationshipModal: React.FC<{
           </div>
         ) : (
           <>
-            {relationships.map((relationship) => (
-              <ProfileItem
-                onClick={() => setModal(undefined)}
-                profile={
-                  type === "FOLLOWER"
-                    ? {
-                      avatarUrl:
-                        relationship.follower.avatarUrl ??
-                        "https://source.unsplash.com/random/600×600/?cat",
-                      handle: relationship.follower.handle,
-                      name: relationship.follower.name,
+            {relationships.length ? (
+              <>
+                {relationships.map((relationship) => (
+                  <ProfileItem
+                    key={relationship.id}
+                    onClick={() => setModal(undefined)}
+                    profile={
+                      type === "FOLLOWER"
+                        ? {
+                            avatarUrl:
+                              relationship.follower.avatarUrl ??
+                              "https://source.unsplash.com/random/600×600/?cat",
+                            handle: relationship.follower.handle,
+                            name: relationship.follower.name,
+                          }
+                        : {
+                            avatarUrl:
+                              relationship.following.avatarUrl ??
+                              "https://source.unsplash.com/random/600×600/?cat",
+                            handle: relationship.following.handle,
+                            name: relationship.following.name,
+                          }
                     }
-                    : {
-                      avatarUrl:
-                        relationship.following.avatarUrl ??
-                        "https://source.unsplash.com/random/600×600/?cat",
-                      handle: relationship.following.handle,
-                      name: relationship.following.name,
-                    }
-                }
-              />
-            ))}
+                  />
+                ))}
+              </>
+            ) : (
+              <div className="">
+                <h4 className="text-lg font-bold text-black dark:text-white md:text-2xl">
+                  Uh oh! We didn&apos;t find anyone here
+                </h4>
+                <h5 className="font-medium text-zinc-700 dark:text-zinc-400 md:text-lg">
+                  It seems like someone has room for friends
+                </h5>
+              </div>
+            )}
           </>
         )}
       </section>

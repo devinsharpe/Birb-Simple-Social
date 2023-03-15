@@ -9,6 +9,8 @@ import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSetAtom } from "jotai";
 
+export const KEY = "search";
+
 const ProfileSearchItem: React.FC<{
   onClick: (handle: string) => void;
   profile: Profile;
@@ -69,7 +71,7 @@ const SearchModal = () => {
   }, [value]);
 
   return (
-    <DialogModal name="search" title="Find your friends on Birb" position="top">
+    <DialogModal name={KEY} title="Find your friends on Birb" position="top">
       <>
         <div className="relative">
           <span className="absolute left-3 top-0 bottom-0 flex items-center">

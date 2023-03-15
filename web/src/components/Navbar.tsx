@@ -4,10 +4,12 @@ import { useAtomValue, useSetAtom } from "jotai";
 import DialogMenu from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import LoginModal from "./modals/Login";
 import React from "react";
 import atoms from "../atoms";
 import { useRouter } from "next/router";
+import { KEY as SEARCH_KEY } from "./modals/Search";
+import { KEY as WELCOME_KEY } from "./modals/Welcome";
+import { KEY as LOGIN_KEY } from "./modals/Login";
 
 const Navbar = () => {
   const profile = useAtomValue(atoms.profile);
@@ -30,7 +32,7 @@ const Navbar = () => {
             <button
               type="button"
               className="rounded-md p-2"
-              onClick={() => setModal("search")}
+              onClick={() => setModal(SEARCH_KEY)}
             >
               <FeatherIcon icon="search" size={24} />
             </button>
@@ -73,7 +75,7 @@ const Navbar = () => {
                   {
                     icon: "help-circle",
                     text: "About Birb",
-                    onClick: () => setModal("welcome"),
+                    onClick: () => setModal(WELCOME_KEY),
                   },
                   {
                     icon:
@@ -83,7 +85,7 @@ const Navbar = () => {
                     onClick:
                       session.status === "authenticated"
                         ? signOut
-                        : () => setModal("login"),
+                        : () => setModal(LOGIN_KEY),
                   },
                 ],
               ]}
@@ -93,7 +95,6 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <LoginModal />
     </>
   );
 };

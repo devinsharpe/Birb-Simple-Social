@@ -7,6 +7,8 @@ import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
 
+export const KEY = "profile-edit";
+
 const ProfileModal = () => {
   const [profileAtom, setProfileAtom] = useAtom(atoms.profile);
   const [profile, setProfile] = useState<Profile | undefined>(undefined);
@@ -41,7 +43,7 @@ const ProfileModal = () => {
       {profile && (
         <DialogModal
           isDismissable={!profile.canChangeHandle}
-          name="profile-edit"
+          name={KEY}
           title={profile.canChangeHandle ? "Create Profile" : "Edit Profile"}
         >
           <ProfileForm

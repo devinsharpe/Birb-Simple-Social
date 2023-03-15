@@ -3,12 +3,15 @@ import { useAtomValue, useSetAtom } from "jotai";
 import DialogModal from "../DialogModal";
 import React from "react";
 import atoms from "../../atoms";
+import { KEY as PROFILE_KEY } from "./Profile";
+
+export const KEY = "welcome";
 
 const WelcomeModal = () => {
   const profile = useAtomValue(atoms.profile);
   const setModal = useSetAtom(atoms.modal);
   return (
-    <DialogModal name="welcome" title="Welcome to Birb">
+    <DialogModal name={KEY} title="Welcome to Birb">
       <section className="space-y-2">
         <h3 className="text-xl font-bold text-zinc-600 dark:text-zinc-400 md:text-2xl">
           What&apos;s different
@@ -50,7 +53,7 @@ const WelcomeModal = () => {
             className="relative mt-4 rounded-full bg-zinc-800 px-10 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
             onClick={() =>
               setModal(
-                profile && profile.canChangeHandle ? "profile-edit" : undefined
+                profile && profile.canChangeHandle ? PROFILE_KEY : undefined
               )
             }
           >

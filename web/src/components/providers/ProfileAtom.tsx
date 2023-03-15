@@ -14,7 +14,6 @@ const ProfileAtomProvider = () => {
 
   useEffect(() => {
     setProfile(profile.data || undefined);
-    if (profile.data?.canChangeHandle) setModal("welcome");
   }, [profile, setModal, setProfile]);
 
   return null;
