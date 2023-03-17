@@ -1,10 +1,10 @@
+import { PostType, RelationshipType } from "@prisma/client";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 import type { Config } from "unique-names-generator";
 import { HANDLE_REGEX } from "../../../utils/profiles";
 import type { ILoremIpsumParams } from "lorem-ipsum";
-import { PostType } from "@prisma/client";
 import { examplePosts } from "../../../utils/posts";
 import { loremIpsum } from "lorem-ipsum";
 import { z } from "zod";
@@ -196,5 +196,37 @@ export const postsRouter = router({
         likedByUser: Boolean(Math.round(Math.random())),
       };
     });
+  }),
+  getTimeline: protectedProcedure.mutation(async ({ ctx }) => {
+    const ids = (
+      await ctx.prisma.profileRelationship.findMany({
+        select: {
+          followingId: true,
+        },
+        where: {
+          followerId: ctx.session.user.id,
+          type: RelationshipType.FOLLOW,
+        },
+      })
+    ).map((profile) => profile.followingId);
+    const posts = await ctx.prisma.post.findMany({
+      where: {
+        profileId: {
+          in: [...ids, ctx.session.user.id],
+        },
+      },
+      include: {
+        mentions: {
+          include: {
+            profile: true,
+          },
+        },
+        postedBy: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return posts;
   }),
 });
