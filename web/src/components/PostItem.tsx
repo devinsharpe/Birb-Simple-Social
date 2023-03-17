@@ -112,15 +112,6 @@ const PostItem: React.FC<{
                 {post.postedBy.name}
               </Link>
             </h4>
-            {post.location && (
-              <div className="flex items-center">
-                <p className="flex items-center px-2 py-1 space-x-1 text-xs leading-none text-opacity-50 rounded whitespace-nowrap bg-zinc-200 dark:bg-zinc-700">
-                  <FeatherIcon icon="map-pin" size={12} />
-                  <span>{post.location}</span>
-                </p>
-                <div className="w-full"></div>
-              </div>
-            )}
           </div>
           <h5 className="text-sm text-zinc-600 dark:text-zinc-400">
             {`${age.value}${age.unit}`}
@@ -174,6 +165,12 @@ const PostItem: React.FC<{
           </div>
         )} */}
         <p className="max-w-xl" dangerouslySetInnerHTML={{ __html: html }}></p>
+        {post.location && (
+          <div className="flex items-center gap-2 pt-4 text-sm leading-none text-opacity-50 border-t whitespace-nowrap border-zinc-300 text-zinc-800/75 dark:border-zinc-600 dark:text-white/75">
+            <FeatherIcon icon="map-pin" size={16} />
+            <p>{post.location}</p>
+          </div>
+        )}
       </div>
       <div className="flex items-center pl-12 space-x-6">
         <button type="button" className="p-2 rounded">
