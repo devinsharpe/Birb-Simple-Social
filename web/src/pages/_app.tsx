@@ -51,7 +51,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <PostModal />
             <button
               type="button"
-              className="fixed right-8 bottom-8 z-[1] flex items-center justify-center rounded-full bg-violet-600 p-4 text-white shadow-md shadow-violet-700/50 transition-colors duration-100 hover:bg-violet-700 focus:bg-violet-700"
+              className="fixed z-10 flex items-center justify-center p-4 text-white transition-colors duration-100 rounded-full shadow-md right-8 bottom-8 bg-violet-600 shadow-violet-700/50 hover:bg-violet-700 focus:bg-violet-700"
               onClick={() => setModal(POST_KEY)}
             >
               <FeatherIcon icon="edit-3" size={24} />

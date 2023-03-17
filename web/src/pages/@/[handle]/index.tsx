@@ -1,5 +1,7 @@
 import type { GetServerSideProps, NextPage } from "next";
 import type {
+  Post,
+  PostMention,
   Profile,
   ProfileRelationship,
   RelationshipRequest,
@@ -7,23 +9,30 @@ import type {
 import React, { useCallback, useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 
-import DialogConfirm from "../../components/DialogConfirm";
+import DialogConfirm from "../../../components/DialogConfirm";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import LoginPrompt from "../../components/LoginPrompt";
-import Navbar from "../../components/Navbar";
+import LoginPrompt from "../../../components/LoginPrompt";
+import Navbar from "../../../components/Navbar";
 import RelationshipModal, {
   KEY_OPTIONS,
-} from "../../components/modals/Relationships";
-import atoms from "../../atoms";
-import { prisma } from "../../server/db/client";
-import { trpc } from "../../utils/trpc";
+} from "../../../components/modals/Relationships";
+import atoms from "../../../atoms";
+import { prisma } from "../../../server/db/client";
+import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { KEY as PROFILE_KEY } from "../../components/modals/Profile";
+import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
+import PostItem from "../../../components/PostItem";
 
 interface PageProps {
   handle: string;
+  posts: (Post & {
+    mentions: (PostMention & {
+      profile: Profile;
+    })[];
+    postedBy: Profile;
+  })[];
   profile: Profile | null;
 }
 
@@ -48,7 +57,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
+        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-500"
         onClick={onEditClick}
       >
         <FeatherIcon icon="user" size={20} />
@@ -59,7 +68,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
+        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-600 hover:bg-zinc-700 dark:hover:bg-zinc-500"
         onClick={onUnfollow}
       >
         <FeatherIcon icon="zap" size={20} />
@@ -70,7 +79,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
+        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-600 hover:bg-zinc-700 dark:hover:bg-zinc-500"
         onClick={onCancel}
       >
         <FeatherIcon icon="clock" size={20} />
@@ -81,7 +90,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
+        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-500"
         onClick={onFollow}
       >
         <FeatherIcon icon="zap" size={20} />
@@ -97,12 +106,12 @@ const BlankHeader: React.FC<{
   const router = useRouter();
   return (
     <>
-      <div className="relative mx-auto mb-16 pt-4">
+      <div className="relative pt-4 mx-auto mb-16">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <Image
             src="https://source.unsplash.com/random/1920×1080/?cat"
             alt={`Missing profile's header image`}
-            className="h-full w-full object-cover object-center grayscale"
+            className="object-cover object-center w-full h-full grayscale"
             width={1080}
             height={2520}
           />
@@ -112,30 +121,30 @@ const BlankHeader: React.FC<{
           <Image
             src="https://source.unsplash.com/random/600×600/?cat"
             alt="Missing profile's avatar image"
-            className="h-full w-full object-cover object-center grayscale"
+            className="object-cover object-center w-full h-full grayscale"
             width={256}
             height={256}
           />
         </div>
       </div>
 
-      <div className="flex items-center justify-between py-2 px-4 text-zinc-800 dark:text-zinc-200 md:-mt-12">
+      <div className="flex items-center justify-between px-4 py-2 text-zinc-800 dark:text-zinc-200 md:-mt-12">
         <div>
           <h2 className="text-2xl font-medium">@{handle}</h2>
         </div>
       </div>
 
       <div className="pt-12">
-        <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+        <h4 className="text-2xl font-bold text-center text-black dark:text-white md:text-4xl">
           This account doesn&apos;t exist
         </h4>
-        <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
+        <h5 className="text-xl font-medium text-center text-zinc-700 dark:text-zinc-400 md:text-2xl">
           It seems like not everyone is on Birb yet
         </h5>
         <div className="flex items-center justify-center pt-12">
           <button
             type="button"
-            className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+            className="relative flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
             onClick={() => router.push("/")}
           >
             <FeatherIcon icon="home" />
@@ -147,7 +156,7 @@ const BlankHeader: React.FC<{
   );
 };
 
-const formatUrl = (url: string) => {
+export const formatUrl = (url: string) => {
   const cleanUrl = url
     .replaceAll("www.", "")
     .replaceAll("https://", "")
@@ -182,7 +191,7 @@ const ProfileHeader: React.FC<{
 }) => {
   return (
     <>
-      <div className="relative mx-auto mb-16 pt-4">
+      <div className="relative pt-4 mx-auto mb-16">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <Image
             src={
@@ -190,7 +199,7 @@ const ProfileHeader: React.FC<{
               "https://source.unsplash.com/random/600×600/?cat"
             }
             alt={`${profile.name}'s header image`}
-            className="h-full w-full object-cover object-center"
+            className="object-cover object-center w-full h-full"
             width={2520}
             height={1080}
           />
@@ -203,14 +212,14 @@ const ProfileHeader: React.FC<{
               "https://source.unsplash.com/random/600×600/?cat"
             }
             alt={`${profile.name}'s avatar image`}
-            className="h-full w-full object-cover object-center"
+            className="object-cover object-center w-full h-full"
             width={256}
             height={256}
           />
         </div>
       </div>
 
-      <div className="flex items-center justify-between py-2 px-4 text-zinc-800 dark:text-zinc-200 md:-mt-12">
+      <div className="flex items-center justify-between px-4 py-2 text-zinc-800 dark:text-zinc-200 md:-mt-12">
         <div>
           <h2 className="text-2xl font-medium">{profile.name}</h2>
           <h3 className="font-light text-zinc-600 dark:text-zinc-400">
@@ -267,7 +276,7 @@ const ProfileHeader: React.FC<{
         </div>
       )}
 
-      <div className="mt-4 flex w-full items-center justify-around divide-x divide-zinc-200 px-2 dark:divide-zinc-700">
+      <div className="flex items-center justify-around w-full px-2 mt-4 divide-x divide-zinc-200 dark:divide-zinc-700">
         <div className="w-full p-2 text-center">
           <h4 className="font-semibold text-black dark:text-white">
             {profile.postCount}
@@ -277,7 +286,7 @@ const ProfileHeader: React.FC<{
         <button
           type="button"
           aria-label="View following"
-          className="group w-full cursor-pointer p-2 text-center"
+          className="w-full p-2 text-center cursor-pointer group"
           onClick={() => onFollowingClick()}
           disabled={sessionStatus !== "authenticated"}
         >
@@ -291,7 +300,7 @@ const ProfileHeader: React.FC<{
         <button
           type="button"
           aria-label="View followers"
-          className="group w-full cursor-pointer p-2 text-center"
+          className="w-full p-2 text-center cursor-pointer group"
           onClick={() => onFollowerClick()}
           disabled={sessionStatus !== "authenticated"}
         >
@@ -309,7 +318,8 @@ const ProfileHeader: React.FC<{
 
 const UNFOLLOW_KEY = "profile-confirm-unfollow";
 
-const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
+const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
+  const router = useRouter();
   const session = useSession();
   const userProfile = useAtomValue(atoms.profile);
   const setModal = useSetAtom(atoms.modal);
@@ -388,10 +398,10 @@ const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
             onConfirm={() => handleUnfollow()}
             onDeny={() => setModal(undefined)}
           >
-            <fieldset className="rounded-mg flex w-full items-center gap-2 rounded-md py-2">
+            <fieldset className="flex items-center w-full gap-2 py-2 rounded-md rounded-mg">
               <input
                 type="checkbox"
-                className="h-6 w-6 rounded-md bg-zinc-200 text-violet-400  dark:bg-zinc-600"
+                className="w-6 h-6 rounded-md bg-zinc-200 text-violet-400 dark:bg-zinc-600"
                 id="force-profile-unfollow"
                 checked={forceUnfollow}
                 onChange={(e) => setForceUnfollow(e.target.checked)}
@@ -406,21 +416,34 @@ const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
           </DialogConfirm>
         </>
       )}
-      <section className="hide-scrollbar container mx-auto h-screen max-w-2xl overflow-y-scroll py-16 ">
+      <section className="max-w-2xl py-16 mx-auto overflow-y-scroll hide-scrollbar ">
         {profile ? (
-          <ProfileHeader
-            onCancelClick={handleCancelClick}
-            onEditClick={() => setModal(PROFILE_KEY)}
-            onFollowClick={handleFollowClick}
-            onFollowerClick={() => setModal("profile-followers")}
-            onFollowingClick={() => setModal("profile-following")}
-            onUnfollowClick={() => setModal(UNFOLLOW_KEY)}
-            profile={profile}
-            isUser={!!userProfile && profile.id === userProfile.id}
-            isFollowing={!!relationship}
-            hasRequest={!!request}
-            sessionStatus={session.status}
-          />
+          <>
+            <ProfileHeader
+              onCancelClick={handleCancelClick}
+              onEditClick={() => setModal(PROFILE_KEY)}
+              onFollowClick={handleFollowClick}
+              onFollowerClick={() => setModal("profile-followers")}
+              onFollowingClick={() => setModal("profile-following")}
+              onUnfollowClick={() => setModal(UNFOLLOW_KEY)}
+              profile={profile}
+              isUser={!!userProfile && profile.id === userProfile.id}
+              isFollowing={!!relationship}
+              hasRequest={!!request}
+              sessionStatus={session.status}
+            />
+            <section className="container max-w-2xl pt-4 mx-auto divide-y divide-zinc-300 dark:divide-zinc-600">
+              {posts.map((post) => (
+                <PostItem
+                  onClick={(p) =>
+                    router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
+                  }
+                  post={post}
+                  key={post.id}
+                />
+              ))}
+            </section>
+          </>
         ) : (
           <BlankHeader handle={handle} />
         )}
@@ -435,6 +458,12 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context
 ) => {
   let profile: Profile | null = null;
+  let posts: (Post & {
+    mentions: (PostMention & {
+      profile: Profile;
+    })[];
+    postedBy: Profile;
+  })[] = [];
   if (context.params && context.params?.handle) {
     profile = await prisma.profile.findFirst({
       where: {
@@ -442,10 +471,34 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       },
     });
   }
+  if (profile) {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    posts = await prisma.post.findMany({
+      where: {
+        profileId: profile.id,
+        createdAt: {
+          gt: date,
+        },
+      },
+      include: {
+        postedBy: true,
+        mentions: {
+          include: {
+            profile: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }
   return {
     props: {
       handle: context.params?.handle as string,
       profile,
+      posts,
     },
   };
 };
