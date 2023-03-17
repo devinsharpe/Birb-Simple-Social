@@ -374,7 +374,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
       setRequest(null);
     }
     setModal(undefined);
-  }, [relationship, profile]);
+  }, [relationship, profile, forceUnfollow]);
 
   return (
     <>
