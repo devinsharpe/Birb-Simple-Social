@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import LoginPrompt from "../components/LoginPrompt";
 import Hero from "../components/Hero";
 import DemoPosts from "../components/DemoPosts";
+import Timeline from "../components/Timeline";
 
 const Home: NextPage = () => {
   const session = useSession();
@@ -19,13 +20,14 @@ const Home: NextPage = () => {
         />
       </Head>
 
-      <section className="hide-scrollbar container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll py-16 dark:divide-zinc-600">
+      <section className="container h-screen max-w-2xl py-16 mx-auto overflow-y-scroll divide-y hide-scrollbar divide-zinc-300 dark:divide-zinc-600">
         {session.status === "unauthenticated" && (
           <>
             <Hero />
             <DemoPosts />
           </>
         )}
+        {session.status === "authenticated" && <Timeline />}
       </section>
       <Navbar />
       {session.status === "unauthenticated" && <LoginPrompt />}
