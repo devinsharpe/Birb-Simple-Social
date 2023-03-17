@@ -11,27 +11,36 @@ import { KEY as SEARCH_KEY } from "./modals/Search";
 import { KEY as WELCOME_KEY } from "./modals/Welcome";
 import { KEY as LOGIN_KEY } from "./modals/Login";
 
-const Navbar = () => {
+interface NavbarProps {
+  brandEl?: JSX.Element;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
   const profile = useAtomValue(atoms.profile);
   const router = useRouter();
   const setModal = useSetAtom(atoms.modal);
   const session = useSession();
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-10 flex h-10 w-full justify-center bg-white/50 py-8 backdrop-blur-md dark:bg-zinc-900/50">
+      <nav className="fixed inset-x-0 top-0 z-10 flex justify-center w-full h-10 py-8 bg-white/50 backdrop-blur-md dark:bg-zinc-900/50">
         <div className="container flex items-center justify-between gap-4 px-4">
-          <Image
-            src={"/icons/icon.svg"}
-            fill={false}
-            width={36}
-            height={36}
-            alt="Birb Logo"
-            priority
-          />
+          {brandEl ? (
+            <>{brandEl}</>
+          ) : (
+            <Image
+              src={"/icons/icon.svg"}
+              fill={false}
+              width={36}
+              height={36}
+              alt="Birb Logo"
+              priority
+            />
+          )}
+
           <div className="flex items-center gap-4 ">
             <button
               type="button"
-              className="rounded-md p-2"
+              className="p-2 rounded-md"
               onClick={() => setModal(SEARCH_KEY)}
             >
               <FeatherIcon icon="search" size={24} />
