@@ -7,6 +7,7 @@ import React, {
 } from "react";
 
 import FeatherIcon from "feather-icons-react";
+import Image from "next/image";
 import { Profile } from "@prisma/client";
 import TextInput from "../inputs/Text";
 import { trpc } from "../../utils/trpc";
@@ -78,17 +79,19 @@ const ProfileForm: React.FC<{
       >
         <div className="relative mb-16">
           <div className="relative aspect-[7/3] w-full overflow-hidden rounded-md ">
-            <img
+            <Image
               src={
                 profile.headerUrl ||
                 "https //source.unsplash.com/random/600×600/?cat"
               }
+              width={2520}
+              height={1080}
               alt={`${profile.name}'s header image`}
-              className="h-full w-full object-cover object-center"
+              className="object-cover object-center w-full h-full"
             />
             <button
               type="button"
-              className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-zinc-900 bg-opacity-50 text-white"
+              className="absolute flex items-center justify-center w-12 h-12 text-white transform -translate-x-1/2 -translate-y-1/2 bg-opacity-50 rounded-full top-1/2 left-1/2 bg-zinc-900"
               onClick={(e) => handleClick(e, "headerUrl")}
             >
               {currentPicKey === "headerUrl" ? (
@@ -100,17 +103,19 @@ const ProfileForm: React.FC<{
           </div>
 
           <div className="absolute left-4 -bottom-12 z-[1] h-28 w-28 overflow-hidden rounded-full border-4 border-white object-center dark:border-zinc-800">
-            <img
+            <Image
               src={
                 profile.avatarUrl ||
                 "https //source.unsplash.com/random/600×600/?cat"
               }
+              height={128}
+              width={128}
               alt={`${profile.name}'s avatar image`}
-              className="h-full w-full object-cover object-center"
+              className="object-cover object-center w-full h-full"
             />
             <button
               type="button"
-              className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-y-1/2 -translate-x-1/2 transform items-center justify-center rounded-full bg-zinc-900 bg-opacity-50 text-white"
+              className="absolute flex items-center justify-center w-12 h-12 text-white transform -translate-x-1/2 -translate-y-1/2 bg-opacity-50 rounded-full top-1/2 left-1/2 bg-zinc-900"
               onClick={(e) => handleClick(e, "avatarUrl")}
             >
               {currentPicKey === "avatarUrl" ? (
@@ -189,14 +194,14 @@ const ProfileForm: React.FC<{
         <div className="flex items-center justify-center">
           <button
             type="submit"
-            className="relative rounded-full bg-zinc-800 px-10 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+            className="relative px-10 py-2 text-white rounded-full bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
           >
             <span className={`${isLoading && "text-transparent"}`}>Save</span>
             {isLoading && (
-              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
+              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 ">
                 <FeatherIcon
                   icon="loader"
-                  className="animate-spin text-white dark:text-zinc-800"
+                  className="text-white animate-spin dark:text-zinc-800"
                   size={16}
                 />
               </span>
