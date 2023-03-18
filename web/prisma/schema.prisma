@@ -62,6 +62,8 @@ model Profile {
   posts             Post[]                @relation("profilePosts")
   postMentions      PostMention[]         @relation("profileMentions")
   postReactions     PostReaction[]        @relation("postReactions")
+  comments          Comment[]             @relation("userComments")
+  commentLikes      CommentLike[]         @relation("userCommentLikes")
 }
 
 enum RequestStatus {
@@ -141,6 +143,7 @@ model Post {
   mentions  PostMention[]  @relation("mentions")
   postedBy  Profile        @relation("profilePosts", fields: [profileId], references: [id], onDelete: Cascade)
   reactions PostReaction[] @relation("reactions")
+  comments  Comment[]      @relation("comments")
 }
 
 model PostMention {
@@ -150,6 +153,36 @@ model PostMention {
 
   post    Post    @relation("mentions", fields: [postId], references: [id], onDelete: Cascade)
   profile Profile @relation("profileMentions", fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        String  @id @default(cuid())
+  postId    String
+  profileId String
+  text      String
+  likeCount Int     @default(0)
+  commentId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  parent   Comment?      @relation("children", fields: [commentId], references: [id], onDelete: Cascade)
+  post     Post          @relation("comments", fields: [postId], references: [id], onDelete: Cascade)
+  postedBy Profile       @relation("userComments", fields: [profileId], references: [id], onDelete: Cascade)
+  likes    CommentLike[] @relation("likes")
+  children Comment[]     @relation("children")
+}
+
+model CommentLike {
+  id        String @id @default(cuid())
+  commentId String
+  profileId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  comment Comment @relation("likes", fields: [commentId], references: [id], onDelete: Cascade)
+  profile Profile @relation("userCommentLikes", fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 enum Reaction {
