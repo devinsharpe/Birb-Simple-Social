@@ -209,8 +209,13 @@ export const postsRouter = router({
         },
       })
     ).map((profile) => profile.followingId);
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
     const posts = await ctx.prisma.post.findMany({
       where: {
+        createdAt: {
+          gt: date,
+        },
         profileId: {
           in: [...ids, ctx.session.user.id],
         },
