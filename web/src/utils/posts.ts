@@ -139,3 +139,31 @@ export const examplePosts = [
     text: "Getting a new tattoo is a commitment, but it's also a beautiful way to honor something or someone that's important to you. I can't wait to wear mine with pride.",
   },
 ];
+
+const ONE_HOUR = 3600;
+const ONE_DAY = ONE_HOUR * 24;
+
+const getTimestamp = (date: Date) => {
+  return Math.floor(date.getTime() / 1000);
+};
+
+export const getAge = (date: Date) => {
+  const today = getTimestamp(new Date());
+  const diff = today - getTimestamp(date);
+  if (diff < ONE_HOUR) {
+    return {
+      unit: "m",
+      value: Math.floor(diff / 60),
+    };
+  } else if (diff < ONE_DAY) {
+    return {
+      unit: "h",
+      value: Math.floor(diff / ONE_HOUR),
+    };
+  } else {
+    return {
+      unit: "d",
+      value: Math.floor(diff / ONE_DAY),
+    };
+  }
+};
