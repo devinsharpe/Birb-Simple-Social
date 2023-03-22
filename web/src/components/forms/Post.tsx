@@ -4,18 +4,17 @@ import { SimplePost } from "../modals/Post";
 
 export const HANDLE_REGEX_GLOBAL = /(^|[^@\w])@(\w{1,24})\b/g;
 
-const PostEditor: React.FC<{
+export const PostEditor: React.FC<{
   onChange: (text: string) => void;
+  placeholder?: string;
   value: string;
-}> = ({ onChange, value }) => {
+}> = ({ onChange, placeholder = "What's on your mind?", value }) => {
   const [height, setHeight] = useState(64);
-  const [html, setHtml] = useState("");
   const postDisplay = useRef<HTMLDivElement | null>(null);
 
-  const handleInput = useCallback((val: string) => {
-    onChange(val);
-    const handles = val.match(HANDLE_REGEX_GLOBAL);
-    let result = val;
+  const html = useMemo(() => {
+    const handles = value.match(HANDLE_REGEX_GLOBAL);
+    let result = value;
     if (result.length > 300) {
       result =
         result.slice(0, 300) +
@@ -31,8 +30,8 @@ const PostEditor: React.FC<{
         );
       });
     }
-    setHtml(`<p>${result}</p>`);
-  }, []);
+    return result;
+  }, [value]);
 
   return (
     <div
@@ -43,7 +42,7 @@ const PostEditor: React.FC<{
     >
       {value.length === 0 && (
         <p className="pointer-events-none absolute inset-0 z-[1] py-2 px-0 opacity-50">
-          What's on your mind?
+          {placeholder}
         </p>
       )}
       <div
@@ -55,7 +54,9 @@ const PostEditor: React.FC<{
       ></div>
       <textarea
         className="absolute inset-0 z-[2] h-full w-full resize-none overflow-hidden border-none bg-transparent py-2 px-0 text-white/0 caret-violet-700 outline-none dark:caret-violet-200"
-        onChange={(e) => handleInput(e.target.value)}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
         onKeyUp={() => {
           postDisplay.current
             ? setHeight(postDisplay.current.scrollHeight)

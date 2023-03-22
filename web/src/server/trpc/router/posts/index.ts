@@ -1,11 +1,11 @@
 import { PostType, RelationshipType } from "@prisma/client";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../../trpc";
 
 import type { Config } from "unique-names-generator";
-import { HANDLE_REGEX } from "../../../utils/profiles";
+import { HANDLE_REGEX } from "../../../../utils/profiles";
 import type { ILoremIpsumParams } from "lorem-ipsum";
-import { examplePosts } from "../../../utils/posts";
+import { examplePosts } from "../../../../utils/posts";
 import { loremIpsum } from "lorem-ipsum";
 import { z } from "zod";
 
@@ -209,13 +209,8 @@ export const postsRouter = router({
         },
       })
     ).map((profile) => profile.followingId);
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
     const posts = await ctx.prisma.post.findMany({
       where: {
-        createdAt: {
-          gt: date,
-        },
         profileId: {
           in: [...ids, ctx.session.user.id],
         },

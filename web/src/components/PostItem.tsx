@@ -7,15 +7,9 @@ import { HANDLE_REGEX_GLOBAL } from "./forms/Post";
 import Image from "next/image";
 import Link from "next/link";
 import { formatUrl } from "../pages/@/[handle]";
+import { getAge } from "../utils/posts";
 
 const LINK_REGEX = /(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+/g;
-
-const ONE_HOUR = 3600;
-const ONE_DAY = ONE_HOUR * 24;
-
-const getTimestamp = (date: Date) => {
-  return Math.floor(date.getTime() / 1000);
-};
 
 const PostItem: React.FC<{
   onClick: (
@@ -30,26 +24,7 @@ const PostItem: React.FC<{
     postedBy: Profile;
   };
 }> = ({ onClick, post }) => {
-  const age = useMemo(() => {
-    const today = getTimestamp(new Date());
-    const diff = today - getTimestamp(post.createdAt);
-    if (diff < ONE_HOUR) {
-      return {
-        unit: "m",
-        value: Math.floor(diff / 60),
-      };
-    } else if (diff < ONE_DAY) {
-      return {
-        unit: "h",
-        value: Math.floor(diff / ONE_HOUR),
-      };
-    } else {
-      return {
-        unit: "d",
-        value: Math.floor(diff / ONE_DAY),
-      };
-    }
-  }, [post.createdAt]);
+  const age = useMemo(() => getAge(post.createdAt), [post.createdAt]);
   const html = useMemo(() => {
     let result = post.text;
     const handles = post.text.match(HANDLE_REGEX_GLOBAL);
@@ -200,9 +175,12 @@ const PostItem: React.FC<{
         >
           <FeatherIcon icon="share-2" size={16} />
         </button>
-        <p className="w-full text-sm text-right cursor-pointer text-zinc-600 hover:underline dark:text-zinc-400">
+        <Link
+          href={`/@/${post.postedBy.handle}/post/${post.id}`}
+          className="w-full text-sm text-right cursor-pointer text-zinc-600 hover:underline dark:text-zinc-400"
+        >
           {post.commentCount} Comment{post.commentCount !== 1 && "s"}
-        </p>
+        </Link>
       </div>
     </article>
   );
