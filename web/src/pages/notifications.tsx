@@ -8,6 +8,7 @@ import Link from "next/link";
 import Navbar from "../components/Navbar";
 import type { NextPage } from "next";
 import { trpc } from "../utils/trpc";
+import { useRouter } from "next/router";
 
 const RequestNotification: React.FC<{
   loading: boolean;
@@ -85,6 +86,7 @@ const NotificationsPage: NextPage = () => {
   const [requests, setRequests] = useState<
     (RelationshipRequest & { follower: Profile })[]
   >([]);
+  const router = useRouter();
   const [page, setPage] = useState(1);
   const listRequests = trpc.requests.list.useMutation();
   const updateRequest = trpc.requests.update.useMutation();
@@ -107,9 +109,9 @@ const NotificationsPage: NextPage = () => {
   return (
     <>
       <section className="hide-scrollbar container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll px-4 pb-16 pt-20 dark:divide-zinc-600">
-        <h2 className="mx-auto max-w-2xl pb-4 text-3xl font-bold text-zinc-700 dark:text-zinc-400 md:text-6xl">
+        {/* <h2 className="mx-auto max-w-2xl pb-4 text-3xl font-bold text-zinc-700 dark:text-zinc-400 md:text-6xl">
           Notifications
-        </h2>
+        </h2> */}
         {requests.map((req) => (
           <RequestNotification
             key={req.id}
@@ -119,7 +121,16 @@ const NotificationsPage: NextPage = () => {
           />
         ))}
       </section>
-      <Navbar />
+      <Navbar
+        brandEl={
+          <div className="flex items-center gap-2">
+            <button type="button" className="p-1" onClick={() => router.back()}>
+              <FeatherIcon icon="arrow-left" size={24} />
+            </button>
+            <h4 className="text-xl font-bold tracking-wide">Notifications</h4>
+          </div>
+        }
+      />
     </>
   );
 };
