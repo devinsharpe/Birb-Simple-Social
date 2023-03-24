@@ -33,13 +33,14 @@ const BlockValue: React.FC<{ block: PostBlock }> = ({ block }) => {
 export const PostDisplay: React.FC<{ blocks: PostBlock[] }> = ({ blocks }) => {
   return (
     <>
-      {blocks.map((block) => {
+      {blocks.map((block, index) => {
         if (block.type === "TEXT") {
-          return <BlockValue block={block} />;
+          return <BlockValue block={block} key={index} />;
         } else if (block.type === "HANDLE") {
           return (
             <Link
               href={block.value.replace(" @", "/@/")}
+              key={index}
               className="text-violet-700 dark:text-violet-400"
             >
               <BlockValue block={block} />
@@ -49,6 +50,7 @@ export const PostDisplay: React.FC<{ blocks: PostBlock[] }> = ({ blocks }) => {
           return (
             <a
               href={formatUrl(block.value).toString()}
+              key={index}
               target="_blank"
               className="text-violet-700 underline dark:text-violet-400"
             >
