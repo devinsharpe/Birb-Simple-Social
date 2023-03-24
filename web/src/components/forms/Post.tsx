@@ -3,6 +3,7 @@ import FeatherIcon from "feather-icons-react";
 import { SimplePost } from "../modals/Post";
 import Link from "next/link";
 import usePostBlocks, { PostBlock } from "../../hooks/postBlocks";
+import { formatUrl } from "../../pages/@/[handle]";
 
 interface PostFormProps {
   post: SimplePost;
@@ -13,6 +14,8 @@ interface PostFormProps {
 }
 
 export const HANDLE_REGEX_GLOBAL = /(^|[^@\w])@(\w{1,24})\b/g;
+export const LINK_REGEX =
+  /(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+/g;
 
 const BlockValue: React.FC<{ block: PostBlock }> = ({ block }) => {
   if (block.overflowIndex !== -1) {
@@ -27,19 +30,9 @@ const BlockValue: React.FC<{ block: PostBlock }> = ({ block }) => {
   } else return <span>{block.value}</span>;
 };
 
-export const PostDisplay = forwardRef<
-  HTMLDivElement,
-  {
-    blocks: PostBlock[];
-  }
->(({ blocks }, ref) => {
+export const PostDisplay: React.FC<{ blocks: PostBlock[] }> = ({ blocks }) => {
   return (
-    <div
-      className="absolute inset-0 z-[1] h-fit min-h-[64px] w-full whitespace-pre-wrap break-words py-2"
-      id="post-editor"
-      key="post-editor-field"
-      ref={ref}
-    >
+    <>
       {blocks.map((block) => {
         if (block.type === "TEXT") {
           return <BlockValue block={block} />;
@@ -52,13 +45,23 @@ export const PostDisplay = forwardRef<
               <BlockValue block={block} />
             </Link>
           );
+        } else if (block.type === "LINK") {
+          return (
+            <a
+              href={formatUrl(block.value).toString()}
+              target="_blank"
+              className="text-violet-700 underline dark:text-violet-400"
+            >
+              <BlockValue block={block} />
+            </a>
+          );
         } else {
           return null;
         }
       })}
-    </div>
+    </>
   );
-});
+};
 
 export const PostEditor: React.FC<{
   onChange: (text: string) => void;
@@ -81,7 +84,14 @@ export const PostEditor: React.FC<{
           {placeholder}
         </p>
       )}
-      <PostDisplay blocks={blocks} ref={postDisplay} />
+      <div
+        className="absolute inset-0 z-[1] h-fit min-h-[64px] w-full whitespace-pre-wrap break-words py-2"
+        id="post-editor"
+        key="post-editor-field"
+        ref={postDisplay}
+      >
+        <PostDisplay blocks={blocks} />
+      </div>
       <textarea
         className="absolute inset-0 z-[2] h-full w-full resize-none overflow-hidden border-none bg-transparent py-2 px-0 text-white/0 caret-violet-700 outline-none dark:caret-violet-200"
         onChange={(e) => {
