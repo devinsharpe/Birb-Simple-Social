@@ -1,4 +1,10 @@
-import type { Comment, Post, PostMention, Profile } from "@prisma/client";
+import {
+  Comment,
+  Post,
+  PostMention,
+  Profile,
+  Visibility,
+} from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
 import React, { useCallback, useState } from "react";
 
@@ -37,10 +43,19 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
       })
     | null
   >(null);
+  const archiveComment = trpc.comments.archive.useMutation();
+  const archivePost = trpc.posts.archive.useMutation();
   const createComment = trpc.comments.create.useMutation();
   const getComment = trpc.comments.get.useMutation();
   const router = useRouter();
   const session = useSession();
+
+  const handleArchive = useCallback(async (id: string) => {
+    if (post) {
+      const archivedPost = await archivePost.mutateAsync({ id: post.id });
+      if (archivedPost) router.push(`/@/${post.postedBy.handle}`);
+    }
+  }, []);
 
   const handleSubmit = useCallback(
     async (val: string) => {
@@ -74,10 +89,15 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
 
   return (
     <>
-      <section className="max-w-2xl min-h-screen py-16 mx-auto overflow-y-scroll hide-scrollbar">
+      <section className="hide-scrollbar mx-auto min-h-screen max-w-2xl overflow-y-scroll py-16">
         {post ? (
           <>
-            <PostItem post={post} onClick={console.log} />
+            <PostItem
+              post={post}
+              onArchive={handleArchive}
+              onClick={console.log}
+              sessionUserId={session.data?.user?.id}
+            />
             <CommentForm
               isLoading={createComment.isLoading}
               onChange={setCommentText}
@@ -87,17 +107,18 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
               value={commentText}
             />
             {post.comments.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-32 opacity-75">
+              <div className="flex h-32 flex-col items-center justify-center opacity-75">
                 <h4 className="text-lg font-semibold">
                   It's all quiet here...
                 </h4>
                 <h5>Just you, {post.postedBy.name}, and Gary 🪿</h5>
               </div>
             )}
-            <div className="overflow-visible divide-y divide-zinc-200 dark:divide-zinc-700">
+            <div className="divide-y divide-zinc-200 overflow-visible dark:divide-zinc-700">
               {post.comments.map((comment) => (
                 <CommentItem
                   comment={comment}
+                  onArchive={(id) => archiveComment.mutateAsync({ id })}
                   onReply={(comment) => setReplyComment(comment)}
                   sessionUserId={session.data?.user?.id}
                 />
@@ -106,16 +127,16 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
           </>
         ) : (
           <div className="flex flex-col items-center gap-4 pt-12">
-            <h4 className="text-2xl font-bold text-center text-black dark:text-white md:text-4xl">
+            <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
               This post doesn&apos;t exist
             </h4>
-            <h5 className="text-xl font-medium text-center text-zinc-700 dark:text-zinc-400 md:text-2xl">
+            <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
               It looks like someone sent you on a wild goose chase 🪿
             </h5>
             <div className="pt-8">
               <Link
                 href="/"
-                className="relative flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+                className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
               >
                 <FeatherIcon icon="home" />
                 <span>Return Home</span>
@@ -151,11 +172,13 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         createdAt: {
           gt: date,
         },
+        visibility: Visibility.ACTIVE,
       },
       include: {
         comments: {
           where: {
             commentId: null,
+            visibility: Visibility.ACTIVE,
           },
           include: {
             children: {

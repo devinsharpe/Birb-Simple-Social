@@ -1,10 +1,11 @@
 import type { GetServerSideProps, NextPage } from "next";
-import type {
+import {
   Post,
   PostMention,
   Profile,
   ProfileRelationship,
   RelationshipRequest,
+  Visibility,
 } from "@prisma/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -57,7 +58,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-500"
+        className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
         onClick={onEditClick}
       >
         <FeatherIcon icon="user" size={20} />
@@ -68,7 +69,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-600 hover:bg-zinc-700 dark:hover:bg-zinc-500"
+        className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
         onClick={onUnfollow}
       >
         <FeatherIcon icon="zap" size={20} />
@@ -79,7 +80,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-600 hover:bg-zinc-700 dark:hover:bg-zinc-500"
+        className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
         onClick={onCancel}
       >
         <FeatherIcon icon="clock" size={20} />
@@ -90,7 +91,7 @@ const ProfileActionButton: React.FC<{
     return (
       <button
         type="button"
-        className="flex items-center gap-2 px-6 py-2 text-white rounded-full bg-violet-600 hover:bg-violet-700 dark:hover:bg-violet-500"
+        className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
         onClick={onFollow}
       >
         <FeatherIcon icon="zap" size={20} />
@@ -106,12 +107,12 @@ const BlankHeader: React.FC<{
   const router = useRouter();
   return (
     <>
-      <div className="relative pt-4 mx-auto mb-16">
+      <div className="relative mx-auto mb-16 pt-4">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <Image
             src="https://source.unsplash.com/random/1920×1080/?cat"
             alt={`Missing profile's header image`}
-            className="object-cover object-center w-full h-full grayscale"
+            className="h-full w-full object-cover object-center grayscale"
             width={1080}
             height={2520}
           />
@@ -121,7 +122,7 @@ const BlankHeader: React.FC<{
           <Image
             src="https://source.unsplash.com/random/600×600/?cat"
             alt="Missing profile's avatar image"
-            className="object-cover object-center w-full h-full grayscale"
+            className="h-full w-full object-cover object-center grayscale"
             width={256}
             height={256}
           />
@@ -135,16 +136,16 @@ const BlankHeader: React.FC<{
       </div>
 
       <div className="pt-12">
-        <h4 className="text-2xl font-bold text-center text-black dark:text-white md:text-4xl">
+        <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
           This account doesn&apos;t exist
         </h4>
-        <h5 className="text-xl font-medium text-center text-zinc-700 dark:text-zinc-400 md:text-2xl">
+        <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
           It seems like not everyone is on Birb yet
         </h5>
         <div className="flex items-center justify-center pt-12">
           <button
             type="button"
-            className="relative flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+            className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
             onClick={() => router.push("/")}
           >
             <FeatherIcon icon="home" />
@@ -191,7 +192,7 @@ const ProfileHeader: React.FC<{
 }) => {
   return (
     <>
-      <div className="relative pt-4 mx-auto mb-16">
+      <div className="relative mx-auto mb-16 pt-4">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <Image
             src={
@@ -199,7 +200,7 @@ const ProfileHeader: React.FC<{
               "https://source.unsplash.com/random/600×600/?cat"
             }
             alt={`${profile.name}'s header image`}
-            className="object-cover object-center w-full h-full"
+            className="h-full w-full object-cover object-center"
             width={2520}
             height={1080}
           />
@@ -212,7 +213,7 @@ const ProfileHeader: React.FC<{
               "https://source.unsplash.com/random/600×600/?cat"
             }
             alt={`${profile.name}'s avatar image`}
-            className="object-cover object-center w-full h-full"
+            className="h-full w-full object-cover object-center"
             width={256}
             height={256}
           />
@@ -276,7 +277,7 @@ const ProfileHeader: React.FC<{
         </div>
       )}
 
-      <div className="flex items-center justify-around w-full px-2 mt-4 divide-x divide-zinc-200 dark:divide-zinc-700">
+      <div className="mt-4 flex w-full items-center justify-around divide-x divide-zinc-200 px-2 dark:divide-zinc-700">
         <div className="w-full p-2 text-center">
           <h4 className="font-semibold text-black dark:text-white">
             {profile.postCount}
@@ -286,7 +287,7 @@ const ProfileHeader: React.FC<{
         <button
           type="button"
           aria-label="View following"
-          className="w-full p-2 text-center cursor-pointer group"
+          className="group w-full cursor-pointer p-2 text-center"
           onClick={() => onFollowingClick()}
           disabled={sessionStatus !== "authenticated"}
         >
@@ -300,7 +301,7 @@ const ProfileHeader: React.FC<{
         <button
           type="button"
           aria-label="View followers"
-          className="w-full p-2 text-center cursor-pointer group"
+          className="group w-full cursor-pointer p-2 text-center"
           onClick={() => onFollowerClick()}
           disabled={sessionStatus !== "authenticated"}
         >
@@ -330,6 +331,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
   );
   const [request, setRequest] = useState<RelationshipRequest | null>(null);
 
+  const archivePost = trpc.posts.archive.useMutation();
   const cancelFollow = trpc.requests.cancel.useMutation();
   const followProfile = trpc.requests.follow.useMutation();
   const getRelationship = trpc.relationships.getRelationship.useMutation();
@@ -345,6 +347,14 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, userProfile]);
+
+  const handleArchive = useCallback(async (id: string) => {
+    const post = posts.find((p) => p.id === id);
+    if (post) {
+      const archivedPost = await archivePost.mutateAsync({ id: post.id });
+      if (archivedPost) router.reload();
+    }
+  }, []);
 
   const handleCancelClick = useCallback(async () => {
     if (request) {
@@ -398,10 +408,10 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
             onConfirm={() => handleUnfollow()}
             onDeny={() => setModal(undefined)}
           >
-            <fieldset className="flex items-center w-full gap-2 py-2 rounded-md rounded-mg">
+            <fieldset className="rounded-mg flex w-full items-center gap-2 rounded-md py-2">
               <input
                 type="checkbox"
-                className="w-6 h-6 rounded-md bg-zinc-200 text-violet-400 dark:bg-zinc-600"
+                className="h-6 w-6 rounded-md bg-zinc-200 text-violet-400 dark:bg-zinc-600"
                 id="force-profile-unfollow"
                 checked={forceUnfollow}
                 onChange={(e) => setForceUnfollow(e.target.checked)}
@@ -416,7 +426,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
           </DialogConfirm>
         </>
       )}
-      <section className="max-w-2xl py-16 mx-auto overflow-y-scroll hide-scrollbar ">
+      <section className="hide-scrollbar mx-auto max-w-2xl overflow-y-scroll py-16 ">
         {profile ? (
           <>
             <ProfileHeader
@@ -432,13 +442,15 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
               hasRequest={!!request}
               sessionStatus={session.status}
             />
-            <section className="container max-w-2xl pt-4 mx-auto divide-y divide-zinc-300 dark:divide-zinc-600">
+            <section className="container mx-auto max-w-2xl divide-y divide-zinc-300 pt-4 dark:divide-zinc-600">
               {posts.map((post) => (
                 <PostItem
+                  onArchive={handleArchive}
                   onClick={(p) =>
                     router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
                   }
                   post={post}
+                  sessionUserId={session.data?.user?.id}
                   key={post.id}
                 />
               ))}
@@ -480,6 +492,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         createdAt: {
           gt: date,
         },
+        visibility: Visibility.ACTIVE,
       },
       include: {
         postedBy: true,
