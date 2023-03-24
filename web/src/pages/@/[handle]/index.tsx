@@ -443,6 +443,20 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
               sessionStatus={session.status}
             />
             <section className="container mx-auto max-w-2xl divide-y divide-zinc-300 pt-4 dark:divide-zinc-600">
+              {posts.length === 0 ? (
+                <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
+                  <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+                    Shhhh! It&apos;s almost like a library here.
+                  </h4>
+                  <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
+                    Peace and quiet is good, let&apos;s use this time to take a
+                    break.
+                  </h5>
+                </div>
+              ) : (
+                <></>
+              )}
+
               {posts.map((post) => (
                 <PostItem
                   onArchive={handleArchive}
