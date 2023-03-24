@@ -1,4 +1,4 @@
-import type { Probability, Result } from "@prisma/client";
+import { Probability, Result, ResultType } from "@prisma/client";
 import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
 
@@ -37,7 +37,8 @@ export default function Home() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          text
+          text,
+          type: ResultType.FORM
         })
       });
       if (res.ok) {
