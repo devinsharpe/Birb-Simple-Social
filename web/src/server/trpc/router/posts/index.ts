@@ -140,6 +140,7 @@ export const postsRouter = router({
           gt: date,
         },
         type: PostType.TEXT,
+        visibility: Visibility.ACTIVE,
       },
     });
     return {
