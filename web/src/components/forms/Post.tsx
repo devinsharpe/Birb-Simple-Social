@@ -1,8 +1,64 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { forwardRef, useMemo, useRef, useState } from "react";
 import FeatherIcon from "feather-icons-react";
 import { SimplePost } from "../modals/Post";
+import Link from "next/link";
+import usePostBlocks, { PostBlock } from "../../hooks/postBlocks";
+
+interface PostFormProps {
+  post: SimplePost;
+  isLoading: boolean;
+  onCancel: () => void;
+  onChange: (post: SimplePost) => void;
+  onSubmit: (post: SimplePost) => void;
+}
 
 export const HANDLE_REGEX_GLOBAL = /(^|[^@\w])@(\w{1,24})\b/g;
+
+const BlockValue: React.FC<{ block: PostBlock }> = ({ block }) => {
+  if (block.overflowIndex !== -1) {
+    return (
+      <span>
+        {block.value.slice(0, block.overflowIndex)}
+        <span className="bg-rose-300/50 dark:bg-rose-800">
+          {block.value.slice(block.overflowIndex)}
+        </span>
+      </span>
+    );
+  } else return <span>{block.value}</span>;
+};
+
+export const PostDisplay = forwardRef<
+  HTMLDivElement,
+  {
+    blocks: PostBlock[];
+  }
+>(({ blocks }, ref) => {
+  return (
+    <div
+      className="absolute inset-0 z-[1] h-fit min-h-[64px] w-full whitespace-pre-wrap break-words py-2"
+      id="post-editor"
+      key="post-editor-field"
+      ref={ref}
+    >
+      {blocks.map((block) => {
+        if (block.type === "TEXT") {
+          return <BlockValue block={block} />;
+        } else if (block.type === "HANDLE") {
+          return (
+            <Link
+              href={block.value.replace(" @", "/@/")}
+              className="text-violet-700 dark:text-violet-400"
+            >
+              <BlockValue block={block} />
+            </Link>
+          );
+        } else {
+          return null;
+        }
+      })}
+    </div>
+  );
+});
 
 export const PostEditor: React.FC<{
   onChange: (text: string) => void;
@@ -10,28 +66,8 @@ export const PostEditor: React.FC<{
   value: string;
 }> = ({ onChange, placeholder = "What's on your mind?", value }) => {
   const [height, setHeight] = useState(64);
+  const { blocks } = usePostBlocks(value);
   const postDisplay = useRef<HTMLDivElement | null>(null);
-
-  const html = useMemo(() => {
-    const handles = value.match(HANDLE_REGEX_GLOBAL);
-    let result = value;
-    if (result.length > 300) {
-      result =
-        result.slice(0, 300) +
-        `<span class="bg-rose-300/50 dark:bg-rose-800">${result.slice(
-          300
-        )}</span>`;
-    }
-    if (handles) {
-      handles.forEach((handle) => {
-        result = result.replaceAll(
-          handle,
-          `<span class="text-violet-700 dark:text-violet-400">${handle}</span>`
-        );
-      });
-    }
-    return result;
-  }, [value]);
 
   return (
     <div
@@ -45,13 +81,7 @@ export const PostEditor: React.FC<{
           {placeholder}
         </p>
       )}
-      <div
-        className="absolute inset-0 z-[1] h-fit min-h-[64px] w-full whitespace-pre-wrap break-words py-2"
-        id="post-editor"
-        dangerouslySetInnerHTML={{ __html: html }}
-        ref={postDisplay}
-        key="post-editor-field"
-      ></div>
+      <PostDisplay blocks={blocks} ref={postDisplay} />
       <textarea
         className="absolute inset-0 z-[2] h-full w-full resize-none overflow-hidden border-none bg-transparent py-2 px-0 text-white/0 caret-violet-700 outline-none dark:caret-violet-200"
         onChange={(e) => {
@@ -73,14 +103,6 @@ export const PostEditor: React.FC<{
   );
 };
 
-interface PostFormProps {
-  post: SimplePost;
-  isLoading: boolean;
-  onCancel: () => void;
-  onChange: (post: SimplePost) => void;
-  onSubmit: (post: SimplePost) => void;
-}
-
 const PostForm: React.FC<PostFormProps> = ({
   post,
   isLoading,
@@ -91,7 +113,7 @@ const PostForm: React.FC<PostFormProps> = ({
   const [showLocationInput, setShowLocationInput] = useState(false);
   return (
     <form
-      className="relative px-2 space-y-4"
+      className="relative space-y-4 px-2"
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(post);
@@ -115,7 +137,7 @@ const PostForm: React.FC<PostFormProps> = ({
         <p className="text-sm opacity-50">{post.text.length}/300</p>
         <button
           type="button"
-          className="p-1 rounded-md"
+          className="rounded-md p-1"
           onClick={() => setShowLocationInput(!showLocationInput)}
         >
           {showLocationInput ? (
@@ -139,7 +161,7 @@ const PostForm: React.FC<PostFormProps> = ({
           />
           <input
             type="text"
-            className="w-full pl-8 bg-transparent border-none rounded outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
+            className="w-full rounded border-none bg-transparent pl-8 outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
             placeholder="Location"
             onChange={(e) => onChange({ ...post, location: e.target.value })}
             value={post.location}
@@ -154,7 +176,7 @@ const PostForm: React.FC<PostFormProps> = ({
         <button
           disabled={isLoading}
           type="button"
-          className="flex items-center justify-center px-2 py-1 transition-colors duration-100 rounded-full aspect-square shrink-0 bg-zinc-200 text-zinc-800 hover:bg-zinc-300 focus:bg-zinc-700 dark:bg-zinc-600 dark:text-white dark:hover:bg-zinc-700"
+          className="flex aspect-square shrink-0 items-center justify-center rounded-full bg-zinc-200 px-2 py-1 text-zinc-800 transition-colors duration-100 hover:bg-zinc-300 focus:bg-zinc-700 dark:bg-zinc-600 dark:text-white dark:hover:bg-zinc-700"
           onClick={onCancel}
         >
           <FeatherIcon icon="x" size={20} />
@@ -172,7 +194,7 @@ const PostForm: React.FC<PostFormProps> = ({
           <FeatherIcon icon="edit-3" size={20} />
           <span>Post</span>
           {isLoading && (
-            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 ">
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
               <FeatherIcon icon="loader" className="text-white" size={16} />
             </span>
           )}
