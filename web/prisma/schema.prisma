@@ -156,12 +156,16 @@ model PostMention {
 }
 
 model Comment {
-  id        String  @id @default(cuid())
-  postId    String
-  profileId String
-  text      String
-  likeCount Int     @default(0)
-  commentId String?
+  id           String           @id @default(cuid())
+  postId       String
+  profileId    String
+  text         String
+  reviewStatus PostReviewStatus @default(PROCESSING)
+  likeCount    Int              @default(0)
+  commentId    String?
+
+  autoReviewedAt   DateTime?
+  manualReviewedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
