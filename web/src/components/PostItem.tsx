@@ -1,16 +1,16 @@
 import { Post, PostMention, Profile } from "@prisma/client";
 import React, { useMemo } from "react";
 
-import DialogMenu from "./DialogMenu";
+import DialogMenu, { DialogMenuItemProps } from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import { PostDisplay } from "./forms/Post";
 import Image from "next/image";
 import Link from "next/link";
-import { formatUrl } from "../pages/@/[handle]";
 import { getAge } from "../utils/posts";
 import usePostBlocks from "../hooks/postBlocks";
 
 const PostItem: React.FC<{
+  onArchive: (id: string) => void;
   onClick: (
     post: Post & {
       postedBy: Profile;
@@ -22,9 +22,48 @@ const PostItem: React.FC<{
     })[];
     postedBy: Profile;
   };
-}> = ({ onClick, post }) => {
+  sessionUserId: string | undefined;
+}> = ({ onArchive, onClick, post, sessionUserId }) => {
   const age = useMemo(() => getAge(post.createdAt), [post.createdAt]);
   const { blocks } = usePostBlocks(post.text);
+
+  const dialogItems = useMemo(() => {
+    const items: DialogMenuItemProps[][] = [
+      [
+        {
+          icon: "smile",
+          text: "Add Reaction",
+          onClick: console.log,
+        },
+        {
+          icon: "message-square",
+          text: "View Comments",
+          onClick: () => onClick(post),
+        },
+        {
+          icon: "at-sign",
+          text: "View Mentions",
+          onClick: console.log,
+          disabled: !post.mentions.length,
+        },
+      ],
+      [
+        {
+          icon: "flag",
+          text: "Report Post",
+          onClick: console.log,
+        },
+      ],
+    ];
+    if (post.profileId === sessionUserId && items[1])
+      items[1].unshift({
+        icon: "archive",
+        text: "Archive Post",
+        onClick: () => onArchive(post.id),
+      });
+    return items;
+  }, [sessionUserId]);
+
   return (
     <article className="space-y-4 p-6 transition-colors duration-150 hover:bg-zinc-800/5 dark:hover:bg-white/5">
       <div className="flex items-center space-x-2">
@@ -71,28 +110,7 @@ const PostItem: React.FC<{
         </div>
         <DialogMenu
           className="px-2 py-1 text-zinc-600 dark:text-zinc-400"
-          items={[
-            [
-              {
-                icon: "message-square",
-                text: "View Comments",
-                onClick: () => onClick(post),
-              },
-              {
-                icon: "at-sign",
-                text: "View Mentions",
-                onClick: console.log,
-                disabled: !post.mentions.length,
-              },
-            ],
-            [
-              {
-                icon: "flag",
-                text: "Report Post",
-                onClick: console.log,
-              },
-            ],
-          ]}
+          items={dialogItems}
         >
           <FeatherIcon icon="more-horizontal" size={24} />
         </DialogMenu>

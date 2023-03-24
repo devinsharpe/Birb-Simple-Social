@@ -1,7 +1,7 @@
 import { Comment, Profile } from "@prisma/client";
 import React, { useMemo } from "react";
 
-import DialogMenu from "./DialogMenu";
+import DialogMenu, { DialogMenuItemProps } from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,18 +14,12 @@ interface CommentItemProps {
       postedBy: Profile;
     })[];
   };
+  onArchive: (id: string) => void;
   onReply: (
     comment: Comment & {
       postedBy: Profile;
     }
   ) => void;
-  sessionUserId: string | undefined;
-}
-
-interface ReplyItemProps {
-  comment: Comment & {
-    postedBy: Profile;
-  };
   sessionUserId: string | undefined;
 }
 
@@ -42,12 +36,13 @@ const formatDay = (date: Date) => {
 
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
+  onArchive,
   onReply,
   sessionUserId,
 }) => {
   const age = useMemo(() => getAge(comment.createdAt), [comment.createdAt]);
   const dialogItems = useMemo(() => {
-    const items = [
+    const items: DialogMenuItemProps[][] = [
       [
         {
           icon: "heart",
@@ -69,13 +64,20 @@ const CommentItem: React.FC<CommentItemProps> = ({
         text: "Reply",
         onClick: () => onReply(comment),
       });
+    if (comment.profileId === sessionUserId && items[1])
+      items[1].unshift({
+        icon: "archive",
+        text: "Archive Comment",
+        onClick: () => onArchive(comment.id),
+      });
     return items;
-  }, [comment.commentId]);
+  }, [comment.id, comment.commentId, sessionUserId]);
+
   return (
     <>
       <article className="px-6 py-4">
         <div className="flex items-center space-x-2">
-          <div className="relative object-center w-10 h-10 overflow-hidden rounded-full shrink-0">
+          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full object-center">
             <Link
               href={`/@/${comment.postedBy.handle}`}
               onClick={(e) => e.stopPropagation()}
@@ -86,15 +88,15 @@ const CommentItem: React.FC<CommentItemProps> = ({
                   "https://source.unsplash.com/random/600×600/?cat"
                 }
                 alt={`${comment.postedBy.name}'s avatar image`}
-                className="object-cover object-center w-full h-full"
+                className="h-full w-full object-cover object-center"
                 width={40}
                 height={40}
               />
             </Link>
           </div>
-          <div className="flex flex-col w-full">
+          <div className="flex w-full flex-col">
             <h5
-              className="font-medium leading-none whitespace-nowrap hover:underline"
+              className="whitespace-nowrap font-medium leading-none hover:underline"
               title={comment.postedBy.handle}
             >
               <Link
@@ -106,7 +108,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             </h5>
             <div className="flex items-center">
               <h6
-                className="text-sm font-light opacity-75 whitespace-nowrap hover:underline"
+                className="whitespace-nowrap text-sm font-light opacity-75 hover:underline"
                 title={comment.postedBy.handle}
               >
                 <Link
@@ -116,7 +118,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                   @{comment.postedBy.handle}
                 </Link>
               </h6>
-              <h6 className="text-sm font-light opacity-75 whitespace-nowrap">
+              <h6 className="whitespace-nowrap text-sm font-light opacity-75">
                 &nbsp;&ndash;&nbsp;
                 {age.unit === "d" ? (
                   <>{formatDay(comment.createdAt)}</>
@@ -130,7 +132,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
         <div className="pt-2 pl-12">
           <p>{comment.text}</p>
         </div>
-        <div className="flex items-center w-full gap-4 pt-2 pl-10">
+        <div className="flex w-full items-center gap-4 pt-2 pl-10">
           <button type="button" className="px-2 py-1">
             <FeatherIcon icon="heart" size={16} />
           </button>
@@ -159,7 +161,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <CommentItem
                 key={reply.id}
                 comment={reply}
-                onReply={console.log}
+                onArchive={(id) => onArchive(id)}
+                onReply={() => {}}
                 sessionUserId={sessionUserId}
               />
             </div>
