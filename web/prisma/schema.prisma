@@ -123,11 +123,17 @@ enum PostType {
   TEXT  @map("TEXT")
 }
 
+enum Visibility {
+  ACTIVE   @map("ACTIVE")
+  ARCHIVED @map("ARCHIVED")
+}
+
 model Post {
   id           String           @id @default(cuid())
   text         String           @db.VarChar(300)
   location     String           @db.VarChar(32)
   reviewStatus PostReviewStatus @default(PROCESSING)
+  visibility   Visibility       @default(ACTIVE)
   likeCount    Int              @default(0)
   commentCount Int              @default(0)
   updateCount  Int              @default(0)
@@ -161,6 +167,7 @@ model Comment {
   profileId    String
   text         String
   reviewStatus PostReviewStatus @default(PROCESSING)
+  visibility   Visibility       @default(ACTIVE)
   likeCount    Int              @default(0)
   commentId    String?
 
