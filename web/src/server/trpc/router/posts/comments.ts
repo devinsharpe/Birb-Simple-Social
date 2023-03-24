@@ -1,9 +1,45 @@
 import { protectedProcedure, publicProcedure, router } from "../../trpc";
 
-import { Comment } from "@prisma/client";
+import { Comment, Visibility } from "@prisma/client";
 import { z } from "zod";
 
 export const commentsRouter = router({
+  archive: protectedProcedure
+    .input(
+      z.strictObject({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.prisma.comment.findFirst({
+        where: {
+          id: input.id,
+          profileId: ctx.session.user.id,
+        },
+      });
+      if (comment) {
+        const updatedComment = await ctx.prisma.comment.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            visibility: Visibility.ARCHIVED,
+          },
+        });
+        await ctx.prisma.post.update({
+          where: {
+            id: updatedComment.postId,
+          },
+          data: {
+            commentCount: {
+              decrement: 1,
+            },
+          },
+        });
+        return updatedComment;
+      }
+      return null;
+    }),
   create: protectedProcedure
     .input(
       z.strictObject({

@@ -1,4 +1,4 @@
-import { PostType, RelationshipType } from "@prisma/client";
+import { PostType, RelationshipType, Visibility } from "@prisma/client";
 import { names, uniqueNamesGenerator } from "unique-names-generator";
 import { protectedProcedure, publicProcedure, router } from "../../trpc";
 
@@ -84,6 +84,42 @@ function shuffle(array: typeof examplePosts) {
 }
 
 export const postsRouter = router({
+  archive: protectedProcedure
+    .input(
+      z.strictObject({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.prisma.post.findFirst({
+        where: {
+          id: input.id,
+          profileId: ctx.session.user.id,
+        },
+      });
+      if (post) {
+        const updatedPost = await ctx.prisma.post.update({
+          where: {
+            id: input.id,
+          },
+          data: {
+            visibility: Visibility.ARCHIVED,
+          },
+        });
+        await ctx.prisma.profile.update({
+          where: {
+            id: updatedPost.profileId,
+          },
+          data: {
+            postCount: {
+              decrement: 1,
+            },
+          },
+        });
+        return updatedPost;
+      }
+      return null;
+    }),
   availableCount: protectedProcedure.mutation(async ({ ctx }) => {
     const date = new Date();
     date.setDate(date.getDate() - 1);
@@ -94,6 +130,7 @@ export const postsRouter = router({
           gt: date,
         },
         type: PostType.IMAGE,
+        visibility: Visibility.ACTIVE,
       },
     });
     const textCount = await ctx.prisma.post.count({
@@ -209,11 +246,17 @@ export const postsRouter = router({
         },
       })
     ).map((profile) => profile.followingId);
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
     const posts = await ctx.prisma.post.findMany({
       where: {
+        createdAt: {
+          gt: date,
+        },
         profileId: {
           in: [...ids, ctx.session.user.id],
         },
+        visibility: Visibility.ACTIVE,
       },
       include: {
         mentions: {
