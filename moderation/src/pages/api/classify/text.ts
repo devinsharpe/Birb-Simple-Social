@@ -1,13 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import txjs from "../../../server/tensorflow";
 import { prisma } from "../../../server/db/client";
+import { ResultType } from "@prisma/client";
 import type { Result, Probability } from "@prisma/client";
 import { z } from "zod";
 import { env } from "../../../env/server.mjs";
 
 const bodySchema = z.object({
   id: z.string().optional(),
-  text: z.string()
+  text: z.string(),
+  type: z
+    .enum([ResultType.COMMENT, ResultType.FORM, ResultType.POST])
+    .default(ResultType.POST)
 });
 
 interface Tox {
@@ -45,6 +49,7 @@ export default async function handler(
       data: {
         hasMatch,
         text: body.text,
+        type: body.type,
         threshold: env.TOXICITY_THRESHOLD
       }
     });

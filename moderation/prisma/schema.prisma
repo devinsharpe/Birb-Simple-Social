@@ -10,11 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ResultType {
+  COMMENT @map("COMMENT")
+  FORM    @map("FORM")
+  POST    @map("POST")
+}
+
 model Result {
-  id        String  @id @default(cuid())
+  id        String     @id @default(cuid())
   text      String
+  type      ResultType @default(FORM)
   threshold Int
-  hasMatch  Boolean @default(false)
+  hasMatch  Boolean    @default(false)
 
   probabilities Probability[] @relation("probabilities")
 }
