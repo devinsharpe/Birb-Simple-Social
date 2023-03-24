@@ -3,13 +3,12 @@ import React, { useMemo } from "react";
 
 import DialogMenu from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
-import { HANDLE_REGEX_GLOBAL } from "./forms/Post";
+import { PostDisplay } from "./forms/Post";
 import Image from "next/image";
 import Link from "next/link";
 import { formatUrl } from "../pages/@/[handle]";
 import { getAge } from "../utils/posts";
-
-const LINK_REGEX = /(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+/g;
+import usePostBlocks from "../hooks/postBlocks";
 
 const PostItem: React.FC<{
   onClick: (
@@ -25,39 +24,11 @@ const PostItem: React.FC<{
   };
 }> = ({ onClick, post }) => {
   const age = useMemo(() => getAge(post.createdAt), [post.createdAt]);
-  const html = useMemo(() => {
-    let result = post.text;
-    const handles = post.text.match(HANDLE_REGEX_GLOBAL);
-    const links = post.text.match(LINK_REGEX);
-    if (handles) {
-      handles.forEach((handle) => {
-        result = result.replaceAll(
-          handle.trim(),
-          `<a href="/@/${handle
-            .trim()
-            .replace(
-              "@",
-              ""
-            )}" class="text-violet-700 hover:underline dark:text-violet-400">${handle}</a>`
-        );
-      });
-    }
-    if (links) {
-      links.forEach((link) => {
-        result = result.replaceAll(
-          link.trim(),
-          `<a href="${formatUrl(
-            link
-          )}" target="_blank" class="text-violet-700 hover:underline dark:text-violet-400">${link}</a>`
-        );
-      });
-    }
-    return result;
-  }, [post.text]);
+  const { blocks } = usePostBlocks(post.text);
   return (
-    <article className="p-6 space-y-4 transition-colors duration-150 hover:bg-zinc-800/5 dark:hover:bg-white/5">
+    <article className="space-y-4 p-6 transition-colors duration-150 hover:bg-zinc-800/5 dark:hover:bg-white/5">
       <div className="flex items-center space-x-2">
-        <div className="relative object-center w-10 h-10 overflow-hidden rounded-full shrink-0">
+        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full object-center">
           <Link
             href={`/@/${post.postedBy.handle}`}
             onClick={(e) => e.stopPropagation()}
@@ -68,7 +39,7 @@ const PostItem: React.FC<{
                 "https://source.unsplash.com/random/600×600/?cat"
               }
               alt={`${post.postedBy.name}'s avatar image`}
-              className="object-cover object-center w-full h-full"
+              className="h-full w-full object-cover object-center"
               width={40}
               height={40}
             />
@@ -77,7 +48,7 @@ const PostItem: React.FC<{
         <div className="w-full">
           <div className="gap-2 md:flex">
             <h4
-              className="font-medium whitespace-nowrap hover:underline"
+              className="whitespace-nowrap font-medium hover:underline"
               title={post.postedBy.handle}
             >
               <Link
@@ -127,36 +98,27 @@ const PostItem: React.FC<{
         </DialogMenu>
       </div>
 
-      <div className="pl-12 space-y-4">
-        {/* {post.type === PostType.IMAGE && (
-          <div className="relative w-full max-w-sm mx-auto overflow-hidden rounded-md aspect-square">
-            <Image
-              src={post.photo}
-              alt="demo post photo"
-              width={512}
-              height={512}
-              className="object-cover object-center w-full h-full"
-            />
-          </div>
-        )} */}
-        <p className="max-w-xl" dangerouslySetInnerHTML={{ __html: html }}></p>
+      <div className="space-y-4 pl-12">
+        <p className="max-w-xl">
+          <PostDisplay blocks={blocks} />
+        </p>
         {post.location && (
-          <div className="flex items-center gap-2 pt-4 text-sm leading-none text-opacity-50 border-t whitespace-nowrap border-zinc-300 text-zinc-800/75 dark:border-zinc-600 dark:text-white/75">
+          <div className="flex items-center gap-2 whitespace-nowrap border-t border-zinc-300 pt-4 text-sm leading-none text-zinc-800/75 text-opacity-50 dark:border-zinc-600 dark:text-white/75">
             <FeatherIcon icon="map-pin" size={16} />
             <p>{post.location}</p>
           </div>
         )}
       </div>
-      <div className="flex items-center pl-12 space-x-6">
-        <button type="button" className="p-2 rounded">
+      <div className="flex items-center space-x-6 pl-12">
+        <button type="button" className="rounded p-2">
           <FeatherIcon icon="smile" size={16} />
         </button>
-        <button type="button" className="p-2 rounded">
+        <button type="button" className="rounded p-2">
           <FeatherIcon icon="message-square" size={16} />
         </button>
         <button
           type="button"
-          className="p-2 rounded"
+          className="rounded p-2"
           onClick={() => {
             const path =
               window.location.hostname +
@@ -177,7 +139,7 @@ const PostItem: React.FC<{
         </button>
         <Link
           href={`/@/${post.postedBy.handle}/post/${post.id}`}
-          className="w-full text-sm text-right cursor-pointer text-zinc-600 hover:underline dark:text-zinc-400"
+          className="w-full cursor-pointer text-right text-sm text-zinc-600 hover:underline dark:text-zinc-400"
         >
           {post.commentCount} Comment{post.commentCount !== 1 && "s"}
         </Link>
