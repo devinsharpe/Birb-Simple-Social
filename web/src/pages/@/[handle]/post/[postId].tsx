@@ -19,8 +19,10 @@ import { prisma } from "../../../../server/db/client";
 import { trpc } from "../../../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 
 interface PageProps {
+  hostname: string | undefined;
   post:
     | (Post & {
         comments: (Comment & {
@@ -35,7 +37,7 @@ interface PageProps {
     | null;
 }
 
-const PostPage: NextPage<PageProps> = ({ post }) => {
+const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
   const [commentText, setCommentText] = useState("");
   const [replyComment, setReplyComment] = useState<
     | (Comment & {
@@ -89,6 +91,23 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
 
   return (
     <>
+      <Head>
+        <meta content="article" property="og:type" />
+        <meta content={router.asPath} property="og:url" />
+        {post && (
+          <>
+            <meta
+              content={`${post?.postedBy.name} on Birb`}
+              property="og:title"
+            />
+            <title>{`${post?.postedBy.name} on Birb`}</title>
+            <meta
+              content="Birb is a social media trying to do things differently"
+              property="og:description"
+            />
+          </>
+        )}
+      </Head>
       <section className="hide-scrollbar mx-auto min-h-screen max-w-2xl overflow-y-scroll py-16">
         {post ? (
           <>
@@ -203,10 +222,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         postedBy: true,
       },
     });
-    return { props: { post } };
+    return { props: { hostname: context.req.headers.host, post } };
   }
   return {
     props: {
+      hostname: context.req.headers.host,
       post: null,
     },
   };

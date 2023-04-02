@@ -25,6 +25,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
 import PostItem from "../../../components/PostItem";
+import Head from "next/head";
 
 interface PageProps {
   handle: string;
@@ -388,6 +389,24 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
 
   return (
     <>
+      <Head>
+        <meta content="profile" property="og:type" />
+        <meta content={router.asPath} property="og:url" />
+        {profile && (
+          <>
+            <meta content={`${profile.name} on Birb`} property="og:title" />
+            <title>{`${profile.name} on Birb`}</title>
+            <meta content={profile.biography ?? ""} property="og:description" />
+            <meta
+              content={
+                profile.avatarUrl ??
+                "https://source.unsplash.com/random/600×600/?cat"
+              }
+              property="og:image"
+            />
+          </>
+        )}
+      </Head>
       {profile && (
         <>
           <RelationshipModal
