@@ -138,17 +138,17 @@ const PostItem: React.FC<{
           type="button"
           className="rounded p-2"
           onClick={() => {
-            const path =
-              window.location.hostname +
-              `/@/${post.postedBy.handle}/post/${post.id}`;
             if (navigator.share) {
               navigator
                 .share({
                   title: "Check out this post on Birb",
-                  url: path,
+                  url: `/@/${post.postedBy.handle}/post/${post.id}`,
                 })
                 .catch((err) => console.log(err));
             } else {
+              const path =
+                window.location.hostname +
+                `/@/${post.postedBy.handle}/post/${post.id}`;
               navigator.clipboard.writeText(path);
             }
           }}
