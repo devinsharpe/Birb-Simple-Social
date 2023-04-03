@@ -1,11 +1,11 @@
-import { Switch } from "@headlessui/react";
-import { Reaction } from "@prisma/client";
 import FeatherIcon from "feather-icons-react";
-import { NextPage } from "next";
 import Head from "next/head";
+import Navbar from "../../components/Navbar";
+import { NextPage } from "next";
+import { Reaction } from "@prisma/client";
+import { Switch } from "@headlessui/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Navbar from "../../components/Navbar";
 
 const SettingsPage: NextPage = () => {
   const [useCatMode, setUseCatMode] = useState(false);
@@ -93,12 +93,15 @@ const SettingsPage: NextPage = () => {
               </select>
             </fieldset>
             <fieldset className="flex items-center justify-between pr-2">
-              <label htmlFor="setting-cat-mode" className="mb-0 md:text-lg">
+              <label
+                htmlFor="setting-relative-timestamp"
+                className="mb-0 md:text-lg"
+              >
                 Relative Timestamps
               </label>
               <Switch
                 checked={useRelativeTimestamps}
-                id="setting-cat-mode"
+                id="setting-relative-timestamp"
                 onChange={setUseRelativeTimestamps}
                 className={`${
                   useRelativeTimestamps ? "bg-violet-900" : "bg-violet-700"
