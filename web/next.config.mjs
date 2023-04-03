@@ -29,6 +29,7 @@ const config = {
       },
     ],
   },
+  transpilePackages: ["jotai-devtools"],
   experimental: {
     swcPlugins: [
       [
