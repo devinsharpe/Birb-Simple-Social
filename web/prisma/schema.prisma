@@ -110,6 +110,21 @@ model ProfileRelationship {
   requestedAt DateTime
 }
 
+enum THEME {
+  AUTO  @map("AUTO")
+  LIGHT @map("LIGHT")
+  DARK  @map("DARK")
+}
+
+model ProfileSettings {
+  id String @id @default(cuid())
+
+  reaction           Reaction @default(SMILE)
+  catMode            Boolean  @default(false)
+  theme              THEME    @default(AUTO)
+  relativeTimestamps Boolean  @default(true)
+}
+
 enum PostReviewStatus {
   PROCESSING      @map("PROCESSING")
   APPROVED        @map("APPROVED")
