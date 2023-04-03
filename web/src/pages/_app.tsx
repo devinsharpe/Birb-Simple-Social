@@ -17,6 +17,7 @@ import LoginModal from "../components/modals/Login";
 import { useAtomValue, useSetAtom } from "jotai";
 import atoms from "../atoms";
 import PostModal, { KEY as POST_KEY } from "../components/modals/Post";
+import { DevTools } from "jotai-devtools";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,6 +33,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <link rel="icon" href="/icons/icon.svg" />
         <meta property="og:site_name" content="Birb - Simple Social" />
       </Head>
+
+      <DevTools />
       <SessionProvider session={session}>
         <style jsx global>
           {`
