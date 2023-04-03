@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
   const session = useSession();
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-10 flex h-10 w-full justify-center bg-white/50 py-8 backdrop-blur-md dark:bg-zinc-900/50">
+      <nav className="fixed inset-x-0 top-0 z-10 flex justify-center w-full h-10 py-8 bg-white/50 backdrop-blur-md dark:bg-zinc-900/50">
         <div className="container flex items-center justify-between gap-4 px-4">
           {brandEl ? (
             <>{brandEl}</>
@@ -43,7 +43,7 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
           <div className="flex items-center gap-4 ">
             <button
               type="button"
-              className="rounded-md p-2"
+              className="p-2 rounded-md"
               onClick={() => setModal(SEARCH_KEY)}
             >
               <FeatherIcon icon="search" size={24} />
@@ -81,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
                   {
                     icon: "settings",
                     text: "Settings",
-                    onClick: console.log,
+                    onClick: () => router.push("/settings"),
                     disabled: session.status !== "authenticated",
                   },
                   {
