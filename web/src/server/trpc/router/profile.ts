@@ -2,8 +2,8 @@ import { names, uniqueNamesGenerator } from "unique-names-generator";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 import type { Config } from "unique-names-generator";
-import { z } from "zod";
 import { HANDLE_REGEX_CLEAN } from "../../../utils/profiles";
+import { z } from "zod";
 
 export const nameConfig: Config = {
   dictionaries: [
@@ -83,10 +83,23 @@ export const profileRouter = router({
       },
     });
 
-    if (profile) return profile;
-    else {
+    if (profile) {
+      let settings = await ctx.prisma.profileSettings.findFirst({
+        where: {
+          id: profile.id,
+        },
+      });
+      if (!settings) {
+        settings = await ctx.prisma.profileSettings.create({
+          data: {
+            id: profile.id,
+          },
+        });
+      }
+      return { profile, settings };
+    } else {
       const handle = uniqueNamesGenerator(nameConfig).toLowerCase();
-      const result = await ctx.prisma.profile.create({
+      const profile = await ctx.prisma.profile.create({
         data: {
           id: ctx.session.user.id,
           name: "",
@@ -94,7 +107,12 @@ export const profileRouter = router({
           normalizedHandle: handle,
         },
       });
-      return result;
+      const settings = await ctx.prisma.profileSettings.create({
+        data: {
+          id: profile.id,
+        },
+      });
+      return { profile, settings };
     }
   }),
   searchProfiles: publicProcedure
