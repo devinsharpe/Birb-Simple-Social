@@ -6,6 +6,7 @@ import { useSetAtom } from "jotai";
 
 const ProfileAtomProvider = () => {
   const setProfile = useSetAtom(atoms.profile);
+  const setSettings = useSetAtom(atoms.settings);
   const session = useSession();
   const profile = trpc.profiles.getProfile.useQuery(undefined, {
     enabled: session.status === "authenticated",
@@ -13,9 +14,11 @@ const ProfileAtomProvider = () => {
   const setModal = useSetAtom(atoms.modal);
 
   useEffect(() => {
-    setProfile(profile.data || undefined);
+    if (profile.data) {
+      setProfile(profile.data.profile || undefined);
+      setSettings(profile.data.settings || undefined);
+    }
   }, [profile, setModal, setProfile]);
-
   return null;
 };
 
