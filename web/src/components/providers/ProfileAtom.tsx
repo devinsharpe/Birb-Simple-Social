@@ -13,9 +13,10 @@ const ProfileAtomProvider = () => {
   const setModal = useSetAtom(atoms.modal);
 
   useEffect(() => {
-    setProfile(profile.data || undefined);
+    if (profile.data) {
+      setProfile(profile.data.profile || undefined);
+    }
   }, [profile, setModal, setProfile]);
-
   return null;
 };
 
