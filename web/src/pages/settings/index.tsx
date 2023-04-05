@@ -1,5 +1,5 @@
 import { ProfileSettings, Reaction, Theme } from "@prisma/client";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
 import FeatherIcon from "feather-icons-react";
@@ -23,17 +23,19 @@ const SettingsPage: NextPage = () => {
   const [storedSettings, setStoredSettings] = useAtom(atoms.settings);
   const updateSettings = trpc.profileSettings.update.useMutation();
 
-  const handleSubmit = useCallback(async () => {
-    const newSettings = await updateSettings.mutateAsync(settings);
-    setStoredSettings(newSettings);
-  }, [storedSettings, settings]);
-
-  useEffect(() => {
+  const handleReset = useCallback(() => {
     if (storedSettings) {
       const { id: _, ...settingsObj } = storedSettings;
       setSettings(settingsObj);
     }
   }, [storedSettings]);
+
+  const handleSubmit = useCallback(async () => {
+    const newSettings = await updateSettings.mutateAsync(settings);
+    setStoredSettings(newSettings);
+  }, [storedSettings, settings]);
+
+  useEffect(() => handleReset, []);
 
   return (
     <>
@@ -45,15 +47,12 @@ const SettingsPage: NextPage = () => {
         />
       </Head>
 
-      <div className="max-w-2xl min-h-screen py-16 mx-auto overflow-y-scroll hide-scrollbar ">
+      <div className="hide-scrollbar mx-auto min-h-screen max-w-2xl overflow-y-scroll py-16 ">
         <SettingsForm
           onChange={(newSettings) => setSettings(newSettings)}
           onDeleteAccount={console.log}
           onDownloadUserData={console.log}
-          onReset={() => {
-            console.log(storedSettings);
-            if (storedSettings) setSettings({ ...storedSettings });
-          }}
+          onReset={handleReset}
           onSubmit={handleSubmit}
           settings={settings}
         />
