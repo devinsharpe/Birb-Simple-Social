@@ -18,6 +18,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import atoms from "../atoms";
 import PostModal, { KEY as POST_KEY } from "../components/modals/Post";
 import { DevTools } from "jotai-devtools";
+import ThemeProvider from "../components/providers/Theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,6 +54,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <SearchModal />
         <WelcomeModal />
         <ProfileAtomProvider />
+        <ThemeProvider />
 
         {profile && (
           <>
