@@ -23,7 +23,7 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
   const session = useSession();
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-10 flex justify-center w-full h-10 py-8 bg-white/50 backdrop-blur-md dark:bg-zinc-900/50">
+      <nav className="fixed inset-x-0 top-0 z-10 flex h-10 w-full justify-center bg-white/50 py-8 backdrop-blur-md dark:bg-zinc-900/50">
         <div className="container flex items-center justify-between gap-4 px-4">
           {brandEl ? (
             <>{brandEl}</>
@@ -43,7 +43,7 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
           <div className="flex items-center gap-4 ">
             <button
               type="button"
-              className="p-2 rounded-md"
+              className="rounded-md p-2"
               onClick={() => setModal(SEARCH_KEY)}
             >
               <FeatherIcon icon="search" size={24} />
@@ -104,6 +104,23 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
             >
               <FeatherIcon icon="menu" size={24} aria-hidden="true" />
             </DialogMenu>
+            {profile && (
+              <Link
+                className="border-1 h-8 w-8 overflow-hidden rounded-full border-white object-center dark:border-zinc-900"
+                href={`/@/${profile.handle}`}
+              >
+                <Image
+                  src={
+                    profile.avatarUrl ||
+                    "https://source.unsplash.com/random/600×600/?cat"
+                  }
+                  alt={`${profile.name}'s avatar image`}
+                  className="h-full w-full object-cover object-center"
+                  width={96}
+                  height={96}
+                />
+              </Link>
+            )}
           </div>
         </div>
       </nav>
