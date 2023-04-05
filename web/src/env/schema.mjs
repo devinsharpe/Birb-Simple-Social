@@ -24,6 +24,7 @@ export const serverSchema = z.object({
   APPLE_KEY_ID: z.string(),
   APPLE_PRIVATE_KEY: z.string(),
   APPLE_TEAM_ID: z.string(),
+  EMAIL_URL: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   S3_HOST_URL: z.string(),
