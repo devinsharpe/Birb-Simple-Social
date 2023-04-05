@@ -110,7 +110,7 @@ model ProfileRelationship {
   requestedAt DateTime
 }
 
-enum THEME {
+enum Theme {
   AUTO  @map("AUTO")
   LIGHT @map("LIGHT")
   DARK  @map("DARK")
@@ -121,7 +121,7 @@ model ProfileSettings {
 
   reaction           Reaction @default(SMILE)
   catMode            Boolean  @default(false)
-  theme              THEME    @default(AUTO)
+  theme              Theme    @default(AUTO)
   relativeTimestamps Boolean  @default(true)
 }
 

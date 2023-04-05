@@ -1,8 +1,8 @@
 import { names, uniqueNamesGenerator } from "unique-names-generator";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../../trpc";
 
 import type { Config } from "unique-names-generator";
-import { HANDLE_REGEX_CLEAN } from "../../../utils/profiles";
+import { HANDLE_REGEX_CLEAN } from "../../../../utils/profiles";
 import { z } from "zod";
 
 export const nameConfig: Config = {
