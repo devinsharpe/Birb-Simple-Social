@@ -52,8 +52,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             >
               <option value={Reaction.SMILE}>😊 Smile</option>
               <option value={Reaction.JOY}>😂 Laughing</option>
+              <option value={Reaction.SKULL}>💀 Skull</option>
               <option value={Reaction.HEART_EYES}>😍 Heart Eyes</option>
-              <option value={Reaction.DOWNCAST}>🙁 Downcast</option>
+              <option value={Reaction.DOWNCAST}>🙁 Sad</option>
+              <option value={Reaction.WEEPING}>😭 Crying</option>
               <option value={Reaction.THUMBS_UP}>👍 Thumbs Up</option>
               <option value={Reaction.PINCHED_FINGERS}>
                 🤌 Pinched Fingers

@@ -217,8 +217,10 @@ enum Reaction {
   HEART_EYES      @map("HEART_EYES")
   JOY             @map("JOY")
   PINCHED_FINGERS @map("PINCHED_FINGERS")
+  SKULL           @map("SKULL")
   SMILE           @map("SMILE")
   THUMBS_UP       @map("THUMBS_UP")
+  WEEPING         @map("WEEPING")
 }
 
 model PostReaction {
