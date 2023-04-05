@@ -13,7 +13,7 @@ interface PostFormProps {
   onSubmit: (post: SimplePost) => void;
 }
 
-export const HANDLE_REGEX_GLOBAL = /(^|[^@\w])@(\w{1,24})\b/g;
+export const HANDLE_REGEX_GLOBAL = /(^|[^@\w])@(\w{3,24})\b/g;
 export const LINK_REGEX =
   /(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-&?=%.]+/g;
 
