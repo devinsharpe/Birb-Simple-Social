@@ -1,11 +1,13 @@
 import DialogModal from "../DialogModal";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import TextInput from "../inputs/Text";
 import { signIn } from "next-auth/react";
 
 export const KEY = "login";
 
 const LoginModal = () => {
+  const [email, setEmail] = useState("");
   return (
     <DialogModal isDismissable name={KEY} title="Log in to Birb">
       <div className="space-y-4 py-2">
@@ -54,6 +56,28 @@ const LoginModal = () => {
             />
           </svg>
           <span className="font-semibold">Sign In With Apple</span>
+        </button>
+        <div className="text-zinc- flex items-center gap-4">
+          <div className="w-full rounded-full border-y border-zinc-300 dark:border-zinc-600" />
+          <p className="text-lg font-bold tracking-wide text-zinc-600 dark:text-zinc-400">
+            OR
+          </p>
+          <div className="w-full rounded-full border-y border-zinc-300 dark:border-zinc-600" />
+        </div>
+        <TextInput
+          autoComplete="email"
+          icon="mail"
+          id="auth-email"
+          label="Email Address"
+          name="email"
+          onChange={setEmail}
+          value={email}
+        />
+        <button
+          onClick={() => signIn("email", { email })}
+          className="mx-auto flex w-full items-center justify-center space-x-2 rounded bg-violet-800 py-2 px-6 text-white hover:bg-violet-900"
+        >
+          Send Magic Link 🪄
         </button>
         <div className="space-y-2 pt-4 text-zinc-600 dark:text-zinc-300">
           <p className="text-center text-sm">

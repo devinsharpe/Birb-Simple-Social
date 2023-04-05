@@ -1,5 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import AppleProvider from "next-auth/providers/apple";
+import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -47,7 +48,38 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
+    EmailProvider({
+      async sendVerificationRequest(params) {
+        await fetch(`${env.EMAIL_URL}api/magic`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: params.identifier,
+            props: {
+              url: params.url,
+              supportUrl: `${env.NEXTAUTH_URL}support`,
+            },
+          }),
+        });
+      },
+    }),
   ],
+  cookies: {
+    pkceCodeVerifier: {
+      name: "next-auth.pkce.code_verifier",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+      },
+    },
+  },
+  pages: {
+    verifyRequest: "/verify",
+  },
 };
 
 export default NextAuth(authOptions);
