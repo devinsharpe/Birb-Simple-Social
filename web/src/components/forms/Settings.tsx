@@ -36,7 +36,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           <FeatherIcon icon="smile" />
           <span>Reactions</span>
         </h2>
-        <div className="pt-4 space-y-2">
+        <div className="space-y-2 pt-4">
           <fieldset className="flex items-center justify-between">
             <label htmlFor="setting-reaction" className="mb-0 md:text-lg">
               Default Reaction
@@ -44,7 +44,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             <select
               name="defaultReaction"
               id="setting-reaction"
-              className="text-sm rounded dark:bg-zinc-800"
+              className="rounded text-sm dark:bg-zinc-800"
               onChange={(e) =>
                 onChange({ ...settings, reaction: e.target.value as Reaction })
               }
@@ -93,7 +93,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           <FeatherIcon icon="eye" />
           <span>Appearance</span>
         </h2>
-        <div className="pt-4 space-y-2">
+        <div className="space-y-2 pt-4">
           <fieldset className="flex items-center justify-between">
             <label htmlFor="setting-theme" className="mb-0 md:text-lg">
               Theme
@@ -101,7 +101,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             <select
               name="theme"
               id="setting-theme"
-              className="text-sm rounded dark:bg-zinc-800"
+              className="rounded text-sm dark:bg-zinc-800"
               value={settings.theme}
               onChange={(e) =>
                 onChange({ ...settings, theme: e.target.value as Theme })
@@ -149,10 +149,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           <FeatherIcon icon="bell" />
           <span>Notifications</span>
         </h2>
-        <div className="flex flex-col items-center pt-4 space-y-4">
+        <div className="flex flex-col items-center space-y-4 pt-4">
           <button
             type="button"
-            className="flex items-center justify-center w-full max-w-lg gap-2 py-2 mx-auto border rounded border-zinc-300 bg-zinc-200 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+            className="mx-auto flex w-full max-w-lg items-center justify-center gap-2 rounded border border-zinc-300 bg-zinc-200 py-2 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           >
             <FeatherIcon icon="power" size={20} />
             <span>Enable PWA Notifications</span>
@@ -164,17 +164,17 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           <FeatherIcon icon="user" />
           <span>Profile</span>
         </h2>
-        <div className="flex flex-col items-center pt-4 space-y-4">
+        <div className="flex flex-col items-center space-y-4 pt-4">
           <button
             type="button"
-            className="flex items-center justify-center w-full max-w-lg gap-2 py-2 mx-auto border rounded border-zinc-300 bg-zinc-200 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+            className="mx-auto flex w-full max-w-lg items-center justify-center gap-2 rounded border border-zinc-300 bg-zinc-200 py-2 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           >
             <FeatherIcon icon="download" size={20} />
             <span>Download User Data</span>
           </button>
           <button
             type="button"
-            className="flex items-center justify-center w-full max-w-lg gap-2 py-2 mx-auto border rounded border-rose-300 bg-rose-200 hover:bg-rose-300 dark:border-rose-700 dark:bg-rose-800 dark:hover:bg-rose-700"
+            className="mx-auto flex w-full max-w-lg items-center justify-center gap-2 rounded border border-rose-300 bg-rose-200 py-2 hover:bg-rose-300 dark:border-rose-700 dark:bg-rose-800 dark:hover:bg-rose-700"
           >
             <FeatherIcon icon="trash" size={20} />
             <span>Delete Account</span>
@@ -183,13 +183,17 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
       </section>
       <section className="flex items-center justify-center gap-4 px-6 py-4">
         <button
-          className="flex items-center justify-center w-auto gap-2 px-4 py-2 border rounded-full border-zinc-300 bg-zinc-200 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
+          className="flex w-auto items-center justify-center gap-2 rounded-full border border-zinc-300 bg-zinc-200 px-4 py-2 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           onClick={onReset}
+          type="button"
         >
           <FeatherIcon icon="refresh-cw" size={20} />
           <span>Reset</span>
         </button>
-        <button className="flex items-center justify-center w-auto gap-2 px-4 py-2 text-white border rounded-full border-zinc-800 bg-zinc-900 hover:bg-zinc-800 dark:border-zinc-100 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100">
+        <button
+          className="flex w-auto items-center justify-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-800 dark:border-zinc-100 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+          type="submit"
+        >
           <FeatherIcon icon="save" size={20} />
           <span>Save Settings</span>
         </button>
