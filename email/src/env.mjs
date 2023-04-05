@@ -6,7 +6,9 @@ import { z } from "zod";
  */
 const server = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]),
+  APP_URL: z.string(),
   EMAIL_HOST: z.string(),
+  EMAIL_NAME: z.string(),
   EMAIL_PASSWORD: z.string(),
   EMAIL_PORT: z.string(),
   EMAIL_SECURE: z.enum(["0", "1"]),
@@ -30,7 +32,9 @@ const client = z.object({
  */
 const processEnv = {
   NODE_ENV: process.env.NODE_ENV,
+  APP_URL: process.env.APP_URL,
   EMAIL_HOST: process.env.EMAIL_HOST,
+  EMAIL_NAME: process.env.EMAIL_NAME,
   EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
   EMAIL_PORT: process.env.EMAIL_PORT,
   EMAIL_SECURE: process.env.EMAIL_SECURE,
