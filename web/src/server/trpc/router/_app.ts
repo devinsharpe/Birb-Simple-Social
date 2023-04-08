@@ -6,12 +6,14 @@ import { relationshipRouter } from "./relationship";
 import { requestRouter } from "./request";
 import { router } from "../trpc";
 import { settingsRouter } from "./profile/settings";
+import { profileReactionsRouter } from "./profile/reactions";
 
 export const appRouter = router({
   auth: authRouter,
   comments: commentsRouter,
   posts: postsRouter,
   profiles: profileRouter,
+  profileReactions: profileReactionsRouter,
   profileSettings: settingsRouter,
   relationships: relationshipRouter,
   requests: requestRouter,
