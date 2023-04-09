@@ -10,6 +10,7 @@ import { useSetAtom } from "jotai";
 import atoms from "../atoms";
 
 import { KEY as POST_KEY } from "./modals/Post";
+import ReactionModal, { KEY as REACTION_KEY } from "./modals/Reaction";
 
 const Timeline: React.FC = () => {
   const getTimeline = trpc.posts.getTimeline.useMutation();
@@ -75,11 +76,14 @@ const Timeline: React.FC = () => {
           onClick={() =>
             router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
           }
+          onReactionClick={() => setModal(REACTION_KEY)}
           post={post}
           sessionUserId={session.data?.user?.id}
           key={post.id}
         />
       ))}
+
+      <ReactionModal />
     </>
   );
 };

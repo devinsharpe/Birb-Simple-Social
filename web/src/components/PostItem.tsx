@@ -9,13 +9,14 @@ import Link from "next/link";
 import { getAge } from "../utils/posts";
 import usePostBlocks from "../hooks/postBlocks";
 
-const PostItem: React.FC<{
+interface PostItemProps {
   onArchive: (id: string) => void;
   onClick: (
     post: Post & {
       postedBy: Profile;
     }
   ) => void;
+  onReactionClick: () => void;
   post: Post & {
     mentions: (PostMention & {
       profile: Profile;
@@ -23,7 +24,15 @@ const PostItem: React.FC<{
     postedBy: Profile;
   };
   sessionUserId: string | undefined;
-}> = ({ onArchive, onClick, post, sessionUserId }) => {
+}
+
+const PostItem: React.FC<PostItemProps> = ({
+  onArchive,
+  onClick,
+  onReactionClick,
+  post,
+  sessionUserId,
+}) => {
   const age = useMemo(() => getAge(post.createdAt), [post.createdAt]);
   const { blocks } = usePostBlocks(post.text);
 
@@ -33,7 +42,7 @@ const PostItem: React.FC<{
         {
           icon: "smile",
           text: "Add Reaction",
-          onClick: console.log,
+          onClick: onReactionClick,
         },
         {
           icon: "message-square",
@@ -128,7 +137,7 @@ const PostItem: React.FC<{
         )}
       </div>
       <div className="flex items-center space-x-6 pl-12">
-        <button type="button" className="rounded p-2">
+        <button type="button" className="rounded p-2" onClick={onReactionClick}>
           <FeatherIcon icon="smile" size={16} />
         </button>
         <button type="button" className="rounded p-2">
