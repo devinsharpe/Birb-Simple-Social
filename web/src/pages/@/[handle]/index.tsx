@@ -24,6 +24,9 @@ import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
+import ReactionModal, {
+  KEY as REACTION_KEY,
+} from "../../../components/modals/Reaction";
 import PostItem from "../../../components/PostItem";
 import Head from "next/head";
 
@@ -482,6 +485,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
                   onClick={(p) =>
                     router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
                   }
+                  onReactionClick={() => setModal(REACTION_KEY)}
                   post={post}
                   sessionUserId={session.data?.user?.id}
                   key={post.id}
@@ -494,6 +498,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
         )}
       </section>
       <Navbar />
+      <ReactionModal />
       {session.status === "unauthenticated" && <LoginPrompt />}
     </>
   );
