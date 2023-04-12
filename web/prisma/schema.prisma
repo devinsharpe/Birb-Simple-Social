@@ -145,16 +145,17 @@ enum Visibility {
 }
 
 model Post {
-  id           String           @id @default(cuid())
-  text         String           @db.VarChar(300)
-  location     String           @db.VarChar(32)
-  reviewStatus PostReviewStatus @default(PROCESSING)
-  visibility   Visibility       @default(ACTIVE)
-  likeCount    Int              @default(0)
-  commentCount Int              @default(0)
-  updateCount  Int              @default(0)
-  type         PostType         @default(TEXT)
-  profileId    String
+  id            String           @id @default(cuid())
+  text          String           @db.VarChar(300)
+  location      String           @db.VarChar(32)
+  reviewStatus  PostReviewStatus @default(PROCESSING)
+  visibility    Visibility       @default(ACTIVE)
+  likeCount     Int              @default(0)
+  commentCount  Int              @default(0)
+  reactionCount Int              @default(0)
+  updateCount   Int              @default(0)
+  type          PostType         @default(TEXT)
+  profileId     String
 
   autoReviewedAt   DateTime?
   manualReviewedAt DateTime?
