@@ -2,6 +2,7 @@ import {
   Comment,
   Post,
   PostMention,
+  PostReaction,
   Profile,
   Visibility,
 } from "@prisma/client";
@@ -20,6 +21,11 @@ import { trpc } from "../../../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
+import ReactionModal, {
+  KEY as REACTION_KEY,
+} from "../../../../components/modals/Reaction";
+import { useSetAtom } from "jotai";
+import atoms from "../../../../atoms";
 
 interface PageProps {
   hostname: string | undefined;
@@ -33,6 +39,9 @@ interface PageProps {
         })[];
         mentions: (PostMention & { profile: Profile })[];
         postedBy: Profile;
+        reactions: (PostReaction & {
+          profile: Profile;
+        })[];
       })
     | null;
 }
@@ -49,6 +58,7 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
   const archivePost = trpc.posts.archive.useMutation();
   const createComment = trpc.comments.create.useMutation();
   const getComment = trpc.comments.get.useMutation();
+  const setModal = useSetAtom(atoms.modal);
   const router = useRouter();
   const session = useSession();
 
@@ -108,13 +118,15 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
           </>
         )}
       </Head>
-      <section className="max-w-2xl min-h-screen py-16 mx-auto overflow-y-scroll hide-scrollbar">
+      <section className="hide-scrollbar mx-auto min-h-screen max-w-2xl overflow-y-scroll py-16">
         {post ? (
           <>
             <PostItem
+              expandedReactions
               post={post}
               onArchive={handleArchive}
               onClick={console.log}
+              onReactionClick={() => setModal(REACTION_KEY)}
               sessionUserId={session.data?.user?.id}
             />
             <CommentForm
@@ -126,16 +138,17 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
               value={commentText}
             />
             {post.comments.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-32 opacity-75">
+              <div className="flex h-32 flex-col items-center justify-center opacity-75">
                 <h4 className="text-lg font-semibold">
                   It's all quiet here...
                 </h4>
                 <h5>Just you, {post.postedBy.name}, and Gary 🪿</h5>
               </div>
             )}
-            <div className="overflow-visible divide-y divide-zinc-200 dark:divide-zinc-700">
+            <div className="divide-y divide-zinc-200 overflow-visible dark:divide-zinc-700">
               {post.comments.map((comment) => (
                 <CommentItem
+                  key={comment.id}
                   comment={comment}
                   onArchive={(id) => archiveComment.mutateAsync({ id })}
                   onReply={(comment) => setReplyComment(comment)}
@@ -146,16 +159,16 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
           </>
         ) : (
           <div className="flex flex-col items-center gap-4 pt-12">
-            <h4 className="text-2xl font-bold text-center text-black dark:text-white md:text-4xl">
+            <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
               This post doesn&apos;t exist
             </h4>
-            <h5 className="text-xl font-medium text-center text-zinc-700 dark:text-zinc-400 md:text-2xl">
+            <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
               It looks like someone sent you on a wild goose chase 🪿
             </h5>
             <div className="pt-8">
               <Link
                 href="/"
-                className="relative flex items-center gap-2 px-6 py-2 text-white rounded-full bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+                className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
               >
                 <FeatherIcon icon="home" />
                 <span>Return Home</span>
@@ -174,6 +187,7 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
           </div>
         }
       />
+      {!!post && <ReactionModal postId={post.id} />}
       {session.status === "unauthenticated" && <LoginPrompt />}
     </>
   );
@@ -220,6 +234,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
           },
         },
         postedBy: true,
+        reactions: {
+          include: {
+            profile: true,
+          },
+        },
       },
     });
     return { props: { hostname: context.req.headers.host, post } };

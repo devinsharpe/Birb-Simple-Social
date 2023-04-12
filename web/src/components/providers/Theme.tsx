@@ -6,9 +6,7 @@ import { Theme } from "@prisma/client";
 const ThemeProvider = () => {
   const settings = useAtomValue(atoms.settings);
   useEffect(() => {
-    console.log(settings);
     if (typeof window !== "undefined") {
-      console.log(window.matchMedia("(prefers-color-scheme: dark)"));
       if (settings) {
         if (
           (settings.theme === Theme.AUTO &&

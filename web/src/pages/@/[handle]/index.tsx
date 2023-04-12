@@ -2,6 +2,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import {
   Post,
   PostMention,
+  PostReaction,
   Profile,
   ProfileRelationship,
   RelationshipRequest,
@@ -24,6 +25,9 @@ import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
+import ReactionModal, {
+  KEY as REACTION_KEY,
+} from "../../../components/modals/Reaction";
 import PostItem from "../../../components/PostItem";
 import Head from "next/head";
 
@@ -34,6 +38,9 @@ interface PageProps {
       profile: Profile;
     })[];
     postedBy: Profile;
+    reactions: (PostReaction & {
+      profile: Profile;
+    })[];
   })[];
   profile: Profile | null;
 }
@@ -482,6 +489,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
                   onClick={(p) =>
                     router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
                   }
+                  onReactionClick={() => setModal(REACTION_KEY)}
                   post={post}
                   sessionUserId={session.data?.user?.id}
                   key={post.id}
@@ -494,6 +502,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
         )}
       </section>
       <Navbar />
+      <ReactionModal />
       {session.status === "unauthenticated" && <LoginPrompt />}
     </>
   );
@@ -508,6 +517,9 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       profile: Profile;
     })[];
     postedBy: Profile;
+    reactions: (PostReaction & {
+      profile: Profile;
+    })[];
   })[] = [];
   if (context.params && context.params?.handle) {
     profile = await prisma.profile.findFirst({
@@ -530,6 +542,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       include: {
         postedBy: true,
         mentions: {
+          include: {
+            profile: true,
+          },
+        },
+        reactions: {
           include: {
             profile: true,
           },

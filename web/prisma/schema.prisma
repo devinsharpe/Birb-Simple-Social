@@ -62,6 +62,7 @@ model Profile {
   posts             Post[]                @relation("profilePosts")
   postMentions      PostMention[]         @relation("profileMentions")
   postReactions     PostReaction[]        @relation("postReactions")
+  profileReaction   ProfileReaction[]     @relation("profileReactions")
   comments          Comment[]             @relation("userComments")
   commentLikes      CommentLike[]         @relation("userCommentLikes")
 }
@@ -144,16 +145,17 @@ enum Visibility {
 }
 
 model Post {
-  id           String           @id @default(cuid())
-  text         String           @db.VarChar(300)
-  location     String           @db.VarChar(32)
-  reviewStatus PostReviewStatus @default(PROCESSING)
-  visibility   Visibility       @default(ACTIVE)
-  likeCount    Int              @default(0)
-  commentCount Int              @default(0)
-  updateCount  Int              @default(0)
-  type         PostType         @default(TEXT)
-  profileId    String
+  id            String           @id @default(cuid())
+  text          String           @db.VarChar(300)
+  location      String           @db.VarChar(32)
+  reviewStatus  PostReviewStatus @default(PROCESSING)
+  visibility    Visibility       @default(ACTIVE)
+  likeCount     Int              @default(0)
+  commentCount  Int              @default(0)
+  reactionCount Int              @default(0)
+  updateCount   Int              @default(0)
+  type          PostType         @default(TEXT)
+  profileId     String
 
   autoReviewedAt   DateTime?
   manualReviewedAt DateTime?
@@ -214,6 +216,7 @@ model CommentLike {
 enum Reaction {
   DOWNCAST        @map("DOWNCAST")
   FIRE            @map("FIRE")
+  HEART           @map("HEART")
   HEART_EYES      @map("HEART_EYES")
   JOY             @map("JOY")
   PINCHED_FINGERS @map("PINCHED_FINGERS")
@@ -226,6 +229,7 @@ enum Reaction {
 model PostReaction {
   id        String   @id @default(cuid())
   reaction  Reaction
+  image     String
   postId    String
   profileId String
 
@@ -233,6 +237,18 @@ model PostReaction {
 
   post    Post    @relation("reactions", fields: [postId], references: [id], onDelete: Cascade)
   profile Profile @relation("postReactions", fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfileReaction {
+  id        String     @id @default(cuid())
+  reaction  Reaction
+  image     String
+  status    Visibility @default(ACTIVE)
+  profileId String
+
+  createdAt DateTime @default(now())
+
+  profile Profile @relation("profileReactions", fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model Session {

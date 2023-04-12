@@ -266,6 +266,11 @@ export const postsRouter = router({
           },
         },
         postedBy: true,
+        reactions: {
+          include: {
+            profile: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

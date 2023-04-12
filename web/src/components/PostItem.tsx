@@ -1,4 +1,4 @@
-import { Post, PostMention, Profile } from "@prisma/client";
+import { Post, PostMention, PostReaction, Profile } from "@prisma/client";
 import React, { useMemo } from "react";
 
 import DialogMenu, { DialogMenuItemProps } from "./DialogMenu";
@@ -8,22 +8,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAge } from "../utils/posts";
 import usePostBlocks from "../hooks/postBlocks";
+import { REACTION_MAP } from "./modals/Reaction";
 
-const PostItem: React.FC<{
+interface PostItemProps {
+  expandedReactions?: boolean;
   onArchive: (id: string) => void;
   onClick: (
     post: Post & {
       postedBy: Profile;
     }
   ) => void;
+  onReactionClick: () => void;
   post: Post & {
     mentions: (PostMention & {
       profile: Profile;
     })[];
     postedBy: Profile;
+    reactions: (PostReaction & {
+      profile: Profile;
+    })[];
   };
   sessionUserId: string | undefined;
-}> = ({ onArchive, onClick, post, sessionUserId }) => {
+}
+
+const PostItem: React.FC<PostItemProps> = ({
+  expandedReactions = false,
+  onArchive,
+  onClick,
+  onReactionClick,
+  post,
+  sessionUserId,
+}) => {
   const age = useMemo(() => getAge(post.createdAt), [post.createdAt]);
   const { blocks } = usePostBlocks(post.text);
 
@@ -33,7 +48,7 @@ const PostItem: React.FC<{
         {
           icon: "smile",
           text: "Add Reaction",
-          onClick: console.log,
+          onClick: onReactionClick,
         },
         {
           icon: "message-square",
@@ -128,12 +143,24 @@ const PostItem: React.FC<{
         )}
       </div>
       <div className="flex items-center space-x-6 pl-12">
-        <button type="button" className="rounded p-2">
-          <FeatherIcon icon="smile" size={16} />
-        </button>
-        <button type="button" className="rounded p-2">
+        {post.profileId !== sessionUserId && (
+          <button
+            type="button"
+            className="rounded p-2"
+            onClick={onReactionClick}
+          >
+            <FeatherIcon icon="smile" size={16} />
+          </button>
+        )}
+        <Link
+          href={`/@/${post.postedBy.handle}/post/${post.id}`}
+          className="flex items-center gap-2 rounded p-2"
+        >
+          {!!post.commentCount && (
+            <span className="text-sm leading-none">{post.commentCount}</span>
+          )}
           <FeatherIcon icon="message-square" size={16} />
-        </button>
+        </Link>
         <button
           type="button"
           className="rounded p-2"
@@ -155,13 +182,48 @@ const PostItem: React.FC<{
         >
           <FeatherIcon icon="share-2" size={16} />
         </button>
-        <Link
-          href={`/@/${post.postedBy.handle}/post/${post.id}`}
-          className="w-full cursor-pointer text-right text-sm text-zinc-600 hover:underline dark:text-zinc-400"
-        >
-          {post.commentCount} Comment{post.commentCount !== 1 && "s"}
-        </Link>
+        {!expandedReactions && (
+          <div className="items center flex w-full justify-end -space-x-3">
+            {post.reactions.map((reaction) => (
+              <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-900">
+                <Image
+                  src={reaction.image}
+                  alt="reaction image"
+                  className="h-full w-full"
+                  width={64}
+                  height={64}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+      {expandedReactions && !!post.reactions.length && (
+        <div className="flex w-full items-center justify-start gap-6 overflow-x-auto rounded bg-zinc-100 p-2 dark:bg-zinc-800">
+          {post.reactions.map((reaction) => (
+            <Link
+              href={`/@/${reaction.profile.handle}`}
+              className="flex flex-col items-center"
+            >
+              <div className="relative h-12 w-12">
+                <div className="h-full w-full overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-900">
+                  <Image
+                    src={reaction.image}
+                    alt="reaction image"
+                    className="h-full w-full object-cover object-center"
+                    width={64}
+                    height={64}
+                  />
+                </div>
+                <span className="absolute -bottom-0 -right-3 z-[1] flex h-7 w-7 items-center  justify-center rounded-full bg-zinc-200 text-center text-sm leading-none dark:bg-zinc-900">
+                  {REACTION_MAP[reaction.reaction]}
+                </span>
+              </div>
+              <p className="text-xs">{reaction.profile.handle}</p>
+            </Link>
+          ))}
+        </div>
+      )}
     </article>
   );
 };
