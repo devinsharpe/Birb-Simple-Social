@@ -2,6 +2,7 @@ import {
   Comment,
   Post,
   PostMention,
+  PostReaction,
   Profile,
   Visibility,
 } from "@prisma/client";
@@ -38,6 +39,9 @@ interface PageProps {
         })[];
         mentions: (PostMention & { profile: Profile })[];
         postedBy: Profile;
+        reactions: (PostReaction & {
+          profile: Profile;
+        })[];
       })
     | null;
 }
@@ -118,6 +122,7 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
         {post ? (
           <>
             <PostItem
+              expandedReactions
               post={post}
               onArchive={handleArchive}
               onClick={console.log}
@@ -182,7 +187,7 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
           </div>
         }
       />
-      <ReactionModal />
+      {!!post && <ReactionModal postId={post.id} />}
       {session.status === "unauthenticated" && <LoginPrompt />}
     </>
   );
@@ -229,6 +234,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
           },
         },
         postedBy: true,
+        reactions: {
+          include: {
+            profile: true,
+          },
+        },
       },
     });
     return { props: { hostname: context.req.headers.host, post } };

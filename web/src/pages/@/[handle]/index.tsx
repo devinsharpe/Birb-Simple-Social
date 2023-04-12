@@ -2,6 +2,7 @@ import type { GetServerSideProps, NextPage } from "next";
 import {
   Post,
   PostMention,
+  PostReaction,
   Profile,
   ProfileRelationship,
   RelationshipRequest,
@@ -37,6 +38,9 @@ interface PageProps {
       profile: Profile;
     })[];
     postedBy: Profile;
+    reactions: (PostReaction & {
+      profile: Profile;
+    })[];
   })[];
   profile: Profile | null;
 }
@@ -513,6 +517,9 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       profile: Profile;
     })[];
     postedBy: Profile;
+    reactions: (PostReaction & {
+      profile: Profile;
+    })[];
   })[] = [];
   if (context.params && context.params?.handle) {
     profile = await prisma.profile.findFirst({
@@ -535,6 +542,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       include: {
         postedBy: true,
         mentions: {
+          include: {
+            profile: true,
+          },
+        },
+        reactions: {
           include: {
             profile: true,
           },
