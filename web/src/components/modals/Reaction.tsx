@@ -2,7 +2,7 @@ import React, { ChangeEvent, useMemo, useRef, useState } from "react";
 import DialogModal from "../DialogModal";
 import { ProfileReaction, Reaction, Visibility } from "@prisma/client";
 import FeatherIcon from "feather-icons-react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import atoms from "../../atoms";
 import { useS3Upload } from "next-s3-upload";
 import useUpload from "../../hooks/upload";
@@ -11,7 +11,7 @@ import Image from "next/image";
 
 export const KEY = "post-reaction";
 
-const REACTION_MAP: {
+export const REACTION_MAP: {
   [key in Reaction]: string;
 } = {
   [Reaction.SMILE]: "😊",
@@ -30,6 +30,7 @@ interface ReactionButtonProps {
   image?: string;
   isLoading: boolean;
   onUploadClick: (reaction: Reaction) => void;
+  onReactionClick: (reaction: Reaction) => void;
   onReset: (reaction: Reaction) => void;
   reaction: Reaction;
 }
@@ -37,8 +38,9 @@ interface ReactionButtonProps {
 const ReactionButton: React.FC<ReactionButtonProps> = ({
   image,
   isLoading,
-  onUploadClick,
+  onReactionClick,
   onReset,
+  onUploadClick,
   reaction,
 }) => {
   return (
@@ -50,7 +52,7 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({
       {image ? (
         <button
           type="button"
-          className="absolute -bottom-0 -left-3 flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-white dark:bg-zinc-900"
+          className="absolute -bottom-0 -left-3 z-[1] flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-900 dark:text-white"
           onClick={() => onReset(reaction)}
         >
           <FeatherIcon icon="x" size={20} />
@@ -58,7 +60,7 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({
       ) : (
         <button
           type="button"
-          className="absolute top-1/2 left-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-zinc-900 bg-opacity-50 text-white"
+          className="absolute top-1/2 left-1/2 z-[1] flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-zinc-100 text-zinc-800 dark:bg-zinc-900/50 dark:text-white"
           onClick={() => onUploadClick(reaction)}
         >
           {isLoading ? (
@@ -69,30 +71,45 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({
         </button>
       )}
       {image && (
-        <Image
-          src={image}
-          height={128}
-          width={128}
-          alt={`${reaction.toLowerCase()} reaction image`}
-          className="h-full w-full rounded-full object-cover object-center"
-        />
+        <button
+          type="button"
+          className="group relative h-full w-full rounded-full"
+          onClick={() => onReactionClick(reaction)}
+        >
+          <span className="absolute inset-0 hidden h-full w-full items-center justify-center rounded-full bg-zinc-900/50 text-white group-hover:flex">
+            <FeatherIcon icon="check" size={30} />
+          </span>
+          <Image
+            src={image}
+            height={128}
+            width={128}
+            alt={`${reaction.toLowerCase()} reaction image`}
+            className="h-full w-full rounded-full object-cover object-center"
+          />
+        </button>
       )}
 
-      <span className="absolute -bottom-0 -right-3 flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-center leading-none dark:bg-zinc-900">
+      <span className="absolute -bottom-0 -right-3 z-[1] flex h-7 w-7 items-center  justify-center rounded-full bg-zinc-200 text-center text-sm leading-none dark:bg-zinc-900 md:h-9 md:w-9 md:text-base">
         {REACTION_MAP[reaction]}
       </span>
     </div>
   );
 };
 
-const ReactionModal = () => {
+interface ReactionModalProps {
+  postId?: string;
+}
+
+const ReactionModal: React.FC<ReactionModalProps> = ({ postId }) => {
   const [currentReaction, setCurrentReaction] = useState<Reaction | undefined>(
     undefined
   );
   const createReaction = trpc.profileReactions.create.useMutation();
   const updateReaction = trpc.profileReactions.update.useMutation();
+  const createPostReaction = trpc.postReactions.create.useMutation();
   const { handleUpload } = useUpload();
   const [reactions, setReactions] = useAtom(atoms.reactions);
+  const setModal = useSetAtom(atoms.modal);
   const reactionsMap = useMemo(() => {
     return reactions.reduce<{
       [key in Reaction]?: ProfileReaction;
@@ -101,7 +118,6 @@ const ReactionModal = () => {
   const uploadRef = useRef<HTMLInputElement | null>(null);
 
   const handleReset = async (reaction: Reaction) => {
-    console.log("resetting");
     const reactionObj = reactions.find((rct) => rct.reaction === reaction);
     if (reactionObj) {
       await updateReaction.mutateAsync({
@@ -142,6 +158,22 @@ const ReactionModal = () => {
     setCurrentReaction(undefined);
   };
 
+  const handleReactionClick = React.useCallback(
+    async (reaction: Reaction) => {
+      const profileReaction = reactions.find(
+        (rct) => rct.reaction === reaction
+      );
+      if (postId && profileReaction) {
+        await createPostReaction.mutateAsync({
+          postId,
+          reactionId: profileReaction.id,
+        });
+      }
+      setModal(undefined);
+    },
+    [postId]
+  );
+
   return (
     <>
       <DialogModal isDismissable={true} name={KEY} title="Add Reaction">
@@ -151,6 +183,7 @@ const ReactionModal = () => {
               <ReactionButton
                 key={`${rct}-${index}`}
                 isLoading={currentReaction === rct}
+                onReactionClick={handleReactionClick}
                 onReset={handleReset}
                 onUploadClick={handleUploadClick}
                 reaction={rct as Reaction}

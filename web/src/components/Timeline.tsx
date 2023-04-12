@@ -1,4 +1,4 @@
-import { Post, PostMention, Profile } from "@prisma/client";
+import { Post, PostMention, PostReaction, Profile } from "@prisma/client";
 import React, { useCallback, useEffect, useState } from "react";
 
 import PostItem from "./PostItem";
@@ -20,8 +20,12 @@ const Timeline: React.FC = () => {
         profile: Profile;
       })[];
       postedBy: Profile;
+      reactions: (PostReaction & {
+        profile: Profile;
+      })[];
     })[]
   >([]);
+  const [currentPost, setCurrentPost] = useState<string>("");
   const router = useRouter();
   const session = useSession();
   const setModal = useSetAtom(atoms.modal);
@@ -76,14 +80,17 @@ const Timeline: React.FC = () => {
           onClick={() =>
             router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
           }
-          onReactionClick={() => setModal(REACTION_KEY)}
+          onReactionClick={() => {
+            setCurrentPost(post.id);
+            setModal(REACTION_KEY);
+          }}
           post={post}
           sessionUserId={session.data?.user?.id}
           key={post.id}
         />
       ))}
 
-      <ReactionModal />
+      <ReactionModal postId={currentPost} />
     </>
   );
 };
