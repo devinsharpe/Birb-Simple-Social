@@ -31,6 +31,7 @@ export const profileReactionsRouter = router({
             not: profileReaction.id,
           },
           reaction: profileReaction.reaction,
+          profileId: ctx.session.user.id,
         },
         data: {
           status: Visibility.ARCHIVED,
