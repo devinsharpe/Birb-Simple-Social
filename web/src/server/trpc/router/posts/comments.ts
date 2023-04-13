@@ -1,6 +1,7 @@
-import { protectedProcedure, publicProcedure, router } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc";
 
-import { Comment, Visibility } from "@prisma/client";
+import type { Comment } from "@prisma/client";
+import { Visibility } from "@prisma/client";
 import { z } from "zod";
 
 export const commentsRouter = router({

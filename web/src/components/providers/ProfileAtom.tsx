@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useAtom } from "jotai";
-import { useRouter } from "next/router";
 
 const ProfileAtomProvider = () => {
   const [profileAtom, setProfile] = useAtom(atoms.profile);
@@ -18,7 +18,7 @@ const ProfileAtomProvider = () => {
       setProfile(profile.data.profile || undefined);
       setSettings(profile.data.settings || undefined);
     }
-  }, [profile.data, setProfile]);
+  }, [profile.data, setProfile, setSettings]);
   return null;
 };
 

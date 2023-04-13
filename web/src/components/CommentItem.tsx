@@ -1,7 +1,8 @@
-import { Comment, Profile } from "@prisma/client";
+import type { Comment, Profile } from "@prisma/client";
 import React, { useMemo } from "react";
 
-import DialogMenu, { DialogMenuItemProps } from "./DialogMenu";
+import DialogMenu from "./DialogMenu";
+import type { DialogMenuItemProps } from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -71,6 +72,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
         onClick: () => onArchive(comment.id),
       });
     return items;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment.id, comment.commentId, sessionUserId]);
 
   return (
@@ -157,12 +159,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
       {comment.children && comment.children.length > 0 && (
         <>
           {comment.children.map((reply) => (
-            <div className="pl-8">
+            <div className="pl-8" key={reply.id}>
               <CommentItem
-                key={reply.id}
                 comment={reply}
                 onArchive={(id) => onArchive(id)}
-                onReply={() => {}}
+                onReply={console.log}
                 sessionUserId={sessionUserId}
               />
             </div>

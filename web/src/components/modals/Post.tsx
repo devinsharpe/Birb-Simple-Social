@@ -69,6 +69,7 @@ const PostModal = () => {
         location: "",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [modal]);
 
   const handleSubmit = useCallback(async () => {
@@ -81,6 +82,7 @@ const PostModal = () => {
       return newPost;
     }
     return null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [post.text, post.location]);
 
   return (

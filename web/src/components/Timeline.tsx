@@ -1,4 +1,4 @@
-import { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
 import React, { useCallback, useEffect, useState } from "react";
 
 import PostItem from "./PostItem";
@@ -40,6 +40,7 @@ const Timeline: React.FC = () => {
         if (updatedPost) router.reload();
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [posts]
   );
 
@@ -50,6 +51,7 @@ const Timeline: React.FC = () => {
         .then((timelinePosts) => setPosts(timelinePosts));
     }
     setPosts([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session.status]);
   return (
     <>

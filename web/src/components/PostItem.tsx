@@ -1,7 +1,8 @@
-import { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
 import React, { useMemo } from "react";
 
-import DialogMenu, { DialogMenuItemProps } from "./DialogMenu";
+import type { DialogMenuItemProps } from "./DialogMenu";
+import DialogMenu from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import { PostDisplay } from "./forms/Post";
 import Image from "next/image";
@@ -77,6 +78,7 @@ const PostItem: React.FC<PostItemProps> = ({
         onClick: () => onArchive(post.id),
       });
     return items;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionUserId]);
 
   return (

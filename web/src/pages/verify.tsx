@@ -29,8 +29,8 @@ const VerifyPage: NextPage = () => {
           What are you still doing here?
         </h3>
         <p className="text-lg">
-          We sent a 🪄 magic 🪄 sign in link to your email address. Let's get
-          started on building stronger, more genuine relationships with
+          We sent a 🪄 magic 🪄 sign in link to your email address. Let&apos;s
+          get started on building stronger, more genuine relationships with
           others... but first, we really need you to find that email.
         </p>
         <div className="flex">

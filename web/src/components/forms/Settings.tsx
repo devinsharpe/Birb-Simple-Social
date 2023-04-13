@@ -1,4 +1,5 @@
-import { ProfileSettings, Reaction, Theme } from "@prisma/client";
+import type { ProfileSettings } from "@prisma/client";
+import { Reaction, Theme } from "@prisma/client";
 
 import FeatherIcon from "feather-icons-react";
 import React from "react";
@@ -17,8 +18,6 @@ interface SettingsFormProps {
 
 const SettingsForm: React.FC<SettingsFormProps> = ({
   onChange,
-  onDeleteAccount,
-  onDownloadUserData,
   onReset,
   onSubmit,
   settings,

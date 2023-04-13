@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSession } from "next-auth/react";
 import { trpc } from "../../utils/trpc";
 import { useEffect } from "react";
@@ -19,7 +20,7 @@ const ReactionsAtomProvider = () => {
     if (reactions.data) {
       setReactionsAtom(reactions.data);
     } else setReactionsAtom([]);
-  }, [reactions.data]);
+  }, [reactions.data, setReactionsAtom]);
 
   return null;
 };

@@ -1,4 +1,4 @@
-import { Profile, ProfileReaction, ProfileSettings } from "@prisma/client";
+import type { Profile, ProfileReaction, ProfileSettings } from "@prisma/client";
 
 import { atom } from "jotai";
 

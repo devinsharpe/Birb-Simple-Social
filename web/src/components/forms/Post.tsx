@@ -1,8 +1,9 @@
-import React, { forwardRef, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import FeatherIcon from "feather-icons-react";
-import { SimplePost } from "../modals/Post";
+import type { SimplePost } from "../modals/Post";
 import Link from "next/link";
-import usePostBlocks, { PostBlock } from "../../hooks/postBlocks";
+import type { PostBlock } from "../../hooks/postBlocks";
+import usePostBlocks from "../../hooks/postBlocks";
 import { formatUrl } from "../../pages/@/[handle]";
 
 interface PostFormProps {
@@ -53,6 +54,7 @@ export const PostDisplay: React.FC<{ blocks: PostBlock[] }> = ({ blocks }) => {
               key={index}
               target="_blank"
               className="text-violet-700 underline dark:text-violet-400"
+              rel="noreferrer"
             >
               <BlockValue block={block} />
             </a>

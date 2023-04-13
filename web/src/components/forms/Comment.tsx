@@ -1,8 +1,7 @@
-import { Comment, Profile } from "@prisma/client";
-import React, { useState } from "react";
+import type { Comment, Profile } from "@prisma/client";
+import React from "react";
 
 import FeatherIcon from "feather-icons-react";
-import Image from "next/image";
 import Link from "next/link";
 import { PostEditor } from "./Post";
 
@@ -33,7 +32,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
         e.preventDefault();
         onSubmit();
       }}
-      className="p-4 border-y border-zinc-300 dark:border-zinc-600"
+      className="border-y border-zinc-300 p-4 dark:border-zinc-600"
     >
       {replyComment && (
         <div className="flex items-center gap-4 ">
@@ -105,7 +104,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
           <FeatherIcon icon="message-square" size={20} />
           <span className="hidden md:inline-block">Post</span>
           {isLoading && (
-            <span className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 ">
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
               <FeatherIcon icon="loader" className="text-white" size={16} />
             </span>
           )}

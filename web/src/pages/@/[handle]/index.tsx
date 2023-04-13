@@ -1,13 +1,13 @@
 import type { GetServerSideProps, NextPage } from "next";
-import {
+import type {
   Post,
   PostMention,
   PostReaction,
   Profile,
   ProfileRelationship,
   RelationshipRequest,
-  Visibility,
 } from "@prisma/client";
+import { Visibility } from "@prisma/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 
@@ -258,7 +258,11 @@ const ProfileHeader: React.FC<{
             <div className="flex items-center gap-2 underline">
               <FeatherIcon icon="link" size={16} />
               <h4>
-                <a href={formatUrl(profile.website).toString()} target="_blank">
+                <a
+                  href={formatUrl(profile.website).toString()}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {profile.website}
                 </a>
               </h4>
@@ -356,13 +360,17 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, userProfile]);
 
-  const handleArchive = useCallback(async (id: string) => {
-    const post = posts.find((p) => p.id === id);
-    if (post) {
-      const archivedPost = await archivePost.mutateAsync({ id: post.id });
-      if (archivedPost) router.reload();
-    }
-  }, []);
+  const handleArchive = useCallback(
+    async (id: string) => {
+      const post = posts.find((p) => p.id === id);
+      if (post) {
+        const archivedPost = await archivePost.mutateAsync({ id: post.id });
+        if (archivedPost) router.reload();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [posts, router]
+  );
 
   const handleCancelClick = useCallback(async () => {
     if (request) {
@@ -392,6 +400,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
       setRequest(null);
     }
     setModal(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [relationship, profile, forceUnfollow]);
 
   return (
@@ -486,7 +495,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
               {posts.map((post) => (
                 <PostItem
                   onArchive={handleArchive}
-                  onClick={(p) =>
+                  onClick={() =>
                     router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
                   }
                   onReactionClick={() => setModal(REACTION_KEY)}

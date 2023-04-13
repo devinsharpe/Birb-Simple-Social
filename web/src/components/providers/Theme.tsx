@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import type React from "react";
+import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import atoms from "../../atoms";
 import { Theme } from "@prisma/client";
 
-const ThemeProvider = () => {
+const ThemeProvider: React.FC = () => {
   const settings = useAtomValue(atoms.settings);
   useEffect(() => {
     if (typeof window !== "undefined") {

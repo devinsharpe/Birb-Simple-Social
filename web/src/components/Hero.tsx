@@ -1,4 +1,5 @@
 import FeatherIcon from "feather-icons-react";
+import Image from "next/image";
 import React from "react";
 
 const Hero = () => {
@@ -16,13 +17,15 @@ const Hero = () => {
       <div className="flex flex-col items-center gap-8 md:flex-row">
         <div className="relative">
           <div className="h-48 w-48 shrink-0 overflow-hidden rounded-lg">
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1619970096024-c7b438a3b82a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjN8fHNlbGZpZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=1800&q=60"
               alt="Photo of young woman taking a selfie"
               className="w-full"
+              width={1920}
+              height={1080}
             />
           </div>
-          <div className="transform absolute -bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-violet-700 p-3 text-white shadow-lg shadow-violet-700/50 dark:bg-violet-400 dark:text-black">
+          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 transform rounded-full bg-violet-700 p-3 text-white shadow-lg shadow-violet-700/50 dark:bg-violet-400 dark:text-black">
             <FeatherIcon icon="aperture" size={28} />
           </div>
         </div>

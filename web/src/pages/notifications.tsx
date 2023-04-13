@@ -1,4 +1,5 @@
-import { Profile, RelationshipRequest, RequestStatus } from "@prisma/client";
+import type { Profile, RelationshipRequest } from "@prisma/client";
+import { RequestStatus } from "@prisma/client";
 import { useCallback, useEffect, useState } from "react";
 
 import DialogMenu from "../components/DialogMenu";
@@ -87,7 +88,7 @@ const NotificationsPage: NextPage = () => {
     (RelationshipRequest & { follower: Profile })[]
   >([]);
   const router = useRouter();
-  const [page, setPage] = useState(1);
+  const [page] = useState(1);
   const listRequests = trpc.requests.list.useMutation();
   const updateRequest = trpc.requests.update.useMutation();
 
@@ -96,6 +97,7 @@ const NotificationsPage: NextPage = () => {
       const newRequest = await updateRequest.mutateAsync({ id, status });
       if (newRequest) setRequests(await listRequests.mutateAsync());
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

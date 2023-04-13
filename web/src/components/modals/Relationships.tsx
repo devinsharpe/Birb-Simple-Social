@@ -23,11 +23,11 @@ const ProfileItem: React.FC<{
   };
 }> = ({ onClick, profile }) => {
   return (
-    <div className="flex items-center w-full gap-4 px-4 py-2">
-      <div className="w-12 h-12 overflow-hidden rounded-full shrink-0">
+    <div className="flex w-full items-center gap-4 px-4 py-2">
+      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
         <Image
           src={profile.avatarUrl}
-          className="object-cover object-center w-full h-full"
+          className="h-full w-full object-cover object-center"
           alt={`${profile.name}'s avatar image`}
           width={128}
           height={128}
@@ -35,7 +35,7 @@ const ProfileItem: React.FC<{
       </div>
       <Link
         href={`/@/${profile.handle}`}
-        className="w-full group"
+        className="group w-full"
         onClick={onClick}
       >
         <div className="w-full">
@@ -79,7 +79,8 @@ const RelationshipModal: React.FC<{
         })
         .then((rels) => setRelationships(rels));
     }
-  }, [modal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modal, modalKey, profile.id, type]);
 
   return (
     <DialogModal
@@ -88,9 +89,9 @@ const RelationshipModal: React.FC<{
       }`}
       name={modalKey}
     >
-      <section className="h-full overflow-y-auto divide-y divide-zinc-300 dark:divide-zinc-600">
+      <section className="h-full divide-y divide-zinc-300 overflow-y-auto dark:divide-zinc-600">
         {getRelationships.isLoading ? (
-          <div className="flex items-center justify-center w-full h-14">
+          <div className="flex h-14 w-full items-center justify-center">
             <FeatherIcon icon="loader" className="animate-spin" />
           </div>
         ) : (

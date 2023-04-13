@@ -14,7 +14,7 @@ const TextInput: React.FC<{
   onFocus?: () => void;
   onChange: (val: string) => void;
   value: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }> = ({
   fieldsetClassName,
   icon,

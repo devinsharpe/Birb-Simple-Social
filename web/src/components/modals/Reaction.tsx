@@ -1,10 +1,11 @@
-import React, { ChangeEvent, useMemo, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import DialogModal from "../DialogModal";
-import { ProfileReaction, Reaction, Visibility } from "@prisma/client";
+import type { ProfileReaction } from "@prisma/client";
+import { Reaction, Visibility } from "@prisma/client";
 import FeatherIcon from "feather-icons-react";
 import { useAtom, useSetAtom } from "jotai";
 import atoms from "../../atoms";
-import { useS3Upload } from "next-s3-upload";
 import useUpload from "../../hooks/upload";
 import { trpc } from "../../utils/trpc";
 import Image from "next/image";
@@ -171,7 +172,8 @@ const ReactionModal: React.FC<ReactionModalProps> = ({ postId }) => {
       }
       setModal(undefined);
     },
-    [postId]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [postId, reactions]
   );
 
   return (

@@ -1,14 +1,9 @@
-import React, {
-  ChangeEvent,
-  MouseEvent,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import type { ChangeEvent, MouseEvent } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import { Profile } from "@prisma/client";
+import type { Profile } from "@prisma/client";
 import TextInput from "../inputs/Text";
 import { trpc } from "../../utils/trpc";
 import { useS3Upload } from "next-s3-upload";
@@ -24,7 +19,8 @@ const ProfileForm: React.FC<{
   const checkHandle = useCallback(async () => {
     const isValid = await checkProfileHandle.mutateAsync(profile.handle);
     setIsValidHandle(isValid);
-  }, [profile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile.handle]);
   const avatarRef = useRef<HTMLInputElement | null>(null);
   const headerRef = useRef<HTMLInputElement | null>(null);
 
@@ -58,7 +54,7 @@ const ProfileForm: React.FC<{
   const handleFileChange = async (file: File) => {
     const blob = file.slice(0, file.size, file.type);
     const filename = `${crypto.randomUUID()}.${file.type.split("/")[1]}`;
-    let { url } = await uploadToS3(
+    const { url } = await uploadToS3(
       new File([blob], filename, {
         type: file.type,
       })
@@ -87,11 +83,11 @@ const ProfileForm: React.FC<{
               width={2520}
               height={1080}
               alt={`${profile.name}'s header image`}
-              className="object-cover object-center w-full h-full"
+              className="h-full w-full object-cover object-center"
             />
             <button
               type="button"
-              className="absolute flex items-center justify-center w-12 h-12 text-white transform -translate-x-1/2 -translate-y-1/2 bg-opacity-50 rounded-full top-1/2 left-1/2 bg-zinc-900"
+              className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-zinc-900 bg-opacity-50 text-white"
               onClick={(e) => handleClick(e, "headerUrl")}
             >
               {currentPicKey === "headerUrl" ? (
@@ -111,11 +107,11 @@ const ProfileForm: React.FC<{
               height={128}
               width={128}
               alt={`${profile.name}'s avatar image`}
-              className="object-cover object-center w-full h-full"
+              className="h-full w-full object-cover object-center"
             />
             <button
               type="button"
-              className="absolute flex items-center justify-center w-12 h-12 text-white transform -translate-x-1/2 -translate-y-1/2 bg-opacity-50 rounded-full top-1/2 left-1/2 bg-zinc-900"
+              className="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 transform items-center justify-center rounded-full bg-zinc-900 bg-opacity-50 text-white"
               onClick={(e) => handleClick(e, "avatarUrl")}
             >
               {currentPicKey === "avatarUrl" ? (
@@ -194,14 +190,14 @@ const ProfileForm: React.FC<{
         <div className="flex items-center justify-center">
           <button
             type="submit"
-            className="relative px-10 py-2 text-white rounded-full bg-zinc-800 hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+            className="relative rounded-full bg-zinc-800 px-10 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
           >
             <span className={`${isLoading && "text-transparent"}`}>Save</span>
             {isLoading && (
-              <span className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2 ">
+              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
                 <FeatherIcon
                   icon="loader"
-                  className="text-white animate-spin dark:text-zinc-800"
+                  className="animate-spin text-white dark:text-zinc-800"
                   size={16}
                 />
               </span>

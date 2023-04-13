@@ -36,7 +36,7 @@ const ProfileModal = () => {
       if (newProfile) setProfileAtom(newProfile);
       setModal(undefined);
     }
-  }, [profile, profileAtom, saveProfileMutation, setModal, setProfileAtom]);
+  }, [profile, saveProfileMutation, setModal, setProfileAtom]);
 
   return (
     <>
