@@ -1,7 +1,17 @@
-import { Reaction, Theme } from "@prisma/client";
+import type { Theme } from "@prisma/client";
+import { Reaction, Visibility } from "@prisma/client";
 import { protectedProcedure, router } from "../../trpc";
 
 import { z } from "zod";
+
+const REACTION_VALUES = [...Object.values(Reaction)] as unknown as readonly [
+  Reaction,
+  ...Reaction[]
+];
+const THEME_VALUES = [...Object.values(Visibility)] as unknown as readonly [
+  Theme,
+  ...Theme[]
+];
 
 export const settingsRouter = router({
   get: protectedProcedure.mutation(async ({ ctx }) => {
@@ -21,17 +31,9 @@ export const settingsRouter = router({
   update: protectedProcedure
     .input(
       z.strictObject({
-        reaction: z.enum([
-          Reaction.DOWNCAST,
-          Reaction.FIRE,
-          Reaction.HEART_EYES,
-          Reaction.JOY,
-          Reaction.PINCHED_FINGERS,
-          Reaction.SMILE,
-          Reaction.THUMBS_UP,
-        ]),
+        reaction: z.enum(REACTION_VALUES),
         catMode: z.boolean(),
-        theme: z.enum([Theme.AUTO, Theme.LIGHT, Theme.DARK]),
+        theme: z.enum(THEME_VALUES),
         relativeTimestamps: z.boolean(),
       })
     )

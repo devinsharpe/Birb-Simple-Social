@@ -1,11 +1,12 @@
-import { ProfileSettings, Reaction, Theme } from "@prisma/client";
+import type { ProfileSettings } from "@prisma/client";
+import { Reaction, Theme } from "@prisma/client";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
 import FeatherIcon from "feather-icons-react";
 import Head from "next/head";
 import Navbar from "../../components/Navbar";
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import SettingsForm from "../../components/forms/Settings";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
@@ -25,6 +26,7 @@ const SettingsPage: NextPage = () => {
 
   const handleReset = useCallback(() => {
     if (storedSettings) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { id: _, ...settingsObj } = storedSettings;
       setSettings(settingsObj);
     }
@@ -33,8 +35,10 @@ const SettingsPage: NextPage = () => {
   const handleSubmit = useCallback(async () => {
     const newSettings = await updateSettings.mutateAsync(settings);
     setStoredSettings(newSettings);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storedSettings, settings]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => handleReset, []);
 
   return (
