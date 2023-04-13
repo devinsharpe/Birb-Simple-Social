@@ -65,6 +65,7 @@ model Profile {
   commentLikes      CommentLike[]         @relation("userCommentLikes")
 
   @@index([id])
+  @@fulltext([name, handle])
 }
 
 enum RequestStatus {
