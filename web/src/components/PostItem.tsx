@@ -185,7 +185,10 @@ const PostItem: React.FC<PostItemProps> = ({
         {!expandedReactions && (
           <div className="items center flex w-full justify-end -space-x-3">
             {post.reactions.map((reaction) => (
-              <div className="h-8 w-8 overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-900">
+              <div
+                className="h-8 w-8 overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-900"
+                key={reaction.id}
+              >
                 <Image
                   src={reaction.image}
                   alt="reaction image"
@@ -204,6 +207,7 @@ const PostItem: React.FC<PostItemProps> = ({
             <Link
               href={`/@/${reaction.profile.handle}`}
               className="flex flex-col items-center"
+              key={reaction.id}
             >
               <div className="relative h-12 w-12">
                 <div className="h-full w-full overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-900">
