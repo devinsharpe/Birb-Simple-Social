@@ -1,4 +1,5 @@
-export default {
+/** @type {import("eslint").Linter.Config} */
+const config = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: "tsconfig.json",
@@ -10,3 +11,5 @@ export default {
     "@typescript-eslint/consistent-type-imports": "warn",
   },
 };
+
+module.exports = config
