@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 // Necessary for Next auth
@@ -28,6 +29,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model Profile {
@@ -61,6 +63,8 @@ model Profile {
   profileReaction   ProfileReaction[]     @relation("profileReactions")
   comments          Comment[]             @relation("userComments")
   commentLikes      CommentLike[]         @relation("userCommentLikes")
+
+  @@index([id])
 }
 
 enum RequestStatus {
@@ -90,6 +94,9 @@ model RelationshipRequest {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([followerId])
+  @@index([followingId])
 }
 
 model ProfileRelationship {
@@ -105,6 +112,9 @@ model ProfileRelationship {
 
   createdAt   DateTime @default(now())
   requestedAt DateTime
+
+  @@index([followerId])
+  @@index([followingId])
 }
 
 enum Theme {
@@ -163,6 +173,8 @@ model Post {
   postedBy  Profile        @relation("profilePosts", fields: [profileId], references: [id], onDelete: Cascade)
   reactions PostReaction[] @relation("reactions")
   comments  Comment[]      @relation("comments")
+
+  @@index([profileId])
 }
 
 model PostMention {
@@ -172,6 +184,9 @@ model PostMention {
 
   post    Post    @relation("mentions", fields: [postId], references: [id], onDelete: Cascade)
   profile Profile @relation("profileMentions", fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([profileId])
 }
 
 model Comment {
@@ -190,11 +205,15 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  parent   Comment?      @relation("children", fields: [commentId], references: [id], onDelete: Cascade)
+  parent   Comment?      @relation("children", fields: [commentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   post     Post          @relation("comments", fields: [postId], references: [id], onDelete: Cascade)
   postedBy Profile       @relation("userComments", fields: [profileId], references: [id], onDelete: Cascade)
   likes    CommentLike[] @relation("likes")
   children Comment[]     @relation("children")
+
+  @@index([commentId])
+  @@index([postId])
+  @@index([profileId])
 }
 
 model CommentLike {
@@ -207,6 +226,9 @@ model CommentLike {
 
   comment Comment @relation("likes", fields: [commentId], references: [id], onDelete: Cascade)
   profile Profile @relation("userCommentLikes", fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([commentId])
+  @@index([profileId])
 }
 
 enum Reaction {
@@ -233,6 +255,9 @@ model PostReaction {
 
   post    Post    @relation("reactions", fields: [postId], references: [id], onDelete: Cascade)
   profile Profile @relation("postReactions", fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([profileId])
 }
 
 model ProfileReaction {
@@ -245,6 +270,8 @@ model ProfileReaction {
   createdAt DateTime @default(now())
 
   profile Profile @relation("profileReactions", fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
 }
 
 model Session {
@@ -253,6 +280,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model User {
