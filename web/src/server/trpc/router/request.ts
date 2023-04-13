@@ -1,5 +1,5 @@
 import { RelationshipType, RequestStatus } from "@prisma/client";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { protectedProcedure, router } from "../trpc";
 
 import { getRelationshipCounts } from "../../../utils/profiles";
 import { z } from "zod";

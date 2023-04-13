@@ -1,11 +1,11 @@
-import {
+import type {
   Comment,
   Post,
   PostMention,
   PostReaction,
   Profile,
-  Visibility,
 } from "@prisma/client";
+import { Visibility } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
 import React, { useCallback, useState } from "react";
 
@@ -46,7 +46,7 @@ interface PageProps {
     | null;
 }
 
-const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
+const PostPage: NextPage<PageProps> = ({ post }) => {
   const [commentText, setCommentText] = useState("");
   const [replyComment, setReplyComment] = useState<
     | (Comment & {
@@ -62,11 +62,12 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
   const router = useRouter();
   const session = useSession();
 
-  const handleArchive = useCallback(async (id: string) => {
+  const handleArchive = useCallback(async () => {
     if (post) {
       const archivedPost = await archivePost.mutateAsync({ id: post.id });
       if (archivedPost) router.push(`/@/${post.postedBy.handle}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = useCallback(
@@ -96,6 +97,7 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
       }
       return null;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [post, replyComment]
   );
 
@@ -140,7 +142,7 @@ const PostPage: NextPage<PageProps> = ({ hostname, post }) => {
             {post.comments.length === 0 && (
               <div className="flex h-32 flex-col items-center justify-center opacity-75">
                 <h4 className="text-lg font-semibold">
-                  It's all quiet here...
+                  It&apos;s all quiet here...
                 </h4>
                 <h5>Just you, {post.postedBy.name}, and Gary 🪿</h5>
               </div>
