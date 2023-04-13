@@ -13,6 +13,7 @@ CREATE TABLE `Account` (
     `id_token` TEXT NULL,
     `session_state` VARCHAR(191) NULL,
 
+    INDEX `Account_userId_idx`(`userId`),
     UNIQUE INDEX `Account_provider_providerAccountId_key`(`provider`, `providerAccountId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -35,6 +36,7 @@ CREATE TABLE `Profile` (
     `canChangeHandle` BOOLEAN NOT NULL DEFAULT true,
 
     UNIQUE INDEX `Profile_normalizedHandle_key`(`normalizedHandle`),
+    INDEX `Profile_id_idx`(`id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -47,6 +49,8 @@ CREATE TABLE `RelationshipRequest` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `RelationshipRequest_followerId_idx`(`followerId`),
+    INDEX `RelationshipRequest_followingId_idx`(`followingId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -59,6 +63,8 @@ CREATE TABLE `ProfileRelationship` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `requestedAt` DATETIME(3) NOT NULL,
 
+    INDEX `ProfileRelationship_followerId_idx`(`followerId`),
+    INDEX `ProfileRelationship_followingId_idx`(`followingId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -91,6 +97,7 @@ CREATE TABLE `Post` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `Post_profileId_idx`(`profileId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -100,6 +107,8 @@ CREATE TABLE `PostMention` (
     `postId` VARCHAR(191) NOT NULL,
     `profileId` VARCHAR(191) NOT NULL,
 
+    INDEX `PostMention_postId_idx`(`postId`),
+    INDEX `PostMention_profileId_idx`(`profileId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -118,6 +127,9 @@ CREATE TABLE `Comment` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `Comment_commentId_idx`(`commentId`),
+    INDEX `Comment_postId_idx`(`postId`),
+    INDEX `Comment_profileId_idx`(`profileId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -129,6 +141,8 @@ CREATE TABLE `CommentLike` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
+    INDEX `CommentLike_commentId_idx`(`commentId`),
+    INDEX `CommentLike_profileId_idx`(`profileId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -141,6 +155,8 @@ CREATE TABLE `PostReaction` (
     `profileId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    INDEX `PostReaction_postId_idx`(`postId`),
+    INDEX `PostReaction_profileId_idx`(`profileId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -153,6 +169,7 @@ CREATE TABLE `ProfileReaction` (
     `profileId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    INDEX `ProfileReaction_profileId_idx`(`profileId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -164,6 +181,7 @@ CREATE TABLE `Session` (
     `expires` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Session_sessionToken_key`(`sessionToken`),
+    INDEX `Session_userId_idx`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -188,57 +206,3 @@ CREATE TABLE `VerificationToken` (
     UNIQUE INDEX `VerificationToken_token_key`(`token`),
     UNIQUE INDEX `VerificationToken_identifier_token_key`(`identifier`, `token`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- AddForeignKey
-ALTER TABLE `Account` ADD CONSTRAINT `Account_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Profile` ADD CONSTRAINT `Profile_id_fkey` FOREIGN KEY (`id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `RelationshipRequest` ADD CONSTRAINT `RelationshipRequest_followerId_fkey` FOREIGN KEY (`followerId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `RelationshipRequest` ADD CONSTRAINT `RelationshipRequest_followingId_fkey` FOREIGN KEY (`followingId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `ProfileRelationship` ADD CONSTRAINT `ProfileRelationship_followerId_fkey` FOREIGN KEY (`followerId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `ProfileRelationship` ADD CONSTRAINT `ProfileRelationship_followingId_fkey` FOREIGN KEY (`followingId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Post` ADD CONSTRAINT `Post_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `PostMention` ADD CONSTRAINT `PostMention_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `PostMention` ADD CONSTRAINT `PostMention_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comment` ADD CONSTRAINT `Comment_commentId_fkey` FOREIGN KEY (`commentId`) REFERENCES `Comment`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comment` ADD CONSTRAINT `Comment_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comment` ADD CONSTRAINT `Comment_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `CommentLike` ADD CONSTRAINT `CommentLike_commentId_fkey` FOREIGN KEY (`commentId`) REFERENCES `Comment`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `CommentLike` ADD CONSTRAINT `CommentLike_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `PostReaction` ADD CONSTRAINT `PostReaction_postId_fkey` FOREIGN KEY (`postId`) REFERENCES `Post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `PostReaction` ADD CONSTRAINT `PostReaction_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `ProfileReaction` ADD CONSTRAINT `ProfileReaction_profileId_fkey` FOREIGN KEY (`profileId`) REFERENCES `Profile`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Session` ADD CONSTRAINT `Session_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
