@@ -1,4 +1,4 @@
-import type { NextPage, GetServerSideProps } from "next";
+import type { NextPage } from "next";
 import { env } from "../env.mjs";
 
 interface HomePageProps {
@@ -16,9 +16,7 @@ const Home: NextPage<HomePageProps> = ({ notFound }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
-  context
-) => {
+export const getServerSideProps = () => {
   const notFound = env.NODE_ENV !== "development";
   return {
     props: {
