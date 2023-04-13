@@ -28,7 +28,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  console.log(env);
   const profile = useAtomValue(atoms.profile);
   const setModal = useSetAtom(atoms.modal);
   return (
