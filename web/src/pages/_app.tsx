@@ -20,6 +20,7 @@ import PostModal, { KEY as POST_KEY } from "../components/modals/Post";
 import { DevTools } from "jotai-devtools";
 import ThemeProvider from "../components/providers/Theme";
 import ReactionsAtomProvider from "../components/providers/ReactionsAtom";
+import { env } from "../env/client.mjs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  console.log(env);
   const profile = useAtomValue(atoms.profile);
   const setModal = useSetAtom(atoms.modal);
   return (
@@ -40,8 +42,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           content="Birb, a different type of social network"
         />
       </Head>
-
-      <DevTools />
+      {env.NEXT_PUBLIC_ENV === "development" && <DevTools />}
       <SessionProvider session={session}>
         <style jsx global>
           {`
