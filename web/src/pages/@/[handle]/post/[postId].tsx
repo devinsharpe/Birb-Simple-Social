@@ -26,6 +26,8 @@ import ReactionModal, {
 } from "../../../../components/modals/Reaction";
 import { useSetAtom } from "jotai";
 import atoms from "../../../../atoms";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../../api/auth/[...nextauth]";
 
 interface PageProps {
   hostname: string | undefined;
@@ -200,7 +202,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 ) => {
   const date = new Date();
   date.setDate(date.getDate() - 7);
-  if (context.params && context.params.postId) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  if (context.params && context.params.postId && session) {
     const post = await prisma.post.findFirst({
       where: {
         id: context.params.postId.toString(),
