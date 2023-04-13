@@ -27,8 +27,8 @@ const BirbMagicLink = ({ url, supportUrl }: BirbMagicLinkProps) => {
     <Html>
       <Head />
       <Preview>
-        Here's your Birb Magic Link 🪄 Open this email to get started with Birb
-        - Simple Social
+        Here&apos;s your Birb Magic Link 🪄 Open this email to get started with
+        Birb - Simple Social
       </Preview>
       <Tailwind>
         <Body className="bg-white mx-auto pt-16 my-auto font-sans bg-zinc-900 text-zinc-200">
@@ -57,8 +57,9 @@ const BirbMagicLink = ({ url, supportUrl }: BirbMagicLinkProps) => {
               </Heading>
               <Text className="text-lg">
                 Click the button below to log into Birb - Simple Social using 🪄
-                magic 🪄 While you're there, don't forget to support your
-                friends, love yourself, and focus on the finer things in life
+                magic 🪄 While you&apos;re there, don&apos;t forget to support
+                your friends, love yourself, and focus on the finer things in
+                life
               </Text>
               <Button
                 className="rounded-md bg-violet-700 flex items-center justify-center font-semibold w-auto px-8 py-4 my-8 text-white"
@@ -68,8 +69,8 @@ const BirbMagicLink = ({ url, supportUrl }: BirbMagicLinkProps) => {
                 Login and Get Started
               </Button>
               <Text className="mb-4">
-                If the button above isn't cooperating, feel free to use copy and
-                paste this link into your browser:&nbsp;
+                If the button above isn&apos;t cooperating, feel free to use
+                copy and paste this link into your browser:&nbsp;
                 <Link
                   href={url}
                   hrefLang="en"
@@ -89,7 +90,7 @@ const BirbMagicLink = ({ url, supportUrl }: BirbMagicLinkProps) => {
                 </Link>
               </Text>
               <Text className="text-zinc-500">
-                If you didn't attempt to login, you can safely ignore this
+                If you didn&apos;t attempt to login, you can safely ignore this
                 email.
               </Text>
             </Section>
