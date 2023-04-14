@@ -1,5 +1,4 @@
-import type { Theme } from "@prisma/client";
-import { Reaction, Visibility } from "@prisma/client";
+import { Reaction, Theme } from "@prisma/client";
 import { protectedProcedure, router } from "../../trpc";
 
 import { z } from "zod";
@@ -8,7 +7,7 @@ const REACTION_VALUES = [...Object.values(Reaction)] as unknown as readonly [
   Reaction,
   ...Reaction[]
 ];
-const THEME_VALUES = [...Object.values(Visibility)] as unknown as readonly [
+const THEME_VALUES = [...Object.values(Theme)] as unknown as readonly [
   Theme,
   ...Theme[]
 ];
