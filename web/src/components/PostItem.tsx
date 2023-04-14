@@ -134,7 +134,7 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       <div className="space-y-4 pl-12">
-        <p className="max-w-xl">
+        <p className="max-w-xl whitespace-pre-wrap">
           <PostDisplay blocks={blocks} />
         </p>
         {post.location && (
