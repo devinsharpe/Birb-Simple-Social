@@ -72,7 +72,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </>
         )}
 
-        <main className="h-screen overflow-hidden">
+        <main className="h-screen">
           <Component {...pageProps} />
         </main>
       </SessionProvider>
