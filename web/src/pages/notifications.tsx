@@ -110,7 +110,7 @@ const NotificationsPage: NextPage = () => {
 
   return (
     <>
-      <section className="hide-scrollbar container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll px-4 pb-16 pt-20 dark:divide-zinc-600">
+      <section className="hide-scrollbar container mx-auto h-full max-w-2xl divide-y divide-zinc-300 overflow-y-scroll px-4 pb-16 pt-20 dark:divide-zinc-600">
         {/* <h2 className="mx-auto max-w-2xl pb-4 text-3xl font-bold text-zinc-700 dark:text-zinc-400 md:text-6xl">
           Notifications
         </h2> */}

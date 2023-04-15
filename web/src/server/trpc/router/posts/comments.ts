@@ -3,6 +3,7 @@ import { protectedProcedure, router } from "../../trpc";
 import type { Comment } from "@prisma/client";
 import { Visibility } from "@prisma/client";
 import { z } from "zod";
+import { comment as CommentSchema } from "../../../../db/schema";
 
 export const commentsRouter = router({
   archive: protectedProcedure
@@ -66,6 +67,14 @@ export const commentsRouter = router({
       }
 
       if (post) {
+        const result = await ctx.db.insert(CommentSchema).values({
+          text: input.text,
+          postId: input.postId,
+          profileId: ctx.session.user.id,
+          commentId: input.parentId,
+        });
+        console.log(result);
+
         const comment = await ctx.prisma.comment.create({
           data: {
             text: input.text,
@@ -74,6 +83,7 @@ export const commentsRouter = router({
             commentId: input.parentId,
           },
         });
+
         await ctx.prisma.post.update({
           where: { id: input.postId },
           data: {
