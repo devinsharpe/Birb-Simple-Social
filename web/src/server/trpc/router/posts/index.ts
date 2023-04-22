@@ -8,6 +8,7 @@ import type { ILoremIpsumParams } from "lorem-ipsum";
 import { examplePosts } from "../../../../utils/posts";
 import { loremIpsum } from "lorem-ipsum";
 import { z } from "zod";
+import { env } from "../../../../env/server.mjs";
 
 const nameConfig: Config = {
   dictionaries: [
@@ -214,6 +215,20 @@ export const postsRouter = router({
         include: {
           mentions: true,
         },
+      });
+      fetch(`${env.MODERATION_URL}api/queue/add`, {
+        keepalive: false,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([
+          {
+            id: post.id,
+            text: post.text,
+            type: "POST",
+          },
+        ]),
       });
       return result;
     }),
