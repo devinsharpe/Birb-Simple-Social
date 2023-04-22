@@ -17,7 +17,7 @@ enum ResultType {
 }
 
 model Result {
-  id        String     @id @default(cuid())
+  id        String     @id
   text      String
   type      ResultType @default(FORM)
   threshold Int
@@ -44,4 +44,21 @@ model Probability {
 
   resultId String
   result   Result @relation("probabilities", fields: [resultId], references: [id], onDelete: Cascade)
+}
+
+enum QueueStatus {
+  PENDING   @map("PENDING")
+  CANCELLED @map("CANCELLED")
+  COMPLETED @map("COMPLETED")
+  FAILED    @map("FAILED")
+}
+
+model QueueItem {
+  id     String      @id
+  type   ResultType
+  text   String
+  status QueueStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
