@@ -149,6 +149,7 @@ enum PostType {
 enum Visibility {
   ACTIVE   @map("ACTIVE")
   ARCHIVED @map("ARCHIVED")
+  REJECTED @map("REJECTED")
 }
 
 model Post {
