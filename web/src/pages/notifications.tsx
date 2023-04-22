@@ -10,6 +10,8 @@ import Navbar from "../components/Navbar";
 import type { NextPage } from "next";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import Redirect from "../components/Redirect";
 
 const RequestNotification: React.FC<{
   loading: boolean;
@@ -88,6 +90,7 @@ const NotificationsPage: NextPage = () => {
     (RelationshipRequest & { follower: Profile })[]
   >([]);
   const router = useRouter();
+  const session = useSession();
   const [page] = useState(1);
   const listRequests = trpc.requests.list.useMutation();
   const updateRequest = trpc.requests.update.useMutation();
@@ -102,39 +105,46 @@ const NotificationsPage: NextPage = () => {
   );
 
   useEffect(() => {
-    listRequests
-      .mutateAsync({ count: 10, page })
-      .then((req) => setRequests(req));
+    if (session.status === "authenticated")
+      listRequests
+        .mutateAsync({ count: 10, page })
+        .then((req) => setRequests(req));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <>
-      <section className="hide-scrollbar container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll px-4 pb-16 pt-20 dark:divide-zinc-600">
-        {/* <h2 className="mx-auto max-w-2xl pb-4 text-3xl font-bold text-zinc-700 dark:text-zinc-400 md:text-6xl">
+  if (session.status === "authenticated")
+    return (
+      <>
+        <section className="hide-scrollbar container mx-auto h-screen max-w-2xl divide-y divide-zinc-300 overflow-y-scroll px-4 pb-16 pt-20 dark:divide-zinc-600">
+          {/* <h2 className="mx-auto max-w-2xl pb-4 text-3xl font-bold text-zinc-700 dark:text-zinc-400 md:text-6xl">
           Notifications
         </h2> */}
-        {requests.map((req) => (
-          <RequestNotification
-            key={req.id}
-            onClick={handleRequestClick}
-            request={req}
-            loading={updateRequest.isLoading}
-          />
-        ))}
-      </section>
-      <Navbar
-        brandEl={
-          <div className="flex items-center gap-2">
-            <button type="button" className="p-1" onClick={() => router.back()}>
-              <FeatherIcon icon="arrow-left" size={24} />
-            </button>
-            <h4 className="text-xl font-bold tracking-wide">Notifications</h4>
-          </div>
-        }
-      />
-    </>
-  );
+          {requests.map((req) => (
+            <RequestNotification
+              key={req.id}
+              onClick={handleRequestClick}
+              request={req}
+              loading={updateRequest.isLoading}
+            />
+          ))}
+        </section>
+        <Navbar
+          brandEl={
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="p-1"
+                onClick={() => router.back()}
+              >
+                <FeatherIcon icon="arrow-left" size={24} />
+              </button>
+              <h4 className="text-xl font-bold tracking-wide">Notifications</h4>
+            </div>
+          }
+        />
+      </>
+    );
+  else return <Redirect href="/" />;
 };
 
 export default NotificationsPage;
