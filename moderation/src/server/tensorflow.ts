@@ -3,7 +3,7 @@ import * as toxicity from "@tensorflow-models/toxicity";
 import { env } from "../env/server.mjs";
 
 const txjs = async () => {
-  const model = await toxicity.load(env.TOXICITY_THRESHOLD * 0.1, [
+  const model = await toxicity.load(env.TOXICITY_THRESHOLD * 0.01, [
     "insult",
     "obscene",
     "severe_toxicity",
