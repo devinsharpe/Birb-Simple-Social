@@ -46,7 +46,11 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
               className="rounded-md p-2"
               onClick={() => setModal(SEARCH_KEY)}
             >
-              <FeatherIcon icon="search" size={24} />
+              <FeatherIcon
+                icon="search"
+                size={24}
+                className="text-black dark:text-white"
+              />
             </button>
             <DialogMenu
               items={[
@@ -102,7 +106,12 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
                 ],
               ]}
             >
-              <FeatherIcon icon="menu" size={24} aria-hidden="true" />
+              <FeatherIcon
+                icon="menu"
+                size={24}
+                aria-hidden="true"
+                className="text-black dark:text-white"
+              />
             </DialogMenu>
             {profile && (
               <Link
