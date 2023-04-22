@@ -27,6 +27,7 @@ export const serverSchema = z.object({
   EMAIL_URL: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  MODERATION_URL: z.string().url(),
   S3_HOST_URL: z.string(),
   S3_UPLOAD_KEY: z.string(),
   S3_UPLOAD_SECRET: z.string(),
