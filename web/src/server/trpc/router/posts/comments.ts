@@ -3,6 +3,7 @@ import { protectedProcedure, router } from "../../trpc";
 import type { Comment } from "@prisma/client";
 import { Visibility } from "@prisma/client";
 import { z } from "zod";
+import { env } from "../../../../env/server.mjs";
 
 export const commentsRouter = router({
   archive: protectedProcedure
@@ -81,6 +82,20 @@ export const commentsRouter = router({
               increment: 1,
             },
           },
+        });
+        fetch(`${env.MODERATION_URL}api/queue/add`, {
+          keepalive: false,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify([
+            {
+              id: comment.id,
+              text: comment.text,
+              type: "COMMENT",
+            },
+          ]),
         });
         return comment;
       }
