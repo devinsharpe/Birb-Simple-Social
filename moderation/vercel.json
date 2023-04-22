@@ -1,8 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/queue/pop/5",
-      "schedule": "*/15 * * * *"
+      "path": "/api/queue/pop/15",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
