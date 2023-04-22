@@ -10,5 +10,5 @@ CREATE TABLE `QueueItem` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- AddForeignKey
-ALTER TABLE `Probability` ADD CONSTRAINT `Probability_resultId_fkey` FOREIGN KEY (`resultId`) REFERENCES `Result`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- CreateIndex
+CREATE INDEX `Probability_resultId_idx` ON `Probability`(`resultId`);

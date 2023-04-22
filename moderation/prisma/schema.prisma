@@ -2,12 +2,14 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 enum ResultType {
@@ -44,6 +46,8 @@ model Probability {
 
   resultId String
   result   Result @relation("probabilities", fields: [resultId], references: [id], onDelete: Cascade)
+
+  @@index([resultId])
 }
 
 enum QueueStatus {
