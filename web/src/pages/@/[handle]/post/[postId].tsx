@@ -24,7 +24,7 @@ import Head from "next/head";
 import ReactionModal, {
   KEY as REACTION_KEY,
 } from "../../../../components/modals/Reaction";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import atoms from "../../../../atoms";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../api/auth/[...nextauth]";
@@ -61,6 +61,7 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
   const createComment = trpc.comments.create.useMutation();
   const getComment = trpc.comments.get.useMutation();
   const setModal = useSetAtom(atoms.modal);
+  const settings = useAtomValue(atoms.settings);
   const router = useRouter();
   const session = useSession();
 
@@ -126,6 +127,7 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
         {post ? (
           <>
             <PostItem
+              catMode={settings ? settings.catMode : false}
               expandedReactions
               post={post}
               onArchive={handleArchive}
