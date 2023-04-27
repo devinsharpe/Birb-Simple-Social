@@ -7,6 +7,8 @@ import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getAge } from "../utils/posts";
+import usePostBlocks from "../hooks/postBlocks";
+import { PostDisplay } from "./forms/Post";
 
 interface CommentItemProps {
   comment: Comment & {
@@ -42,6 +44,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
   sessionUserId,
 }) => {
   const age = useMemo(() => getAge(comment.createdAt), [comment.createdAt]);
+  const { blocks } = usePostBlocks(comment.text);
   const dialogItems = useMemo(() => {
     const items: DialogMenuItemProps[][] = [
       [
@@ -132,7 +135,9 @@ const CommentItem: React.FC<CommentItemProps> = ({
           </div>
         </div>
         <div className="pt-2 pl-12">
-          <p>{comment.text}</p>
+          <p className="max-w-xl whitespace-pre-wrap">
+            <PostDisplay blocks={blocks} />
+          </p>
         </div>
         <div className="flex w-full items-center gap-4 pt-2 pl-10">
           <button type="button" className="px-2 py-1">
