@@ -148,7 +148,7 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
                 <h4 className="text-lg font-semibold">
                   It&apos;s all quiet here...
                 </h4>
-                <h5>Just you, {post.postedBy.name}, and Gary 🪿</h5>
+                <h5>Just you, {post.postedBy.name}, and Gary 🦆</h5>
               </div>
             )}
             <div className="divide-y divide-zinc-200 overflow-visible dark:divide-zinc-700">
