@@ -8,7 +8,7 @@ import { KEY as LOGIN_KEY } from "./modals/Login";
 const LoginPrompt = () => {
   const setModal = useSetAtom(atoms.modal);
   return (
-    <div className="container fixed bottom-8 left-1/2 z-10 flex max-w-[96vw] -translate-x-1/2 transform flex-wrap items-center justify-between gap-2 rounded-lg bg-violet-600 p-4 px-6 text-white shadow-lg shadow-violet-700/50 md:max-w-[80vw] ">
+    <div className="container fixed bottom-8 left-1/2 z-10 flex max-w-[96vw] -translate-x-1/2 transform flex-wrap items-center justify-between gap-2 rounded-lg bg-violet-600 p-4 px-6 text-white shadow-lg shadow-violet-700/50 md:max-w-[60vw] ">
       <div>
         <h3 className="font-semibold md:text-lg">
           Want to try something different?
