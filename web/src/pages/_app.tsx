@@ -21,6 +21,7 @@ import { DevTools } from "jotai-devtools";
 import ThemeProvider from "../components/providers/Theme";
 import ReactionsAtomProvider from "../components/providers/ReactionsAtom";
 import { env } from "../env/client.mjs";
+import SecondaryNav from "../components/navigation/SecondaryNav";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -75,6 +76,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <main className="h-screen">
           <Component {...pageProps} />
         </main>
+
+        <SecondaryNav onModalClick={setModal} profileHandle={profile?.handle} />
       </SessionProvider>
     </>
   );
