@@ -9,9 +9,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAge } from "../utils/posts";
 import usePostBlocks from "../hooks/postBlocks";
-import { REACTION_MAP } from "./modals/Reaction";
+import { CAT_REACTION_MAP, REACTION_MAP } from "./modals/Reaction";
 
 interface PostItemProps {
+  catMode?: boolean;
   expandedReactions?: boolean;
   onArchive: (id: string) => void;
   onClick: (
@@ -33,6 +34,7 @@ interface PostItemProps {
 }
 
 const PostItem: React.FC<PostItemProps> = ({
+  catMode = false,
   expandedReactions = false,
   onArchive,
   onClick,
@@ -71,12 +73,14 @@ const PostItem: React.FC<PostItemProps> = ({
         },
       ],
     ];
-    if (post.profileId === sessionUserId && items[1])
+    if (post.profileId === sessionUserId && items[0] && items[1]) {
+      items[0].shift();
       items[1].unshift({
         icon: "archive",
         text: "Archive Post",
         onClick: () => onArchive(post.id),
       });
+    }
     return items;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionUserId]);
@@ -204,7 +208,7 @@ const PostItem: React.FC<PostItemProps> = ({
         )}
       </div>
       {expandedReactions && !!post.reactions.length && (
-        <div className="flex w-full items-center justify-start gap-6 overflow-x-auto rounded bg-zinc-100 p-2 dark:bg-zinc-800">
+        <div className="flex w-full items-center justify-start gap-6 overflow-x-auto p-2">
           {post.reactions.map((reaction) => (
             <Link
               href={`/@/${reaction.profile.handle}`}
@@ -212,7 +216,7 @@ const PostItem: React.FC<PostItemProps> = ({
               key={reaction.id}
             >
               <div className="relative h-12 w-12">
-                <div className="h-full w-full overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-900">
+                <div className="h-full w-full overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-800">
                   <Image
                     src={reaction.image}
                     alt="reaction image"
@@ -221,8 +225,10 @@ const PostItem: React.FC<PostItemProps> = ({
                     height={64}
                   />
                 </div>
-                <span className="absolute -bottom-0 -right-3 z-[1] flex h-7 w-7 items-center  justify-center rounded-full bg-zinc-200 text-center text-sm leading-none dark:bg-zinc-900">
-                  {REACTION_MAP[reaction.reaction]}
+                <span className="absolute -bottom-0 -right-3 z-[1] flex h-7 w-7 items-center  justify-center rounded-full bg-zinc-200 text-center text-sm leading-none dark:bg-zinc-700">
+                  {catMode
+                    ? CAT_REACTION_MAP[reaction.reaction]
+                    : REACTION_MAP[reaction.reaction]}
                 </span>
               </div>
               <p className="text-xs">{reaction.profile.handle}</p>

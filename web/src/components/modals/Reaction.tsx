@@ -4,7 +4,7 @@ import DialogModal from "../DialogModal";
 import type { ProfileReaction } from "@prisma/client";
 import { Reaction, Visibility } from "@prisma/client";
 import FeatherIcon from "feather-icons-react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import atoms from "../../atoms";
 import useUpload from "../../hooks/upload";
 import { trpc } from "../../utils/trpc";
@@ -27,7 +27,23 @@ export const REACTION_MAP: {
   [Reaction.HEART]: "❤️",
 };
 
+export const CAT_REACTION_MAP: {
+  [key in Reaction]: string;
+} = {
+  [Reaction.SMILE]: "😸",
+  [Reaction.JOY]: "😹",
+  [Reaction.SKULL]: "💀",
+  [Reaction.HEART_EYES]: "😻",
+  [Reaction.DOWNCAST]: "😾",
+  [Reaction.WEEPING]: "😿",
+  [Reaction.THUMBS_UP]: "👍",
+  [Reaction.PINCHED_FINGERS]: "🤌",
+  [Reaction.FIRE]: "🔥",
+  [Reaction.HEART]: "❤️",
+};
+
 interface ReactionButtonProps {
+  catMode: boolean;
   image?: string;
   isLoading: boolean;
   onUploadClick: (reaction: Reaction) => void;
@@ -37,6 +53,7 @@ interface ReactionButtonProps {
 }
 
 const ReactionButton: React.FC<ReactionButtonProps> = ({
+  catMode,
   image,
   isLoading,
   onReactionClick,
@@ -91,7 +108,7 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({
       )}
 
       <span className="absolute -bottom-0 -right-3 z-[1] flex h-7 w-7 items-center  justify-center rounded-full bg-zinc-200 text-center text-sm leading-none dark:bg-zinc-900 md:h-9 md:w-9 md:text-base">
-        {REACTION_MAP[reaction]}
+        {catMode ? CAT_REACTION_MAP[reaction] : REACTION_MAP[reaction]}
       </span>
     </div>
   );
@@ -111,6 +128,7 @@ const ReactionModal: React.FC<ReactionModalProps> = ({ postId }) => {
   const { handleUpload } = useUpload();
   const [reactions, setReactions] = useAtom(atoms.reactions);
   const setModal = useSetAtom(atoms.modal);
+  const settings = useAtomValue(atoms.settings);
   const reactionsMap = useMemo(() => {
     return reactions.reduce<{
       [key in Reaction]?: ProfileReaction;
@@ -184,6 +202,7 @@ const ReactionModal: React.FC<ReactionModalProps> = ({ postId }) => {
             {Object.keys(REACTION_MAP).map((rct, index) => (
               <ReactionButton
                 key={`${rct}-${index}`}
+                catMode={settings ? settings.catMode : false}
                 isLoading={currentReaction === rct}
                 onReactionClick={handleReactionClick}
                 onReset={handleReset}

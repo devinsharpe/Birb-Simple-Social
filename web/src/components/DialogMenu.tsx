@@ -63,7 +63,7 @@ const DialogMenu: React.FC<{
 }> = ({ children, className, items }) => {
   return (
     <div className="text-right">
-      <Menu as="div" className="relative z-[1] inline-block text-left">
+      <Menu as="div" className="relative inline-block text-left">
         <div>
           <DialogMenuButton className={className}>{children}</DialogMenuButton>
         </div>
@@ -76,7 +76,7 @@ const DialogMenu: React.FC<{
           leaveFrom="transform opacity-100 scale-100"
           leaveTo="transform opacity-0 scale-95"
         >
-          <Menu.Items className="absolute right-0 z-[1] mt-2 w-auto min-w-[14rem] origin-top-right divide-y divide-zinc-400 rounded border border-zinc-400 bg-white py-1 shadow-lg focus:outline-none dark:divide-zinc-700 dark:border-zinc-700 dark:bg-zinc-800">
+          <Menu.Items className="absolute right-0 z-[2] mt-2 w-auto min-w-[14rem] origin-top-right divide-y divide-zinc-400 rounded border border-zinc-400 bg-white py-1 shadow-lg focus:outline-none dark:divide-zinc-700 dark:border-zinc-700 dark:bg-zinc-800">
             {items.map((item, index) =>
               Array.isArray(item) ? (
                 <div className="px-2 py-1" key={index}>
