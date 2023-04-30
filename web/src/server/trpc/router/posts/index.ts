@@ -155,6 +155,8 @@ export const postsRouter = router({
         text: z.string().max(300),
         location: z.string().max(32).default(""),
         type: z.enum([PostType.IMAGE, PostType.TEXT]).default(PostType.TEXT),
+        image: z.string().default(""),
+        alt: z.string().max(500).default(""),
       })
     )
     .mutation(async ({ ctx, input }) => {
