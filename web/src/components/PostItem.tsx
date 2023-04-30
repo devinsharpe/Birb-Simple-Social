@@ -1,4 +1,5 @@
 import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+import { PostType } from "@prisma/client";
 import React, { useMemo } from "react";
 
 import type { DialogMenuItemProps } from "./DialogMenu";
@@ -138,6 +139,17 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       <div className="space-y-4 pl-12">
+        {post.type === PostType.IMAGE && (
+          <div className="relative h-48 w-full lg:h-64">
+            <Image
+              src={post.image}
+              alt={post.alt}
+              fill
+              className="object-contain"
+            />
+          </div>
+        )}
+
         <p className="max-w-xl whitespace-pre-wrap">
           <PostDisplay blocks={blocks} />
         </p>
