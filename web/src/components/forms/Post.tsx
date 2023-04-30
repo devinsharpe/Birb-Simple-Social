@@ -1,10 +1,13 @@
-import React, { useRef, useState } from "react";
+import type { ChangeEvent } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import FeatherIcon from "feather-icons-react";
 import type { SimplePost } from "../modals/Post";
 import Link from "next/link";
 import type { PostBlock } from "../../hooks/postBlocks";
 import usePostBlocks from "../../hooks/postBlocks";
 import { formatUrl } from "../../pages/@/[handle]";
+import useUpload from "../../hooks/upload";
+import Image from "next/image";
 
 interface PostFormProps {
   post: SimplePost;
@@ -124,7 +127,27 @@ const PostForm: React.FC<PostFormProps> = ({
   onChange,
   onSubmit,
 }) => {
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const [showLocationInput, setShowLocationInput] = useState(false);
+  const imageRef = useRef<HTMLInputElement | null>(null);
+  const { handleUpload } = useUpload();
+
+  const handleImageClick = useCallback(() => {
+    if (imageRef.current) imageRef.current.click();
+  }, [imageRef]);
+
+  const handleFileChange = useCallback(
+    async (e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+        setIsImageLoading(true);
+        const fileUrl = await handleUpload(e.target.files[0]);
+        onChange({ ...post, image: fileUrl });
+        setIsImageLoading(false);
+      }
+    },
+    [handleUpload, onChange, post]
+  );
+
   return (
     <form
       className="relative space-y-4 px-2"
@@ -133,6 +156,47 @@ const PostForm: React.FC<PostFormProps> = ({
         onSubmit(post);
       }}
     >
+      {post.image && (
+        <>
+          <fieldset
+            className={`relative flex items-center pt-2  ${
+              post.location.length > 128 ? "text-rose-600" : ""
+            }`}
+          >
+            <FeatherIcon
+              icon="type"
+              size={16}
+              className="absolute left-0 opacity-50"
+            />
+            <input
+              type="text"
+              className="w-full rounded border-none bg-transparent pl-8 outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
+              placeholder="Image Alt Text"
+              onChange={(e) => onChange({ ...post, alt: e.target.value })}
+              value={post.alt}
+            />
+            <span className="right-0 text-sm opacity-50">
+              {post.alt.length}/500
+            </span>
+            <button
+              type="button"
+              className="flex h-full items-center justify-center px-2 opacity-50"
+              onClick={() => onChange({ ...post, alt: "", image: "" })}
+            >
+              <FeatherIcon icon="x" size={20} />
+            </button>
+          </fieldset>
+          <div className="mx-w-xl relative mx-auto h-32 w-full overflow-hidden lg:h-48">
+            <Image
+              src={post.image}
+              alt="Current post image 1"
+              fill
+              className="object-contain"
+            />
+          </div>
+        </>
+      )}
+
       <PostEditor
         onChange={(text) => onChange({ ...post, text })}
         value={post.text}
@@ -213,6 +277,29 @@ const PostForm: React.FC<PostFormProps> = ({
             </span>
           )}
         </button>
+        <button
+          disabled={isImageLoading}
+          type="button"
+          className="flex aspect-square shrink-0 items-center justify-center rounded-full bg-zinc-200 px-2 py-1 text-zinc-800 transition-colors duration-100 hover:bg-zinc-300 focus:bg-zinc-700 dark:bg-zinc-600 dark:text-white dark:hover:bg-zinc-700"
+          onClick={handleImageClick}
+        >
+          {isImageLoading ? (
+            <FeatherIcon icon="loader" className="animate-spin" size={20} />
+          ) : (
+            <FeatherIcon icon="camera" size={20} />
+          )}
+          <span className="sr-only">Add Photo</span>
+        </button>
+      </div>
+      <div className="hidden">
+        <input
+          accept="image/png, image/jpeg, image/jpg"
+          id="post-image"
+          name="image"
+          onChange={handleFileChange}
+          ref={imageRef}
+          type="file"
+        />
       </div>
     </form>
   );
