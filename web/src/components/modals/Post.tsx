@@ -13,6 +13,8 @@ export const KEY = "post-new";
 export interface SimplePost {
   text: string;
   location: string;
+  alt: string;
+  image: string;
 }
 
 interface AvailablePostIndicatorProps {
@@ -56,6 +58,8 @@ const PostModal = () => {
   const [post, setPost] = useState<SimplePost>({
     text: "",
     location: "",
+    alt: "",
+    image: "",
   });
   const [modal, setModal] = useAtom(atoms.modal);
   const createPost = trpc.posts.create.useMutation();
@@ -67,6 +71,8 @@ const PostModal = () => {
       setPost({
         text: "",
         location: "",
+        alt: "",
+        image: "",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,7 +82,7 @@ const PostModal = () => {
     if (post.text) {
       const newPost = await createPost.mutateAsync({
         ...post,
-        type: PostType.TEXT,
+        type: post.image.length ? PostType.IMAGE : PostType.TEXT,
       });
       setModal(undefined);
       return newPost;
