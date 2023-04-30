@@ -165,6 +165,9 @@ model Post {
   type          PostType         @default(TEXT)
   profileId     String
 
+  image String @default("")
+  alt   String @default("") @db.VarChar(500)
+
   autoReviewedAt   DateTime?
   manualReviewedAt DateTime?
 
