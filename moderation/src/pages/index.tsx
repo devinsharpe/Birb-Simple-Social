@@ -1,6 +1,7 @@
 import { Probability, Result, ResultType } from "@prisma/client";
-import Head from "next/head";
 import { useCallback, useEffect, useState } from "react";
+
+import Head from "next/head";
 
 const labels: { [key: string]: string } = {
   indentity_attack: "Identity Attack",
@@ -37,6 +38,7 @@ export default function Home() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
+          id: `FORM-${Math.floor(Math.random() * 100000)}`,
           text,
           type: ResultType.FORM
         })
