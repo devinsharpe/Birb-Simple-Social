@@ -135,3 +135,5 @@ export default function Home() {
     </>
   );
 }
+
+export const runtime = "experimental-edge";
