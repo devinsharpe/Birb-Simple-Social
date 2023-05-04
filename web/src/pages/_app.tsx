@@ -30,7 +30,7 @@ const inter = Inter({ subsets: ["latin"] });
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
-  router
+  router,
 }) => {
   const profile = useAtomValue(atoms.profile);
   const setModal = useSetAtom(atoms.modal);
@@ -77,8 +77,21 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </>
         )}
 
-        <main className="h-screen">
+        <main className="hide-scrollbar mx-auto h-screen max-w-2xl overflow-y-scroll pt-16">
           <Component {...pageProps} />
+          <div className="mt-auto flex items-center justify-center border-t border-zinc-300 pt-16 pb-4 opacity-50 dark:border-zinc-600">
+            <p className="text-sm">
+              made with ❤️ by&nbsp;
+              <a
+                href="https://www.devsharpe.io/"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                devsharpe
+              </a>
+            </p>
+          </div>
         </main>
 
         <SecondaryNav onModalClick={setModal} profileHandle={profile?.handle} />
