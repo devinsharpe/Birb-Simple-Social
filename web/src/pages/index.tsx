@@ -21,7 +21,7 @@ const Home: NextPage = () => {
         />
       </Head>
 
-      <section className="hide-scrollbar container mx-auto h-full max-w-2xl divide-y divide-zinc-300 overflow-y-scroll py-16 dark:divide-zinc-600">
+      <section className="divide-y divide-zinc-300 dark:divide-zinc-600">
         {session.status === "unauthenticated" && (
           <>
             <Hero />

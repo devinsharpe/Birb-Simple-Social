@@ -5,7 +5,7 @@ import FeatherIcon from "feather-icons-react";
 
 const VerifyPage: NextPage = () => {
   return (
-    <div className="hide-scrollbar container mx-auto h-screen max-w-2xl space-y-8 overflow-y-scroll py-16 px-4">
+    <>
       <section className="flex items-center gap-4">
         <Link href="/">
           <Image
@@ -43,7 +43,7 @@ const VerifyPage: NextPage = () => {
           </Link>
         </div>
       </section>
-    </div>
+    </>
   );
 };
 

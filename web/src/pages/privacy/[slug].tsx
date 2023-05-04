@@ -20,7 +20,7 @@ const PrivacyPage: NextPage<DocsPageProps> = ({
         docs={docs}
         onDocSelect={(doc) => router.push(`/privacy/${doc}`)}
       />
-      <div className="mt-16 px-8 py-16">
+      <div className="px-8 py-16">
         <h1 className="text-3xl font-bold tracking-wide">
           Birb Social Privacy Policy
         </h1>
