@@ -7,6 +7,7 @@ import FeatherIcon from "feather-icons-react";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
+import "../styles/nprogress.css";
 import React from "react";
 import Head from "next/head";
 import ProfileAtomProvider from "../components/providers/ProfileAtom";
@@ -19,6 +20,7 @@ import atoms from "../atoms";
 import PostModal, { KEY as POST_KEY } from "../components/modals/Post";
 import { DevTools } from "jotai-devtools";
 import ThemeProvider from "../components/providers/Theme";
+import NProgressProvider from "../components/providers/NProgress";
 import ReactionsAtomProvider from "../components/providers/ReactionsAtom";
 import { env } from "../env/client.mjs";
 import SecondaryNav from "../components/navigation/SecondaryNav";
@@ -28,6 +30,7 @@ const inter = Inter({ subsets: ["latin"] });
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
+  router
 }) => {
   const profile = useAtomValue(atoms.profile);
   const setModal = useSetAtom(atoms.modal);
@@ -57,6 +60,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <WelcomeModal />
         <ProfileAtomProvider />
         <ReactionsAtomProvider />
+        <NProgressProvider router={router} />
         <ThemeProvider />
 
         {profile && (
