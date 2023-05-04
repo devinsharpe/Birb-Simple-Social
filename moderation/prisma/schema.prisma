@@ -3,13 +3,14 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["jsonProtocol"]
+  // previewFeatures = ["jsonProtocol"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
-  provider     = "mysql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider  = "postgres"
+  url       = env("DATABASE_URL")
+  directUrl = env("MIGRATE_DATABASE_URL")
 }
 
 enum ResultType {
@@ -46,8 +47,6 @@ model Probability {
 
   resultId String
   result   Result @relation("probabilities", fields: [resultId], references: [id], onDelete: Cascade)
-
-  @@index([resultId])
 }
 
 enum QueueStatus {
