@@ -123,66 +123,66 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
           </>
         )}
       </Head>
-      <section className="hide-scrollbar mx-auto min-h-screen max-w-2xl overflow-y-scroll py-16">
-        {post ? (
-          <>
-            <PostItem
-              catMode={settings ? settings.catMode : false}
-              expandedReactions
-              post={post}
-              onArchive={handleArchive}
-              onClick={console.log}
-              onReactionClick={() => setModal(REACTION_KEY)}
-              sessionUserId={session.data?.user?.id}
-            />
-            <CommentForm
-              isLoading={createComment.isLoading}
-              onChange={setCommentText}
-              onReplyCancel={() => setReplyComment(null)}
-              onSubmit={() => handleSubmit(commentText)}
-              replyComment={replyComment}
-              value={commentText}
-            />
-            {post.comments.length === 0 && (
-              <div className="flex h-32 flex-col items-center justify-center opacity-75">
-                <h4 className="text-lg font-semibold">
-                  It&apos;s all quiet here...
-                </h4>
-                <h5>Just you, {post.postedBy.name}, and Gary 🦆</h5>
-              </div>
-            )}
-            <div className="divide-y divide-zinc-200 overflow-visible dark:divide-zinc-700">
-              {post.comments.map((comment) => (
-                <CommentItem
-                  key={comment.id}
-                  comment={comment}
-                  onArchive={(id) => archiveComment.mutateAsync({ id })}
-                  onReply={(comment) => setReplyComment(comment)}
-                  sessionUserId={session.data?.user?.id}
-                />
-              ))}
+
+      {post ? (
+        <>
+          <PostItem
+            catMode={settings ? settings.catMode : false}
+            expandedReactions
+            post={post}
+            onArchive={handleArchive}
+            onClick={console.log}
+            onReactionClick={() => setModal(REACTION_KEY)}
+            sessionUserId={session.data?.user?.id}
+          />
+          <CommentForm
+            isLoading={createComment.isLoading}
+            onChange={setCommentText}
+            onReplyCancel={() => setReplyComment(null)}
+            onSubmit={() => handleSubmit(commentText)}
+            replyComment={replyComment}
+            value={commentText}
+          />
+          {post.comments.length === 0 && (
+            <div className="flex h-32 flex-col items-center justify-center opacity-75">
+              <h4 className="text-lg font-semibold">
+                It&apos;s all quiet here...
+              </h4>
+              <h5>Just you, {post.postedBy.name}, and Gary 🦆</h5>
             </div>
-          </>
-        ) : (
-          <div className="flex flex-col items-center gap-4 pt-12">
-            <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
-              This post doesn&apos;t exist
-            </h4>
-            <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
-              It looks like someone sent you on a wild goose chase 🪿
-            </h5>
-            <div className="pt-8">
-              <Link
-                href="/"
-                className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
-              >
-                <FeatherIcon icon="home" />
-                <span>Return Home</span>
-              </Link>
-            </div>
+          )}
+          <div className="divide-y divide-zinc-200 overflow-visible dark:divide-zinc-700">
+            {post.comments.map((comment) => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                onArchive={(id) => archiveComment.mutateAsync({ id })}
+                onReply={(comment) => setReplyComment(comment)}
+                sessionUserId={session.data?.user?.id}
+              />
+            ))}
           </div>
-        )}
-      </section>
+        </>
+      ) : (
+        <div className="flex flex-col items-center gap-4 pt-12">
+          <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+            This post doesn&apos;t exist
+          </h4>
+          <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
+            It looks like someone sent you on a wild goose chase 🪿
+          </h5>
+          <div className="pt-8">
+            <Link
+              href="/"
+              className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+            >
+              <FeatherIcon icon="home" />
+              <span>Return Home</span>
+            </Link>
+          </div>
+        </div>
+      )}
+
       <Navbar
         brandEl={
           <div className="flex items-center gap-2">

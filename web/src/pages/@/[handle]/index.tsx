@@ -463,70 +463,69 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
           </DialogConfirm>
         </>
       )}
-      <section className="hide-scrollbar mx-auto max-w-2xl overflow-y-scroll py-16 ">
-        {profile ? (
-          <>
-            <ProfileHeader
-              onCancelClick={handleCancelClick}
-              onEditClick={() => setModal(PROFILE_KEY)}
-              onFollowClick={handleFollowClick}
-              onFollowerClick={() => setModal("profile-followers")}
-              onFollowingClick={() => setModal("profile-following")}
-              onUnfollowClick={() => setModal(UNFOLLOW_KEY)}
-              profile={profile}
-              isUser={!!userProfile && profile.id === userProfile.id}
-              isFollowing={!!relationship}
-              hasRequest={!!request}
-              sessionStatus={session.status}
-            />
-            <section className="container mx-auto max-w-2xl divide-y divide-zinc-300 pt-4 dark:divide-zinc-600">
-              {session.status === "authenticated" ? (
-                <>
-                  {posts.length === 0 ? (
-                    <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
-                      <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
-                        Shhhh! It&apos;s almost like a library here.
-                      </h4>
-                      <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
-                        Peace and quiet is good, let&apos;s use this time to
-                        take a break.
-                      </h5>
-                    </div>
-                  ) : (
-                    <>
-                      {posts.map((post) => (
-                        <PostItem
-                          onArchive={handleArchive}
-                          onClick={() =>
-                            router.push(
-                              `/@/${post.postedBy.handle}/post/${post.id}`
-                            )
-                          }
-                          onReactionClick={() => setModal(REACTION_KEY)}
-                          post={post}
-                          sessionUserId={session.data?.user?.id}
-                          key={post.id}
-                        />
-                      ))}
-                    </>
-                  )}
-                </>
-              ) : (
-                <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
-                  <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
-                    Uh oh!!! Looks like you&apos;re not signed in.
-                  </h4>
-                  <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
-                    Sign in to see {profile.name}&apos;s great posts.
-                  </h5>
-                </div>
-              )}
-            </section>
-          </>
-        ) : (
-          <BlankHeader handle={handle} />
-        )}
-      </section>
+
+      {profile ? (
+        <>
+          <ProfileHeader
+            onCancelClick={handleCancelClick}
+            onEditClick={() => setModal(PROFILE_KEY)}
+            onFollowClick={handleFollowClick}
+            onFollowerClick={() => setModal("profile-followers")}
+            onFollowingClick={() => setModal("profile-following")}
+            onUnfollowClick={() => setModal(UNFOLLOW_KEY)}
+            profile={profile}
+            isUser={!!userProfile && profile.id === userProfile.id}
+            isFollowing={!!relationship}
+            hasRequest={!!request}
+            sessionStatus={session.status}
+          />
+          <section className="container mx-auto max-w-2xl divide-y divide-zinc-300 pt-4 dark:divide-zinc-600">
+            {session.status === "authenticated" ? (
+              <>
+                {posts.length === 0 ? (
+                  <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
+                    <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+                      Shhhh! It&apos;s almost like a library here.
+                    </h4>
+                    <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
+                      Peace and quiet is good, let&apos;s use this time to take
+                      a break.
+                    </h5>
+                  </div>
+                ) : (
+                  <>
+                    {posts.map((post) => (
+                      <PostItem
+                        onArchive={handleArchive}
+                        onClick={() =>
+                          router.push(
+                            `/@/${post.postedBy.handle}/post/${post.id}`
+                          )
+                        }
+                        onReactionClick={() => setModal(REACTION_KEY)}
+                        post={post}
+                        sessionUserId={session.data?.user?.id}
+                        key={post.id}
+                      />
+                    ))}
+                  </>
+                )}
+              </>
+            ) : (
+              <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
+                <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+                  Uh oh!!! Looks like you&apos;re not signed in.
+                </h4>
+                <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
+                  Sign in to see {profile.name}&apos;s great posts.
+                </h5>
+              </div>
+            )}
+          </section>
+        </>
+      ) : (
+        <BlankHeader handle={handle} />
+      )}
       <Navbar />
       <ReactionModal />
       {session.status === "unauthenticated" && <LoginPrompt />}

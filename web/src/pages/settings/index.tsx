@@ -55,16 +55,14 @@ const SettingsPage: NextPage = () => {
           />
         </Head>
 
-        <div className="hide-scrollbar mx-auto min-h-screen max-w-2xl overflow-y-scroll py-16 ">
-          <SettingsForm
-            onChange={(newSettings) => setSettings(newSettings)}
-            onDeleteAccount={console.log}
-            onDownloadUserData={console.log}
-            onReset={handleReset}
-            onSubmit={handleSubmit}
-            settings={settings}
-          />
-        </div>
+        <SettingsForm
+          onChange={(newSettings) => setSettings(newSettings)}
+          onDeleteAccount={console.log}
+          onDownloadUserData={console.log}
+          onReset={handleReset}
+          onSubmit={handleSubmit}
+          settings={settings}
+        />
 
         <Navbar
           brandEl={
