@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../server/db/client";
+
 import { QueueStatus } from "@prisma/client";
-import txjs from "../../../../server/tensorflow";
 import classifyText from "../../../../utils/classify/text";
 import createResult from "../../../../utils/result/create";
 import { env } from "../../../../env/server.mjs";
+import { prisma } from "../../../../server/db/client";
+import txjs from "../../../../server/tensorflow";
 
 export default async function handler(
   req: NextApiRequest,

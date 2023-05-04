@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
-import { prisma } from "../../../server/db/client";
+
 import { QueueStatus } from "@prisma/client";
+import { prisma } from "../../../server/db/client";
+import { z } from "zod";
 
 const bodySchema = z.object({
   id: z.string(),
@@ -27,3 +28,5 @@ export default async function handler(
   }
   return res.status(405).end();
 }
+
+export const runtime = "experimental-edge";
