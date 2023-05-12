@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 
 import FeatherIcon from "feather-icons-react";
+import type { RefObject } from "react";
 import { Fragment } from "react";
 import atoms from "../atoms/";
 import { useAtom } from "jotai";
@@ -12,7 +13,15 @@ const DialogModal: React.FC<{
   title: string;
   isDismissable?: boolean;
   position?: "top" | "middle" | "bottom";
-}> = ({ children, isDismissable = true, name, position = "middle", title }) => {
+  initialFocusRef?: RefObject<HTMLElement>;
+}> = ({
+  children,
+  isDismissable = true,
+  name,
+  position = "middle",
+  title,
+  initialFocusRef,
+}) => {
   const [modal, setModal] = useAtom(atoms.modal);
   if (typeof window === "undefined") return null;
   return createPortal(
@@ -22,6 +31,7 @@ const DialogModal: React.FC<{
           as="div"
           className="relative z-10"
           onClose={() => isDismissable && setModal(undefined)}
+          initialFocus={initialFocusRef}
         >
           <Transition.Child
             as={Fragment}
