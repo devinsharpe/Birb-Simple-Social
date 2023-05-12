@@ -10,10 +10,10 @@ export interface DocsNavProps {
 
 const DocsNav: React.FC<DocsNavProps> = ({ current, docs, onDocSelect }) => {
   return (
-    <nav className="fixed inset-x-0 top-0 bg-zinc-200/50 px-8 py-4 backdrop-blur-md dark:bg-zinc-800/50">
+    <nav className="fixed inset-x-0 top-0 bg-white/50 px-8 py-2 backdrop-blur-md dark:bg-zinc-900/50">
       <div className="flex items-center justify-between">
         <Link href="/">
-          <Image src="/icons/icon.svg" width={48} height={48} alt="Birb Logo" />
+          <Image src="/icons/icon.svg" width={32} height={32} alt="Birb Logo" />
         </Link>
         <select
           name="terms-archive-select"

@@ -25,7 +25,7 @@ const PrivacyPage: NextPage<DocsPageProps> = ({
           Birb Social Privacy Policy
         </h1>
       </div>
-      <div className="mx-8 rounded-md bg-zinc-200 p-4 dark:bg-zinc-800">
+      <div className="mx-8 border-y border-zinc-300 py-4 dark:border-zinc-800">
         <p>
           Effective: {new Date(data.effectiveDate * 1000).toLocaleDateString()}
         </p>
