@@ -7,6 +7,7 @@ import { PostType } from "@prisma/client";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
+import useToasts from "../../hooks/toasts";
 
 export const KEY = "post-new";
 
@@ -62,6 +63,7 @@ const PostModal = () => {
     image: "",
   });
   const [modal, setModal] = useAtom(atoms.modal);
+  const { addToast } = useToasts();
   const createPost = trpc.posts.create.useMutation();
   const getAvaiable = trpc.posts.availableCount.useMutation();
 
@@ -85,6 +87,11 @@ const PostModal = () => {
         type: post.image.length ? PostType.IMAGE : PostType.TEXT,
       });
       setModal(undefined);
+      addToast({
+        id: "post-new",
+        content: "Thanks for sharing!",
+        icon: "smile",
+      });
       return newPost;
     }
     return null;

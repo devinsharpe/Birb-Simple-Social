@@ -6,6 +6,7 @@ import ProfileForm from "../forms/Profile";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
+import useToasts from "../../hooks/toasts";
 
 export const KEY = "profile-edit";
 
@@ -14,6 +15,7 @@ const ProfileModal = () => {
   const [profile, setProfile] = useState<Profile | undefined>(undefined);
   const [modal, setModal] = useAtom(atoms.modal);
   const saveProfileMutation = trpc.profiles.updateProfile.useMutation();
+  const { addToast } = useToasts();
 
   useEffect(() => {
     if (modal === "profile-edit" && profileAtom) {
@@ -35,8 +37,13 @@ const ProfileModal = () => {
       });
       if (newProfile) setProfileAtom(newProfile);
       setModal(undefined);
+      addToast({
+        id: "profile-update",
+        content: "Looking good!",
+        icon: "camera",
+      });
     }
-  }, [profile, saveProfileMutation, setModal, setProfileAtom]);
+  }, [profile, saveProfileMutation, setModal, setProfileAtom, addToast]);
 
   return (
     <>
