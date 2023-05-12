@@ -11,6 +11,7 @@ import Link from "next/link";
 import { getAge } from "../utils/posts";
 import usePostBlocks from "../hooks/postBlocks";
 import { CAT_REACTION_MAP, REACTION_MAP } from "./modals/Reaction";
+import useToasts from "../hooks/toasts";
 
 interface PostItemProps {
   catMode?: boolean;
@@ -45,6 +46,7 @@ const PostItem: React.FC<PostItemProps> = ({
 }) => {
   const age = useMemo(() => getAge(post.createdAt), [post.createdAt]);
   const { blocks } = usePostBlocks(post.text);
+  const { addToast } = useToasts();
 
   const dialogItems = useMemo(() => {
     const items: DialogMenuItemProps[][] = [
@@ -195,6 +197,11 @@ const PostItem: React.FC<PostItemProps> = ({
                 window.location.hostname +
                 `/@/${post.postedBy.handle}/post/${post.id}`;
               navigator.clipboard.writeText(path);
+              addToast({
+                id: "post-link-copy",
+                content: "Post link copied to clipboard",
+                icon: "link",
+              });
             }
           }}
         >
