@@ -56,7 +56,7 @@ const ToastsAtomProvider = () => {
           leaveTo="opacity-0 scale-75"
         >
           {currentToast && (
-            <div className="pointer-events-none fixed -bottom-16 z-[1] ml-[50vw] flex w-auto -translate-x-1/2 items-center gap-4 rounded-md bg-zinc-800 px-4 py-2 shadow">
+            <div className="pointer-events-none fixed -bottom-16 z-[1] ml-[50vw] flex w-auto -translate-x-1/2 items-center gap-4 rounded-md  bg-zinc-800 px-4 py-2 text-white shadow">
               {currentToast.icon && (
                 <FeatherIcon icon={currentToast.icon} size={20} />
               )}
