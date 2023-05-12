@@ -138,15 +138,19 @@ export const profileRouter = router({
     }),
   updateProfile: protectedProcedure
     .input(
-      z.strictObject({
+      z.object({
         name: z.string().max(50),
         handle: z.string().max(24).regex(HANDLE_REGEX_CLEAN),
-        biography: z.string().max(300),
-        birthdate: z.string().max(10),
-        location: z.string().max(50),
-        website: z.string(),
-        avatarUrl: z.string(),
-        headerUrl: z.string(),
+        biography: z.string().max(300).nullable(),
+        birthdate: z.string().max(10).nullable(),
+        location: z.string().max(50).nullable(),
+        website: z.string().nullable(),
+        avatarUrl: z
+          .string()
+          .default("https://source.unsplash.com/random/600×600/?cat"),
+        headerUrl: z
+          .string()
+          .default("https://source.unsplash.com/random/1920×1080/?cat"),
       })
     )
     .mutation(async ({ ctx, input }) => {
