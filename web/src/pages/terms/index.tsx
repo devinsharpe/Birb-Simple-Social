@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import { cleanFilename, getDocs } from "../../utils/docs";
 
 import React from "react";
@@ -16,7 +16,7 @@ const TermsIndexPage: NextPage<TermsIndexPageProps> = ({ redirectSlug }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const files = await getDocs("terms");
   return {
     props: {
