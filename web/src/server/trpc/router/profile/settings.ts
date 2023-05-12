@@ -29,7 +29,7 @@ export const settingsRouter = router({
   }),
   update: protectedProcedure
     .input(
-      z.strictObject({
+      z.object({
         reaction: z.enum(REACTION_VALUES),
         catMode: z.boolean(),
         theme: z.enum(THEME_VALUES),

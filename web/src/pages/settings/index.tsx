@@ -18,31 +18,26 @@ const SettingsPage: NextPage = () => {
   const router = useRouter();
 
   const session = useSession();
-  const [settings, setSettings] = useState<Omit<ProfileSettings, "id">>({
-    reaction: Reaction.SMILE,
-    catMode: false,
-    theme: Theme.AUTO,
-    relativeTimestamps: true,
-  });
+  const [settings, setSettings] = useState<ProfileSettings | null>(null);
   const [storedSettings, setStoredSettings] = useAtom(atoms.settings);
   const updateSettings = trpc.profileSettings.update.useMutation();
 
   const handleReset = useCallback(() => {
     if (storedSettings) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { id: _, ...settingsObj } = storedSettings;
-      setSettings(settingsObj);
+      setSettings(storedSettings);
     }
   }, [storedSettings]);
 
   const handleSubmit = useCallback(async () => {
-    const newSettings = await updateSettings.mutateAsync(settings);
-    setStoredSettings(newSettings);
+    if (settings) {
+      const newSettings = await updateSettings.mutateAsync(settings);
+      setStoredSettings(newSettings);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storedSettings, settings]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => handleReset, []);
+  useEffect(() => handleReset(), []);
 
   if (session.status === "authenticated")
     return (
@@ -55,14 +50,17 @@ const SettingsPage: NextPage = () => {
           />
         </Head>
 
-        <SettingsForm
-          onChange={(newSettings) => setSettings(newSettings)}
-          onDeleteAccount={console.log}
-          onDownloadUserData={console.log}
-          onReset={handleReset}
-          onSubmit={handleSubmit}
-          settings={settings}
-        />
+        {settings && (
+          <SettingsForm
+            isLoading={updateSettings.isLoading}
+            onChange={(newSettings) => setSettings(newSettings)}
+            onDeleteAccount={console.log}
+            onDownloadUserData={console.log}
+            onReset={handleReset}
+            onSubmit={handleSubmit}
+            settings={settings}
+          />
+        )}
 
         <Navbar
           brandEl={
