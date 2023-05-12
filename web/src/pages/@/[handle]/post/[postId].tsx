@@ -164,12 +164,12 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center gap-4 pt-12">
+        <div className="flex flex-col items-center gap-4 pt-12 pb-8">
           <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
             This post doesn&apos;t exist
           </h4>
           <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
-            It looks like someone sent you on a wild goose chase 🪿
+            It looks like someone sent you on a wild duck chase 🦆
           </h5>
           <div className="pt-8">
             <Link
