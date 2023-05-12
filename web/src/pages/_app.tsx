@@ -24,6 +24,7 @@ import NProgressProvider from "../components/providers/NProgress";
 import ReactionsAtomProvider from "../components/providers/ReactionsAtom";
 import { env } from "../env/client.mjs";
 import SecondaryNav from "../components/navigation/SecondaryNav";
+import ToastsAtomProvider from "../components/providers/ToastsAtom";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,6 +61,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <WelcomeModal />
         <ProfileAtomProvider />
         <ReactionsAtomProvider />
+        <ToastsAtomProvider />
         <NProgressProvider router={router} />
         <ThemeProvider />
 
