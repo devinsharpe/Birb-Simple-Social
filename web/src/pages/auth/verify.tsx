@@ -5,8 +5,8 @@ import FeatherIcon from "feather-icons-react";
 
 const VerifyPage: NextPage = () => {
   return (
-    <>
-      <section className="flex items-center gap-4">
+    <div className="px-4 lg:px-0 ">
+      <section className="flex items-center gap-4 pb-8">
         <Link href="/">
           <Image
             src={"/icons/icon.svg"}
@@ -24,7 +24,7 @@ const VerifyPage: NextPage = () => {
           <h2 className="text-lg font-light md:text-xl">Simple Social</h2>
         </div>
       </section>
-      <section className="space-y-4">
+      <section className="space-y-4 pb-8">
         <h3 className="text-3xl font-bold tracking-wide md:text-6xl">
           What are you still doing here?
         </h3>
@@ -43,7 +43,7 @@ const VerifyPage: NextPage = () => {
           </Link>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 

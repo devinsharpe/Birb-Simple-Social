@@ -13,7 +13,8 @@ const ProfileForm: React.FC<{
   profile: Profile;
   onChange: (profile: Profile) => void;
   onSubmit: () => void;
-}> = ({ isLoading, profile, onChange, onSubmit }) => {
+  submitText?: string;
+}> = ({ isLoading, profile, onChange, onSubmit, submitText = "Save" }) => {
   const [isValidHandle, setIsValidHandle] = useState(true);
   const checkProfileHandle = trpc.profiles.checkProfileHandle.useMutation();
   const checkHandle = useCallback(async () => {
@@ -192,7 +193,9 @@ const ProfileForm: React.FC<{
             type="submit"
             className="relative rounded-full bg-zinc-800 px-10 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
           >
-            <span className={`${isLoading && "text-transparent"}`}>Save</span>
+            <span className={`${isLoading && "text-transparent"}`}>
+              {submitText}
+            </span>
             {isLoading && (
               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
                 <FeatherIcon
