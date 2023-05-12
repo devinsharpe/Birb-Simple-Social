@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import { cleanFilename, getDocs } from "../../utils/docs";
 
 import React from "react";
@@ -18,7 +18,7 @@ const PrivacyIndexPage: NextPage<PrivacyIndexPageProps> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const files = await getDocs("privacy");
   return {
     props: {
