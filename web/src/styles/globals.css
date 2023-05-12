@@ -6,7 +6,7 @@ body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
   overflow-y: auto;
-  @apply bg-white text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100;
+  @apply bg-white text-zinc-900 selection:bg-violet-700 selection:text-white dark:bg-zinc-900 dark:text-zinc-100;
 }
 
 div#__next {
