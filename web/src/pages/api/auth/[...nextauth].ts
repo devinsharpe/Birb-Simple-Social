@@ -49,6 +49,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
     EmailProvider({
+      id: "email",
       async sendVerificationRequest(params) {
         await fetch(`${env.EMAIL_URL}api/magic`, {
           method: "POST",
@@ -78,7 +79,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    verifyRequest: "/verify",
+    newUser: "/auth/new",
+    verifyRequest: "/auth/verify",
   },
 };
 
