@@ -5,11 +5,10 @@ import FeatherIcon from "feather-icons-react";
 import React from "react";
 import { Switch } from "@headlessui/react";
 
-type OptionalIdSettings = Omit<ProfileSettings, "id">;
-
 interface SettingsFormProps {
-  settings: OptionalIdSettings;
-  onChange: (settings: OptionalIdSettings) => void;
+  settings: ProfileSettings;
+  isLoading: boolean;
+  onChange: (settings: ProfileSettings) => void;
   onDeleteAccount: () => void;
   onDownloadUserData: () => void;
   onReset: () => void;
@@ -17,6 +16,7 @@ interface SettingsFormProps {
 }
 
 const SettingsForm: React.FC<SettingsFormProps> = ({
+  isLoading,
   onChange,
   onReset,
   onSubmit,
@@ -192,11 +192,23 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           <span>Reset</span>
         </button>
         <button
-          className="flex w-auto items-center justify-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 text-white hover:bg-zinc-800 dark:border-zinc-100 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
+          className={`relative flex w-auto items-center justify-center gap-2 rounded-full border border-zinc-800 bg-zinc-900 px-4 py-2 hover:bg-zinc-800 dark:border-zinc-100 dark:bg-white dark:hover:bg-zinc-100 ${
+            isLoading ? "text-transparent" : "text-white dark:text-zinc-800"
+          }`}
           type="submit"
         >
           <FeatherIcon icon="save" size={20} />
           <span>Save Settings</span>
+
+          {isLoading && (
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
+              <FeatherIcon
+                icon="loader"
+                className="text-white dark:text-zinc-800"
+                size={16}
+              />
+            </span>
+          )}
         </button>
       </section>
     </form>
