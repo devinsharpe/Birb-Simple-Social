@@ -92,6 +92,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
               >
                 devsharpe
               </a>
+              &nbsp;& Gary 🦆
             </p>
           </div>
         </main>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import DialogModal from "../DialogModal";
 import FeatherIcon from "feather-icons-react";
@@ -47,6 +47,7 @@ const ProfileSearchItem: React.FC<{
 const SearchModal = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [value, setValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const searchProfiles = trpc.profiles.searchProfiles.useMutation();
   const router = useRouter();
   const setModal = useSetAtom(atoms.modal);
@@ -71,7 +72,12 @@ const SearchModal = () => {
   }, [value]);
 
   return (
-    <DialogModal name={KEY} title="Find your friends on Birb" position="top">
+    <DialogModal
+      initialFocusRef={inputRef}
+      name={KEY}
+      title="Find your friends on Birb"
+      position="top"
+    >
       <>
         <div className="relative">
           <span className="absolute left-3 top-0 bottom-0 flex items-center">
@@ -79,6 +85,7 @@ const SearchModal = () => {
           </span>
           <input
             type="text"
+            ref={inputRef}
             className={`w-full rounded-md  bg-transparent pl-8 text-zinc-800 focus:border-violet-600 dark:text-white dark:focus:border-violet-400`}
             placeholder="Search Birb"
             onChange={(e) => setValue(e.target.value)}
