@@ -1,5 +1,4 @@
 import type { ProfileSettings } from "@prisma/client";
-import { Reaction, Theme } from "@prisma/client";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
