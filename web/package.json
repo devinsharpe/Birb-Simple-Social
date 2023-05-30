@@ -25,7 +25,7 @@
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
     "chalk": "^5.2.0",
-    "drizzle-orm": "^0.23.11",
+    "drizzle-orm": "^0.26.2",
     "feather-icons-react": "^0.6.2",
     "gray-matter": "^4.0.3",
     "jotai": "^2.0.1",

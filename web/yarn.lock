@@ -2439,10 +2439,10 @@ drizzle-kit@^0.17.4:
     json-diff "0.9.0"
     zod "^3.20.2"
 
-drizzle-orm@^0.23.11:
-  version "0.23.11"
-  resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.23.11.tgz#863309afcb6798e7aab874fde03a965ca5001713"
-  integrity sha512-uqebUff9QeDo0ZI+s5XurmHjFNDuQMbnNObWIClzotU+iI0RfA1RSEXbK3lSp1FNp/HeUy23yIv8lkYzU9278A==
+drizzle-orm@^0.26.2:
+  version "0.26.2"
+  resolved "https://registry.yarnpkg.com/drizzle-orm/-/drizzle-orm-0.26.2.tgz#6bcfbd840511aba89cfa4546eab7a53f201a1df3"
+  integrity sha512-/iqKfPNgPu5hnmwDG65bNol6ClIC6NPJ86C5Tejx4Wn5CGDYfQEihM4bfqvHpVWjrEjhuAVOhDcA/bqadiK/hA==
 
 ecdsa-sig-formatter@1.0.11:
   version "1.0.11"
