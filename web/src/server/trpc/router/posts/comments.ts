@@ -1,9 +1,61 @@
 import { protectedProcedure, router } from "../../trpc";
 
 import type { Comment } from "@prisma/client";
-import { Visibility } from "@prisma/client";
+// import { Visibility } from "@prisma/client";
 import { z } from "zod";
 import { env } from "../../../../env/server.mjs";
+import { comments, posts } from "~/server/db/schema/app";
+import { Visibility } from "~/server/db/schema/enums";
+import { eq, sql } from "drizzle-orm";
+
+export const commentsRouter2 = router({
+  archive: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.db
+        .select()
+        .from(comments)
+        .then((cmts) => cmts[0] ?? null);
+      if (comment) {
+        const updatedComment = await ctx.db
+          .update(comments)
+          .set({
+            visibility: Visibility.Archived,
+          })
+          .where(eq(comments.id, input.id))
+          .returning()
+          .then((cmts) => cmts[0] ?? null);
+        if (updatedComment)
+          await ctx.db
+            .update(posts)
+            .set({
+              commentCount: sql`commentCount - 1`,
+            })
+            .where(eq(posts.id, comment.postId));
+        return updatedComment;
+      }
+      return null;
+    }),
+  get: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const comment = await ctx.db
+        .select()
+        .from(comments)
+        .where(eq(comments.id, input.id))
+        .leftJoin(comments, eq(comments.id, comments.id))
+        .then((cmts) => cmts[0] ?? null);
+      return comment;
+    }),
+});
 
 export const commentsRouter = router({
   archive: protectedProcedure
@@ -25,7 +77,7 @@ export const commentsRouter = router({
             id: input.id,
           },
           data: {
-            visibility: Visibility.ARCHIVED,
+            visibility: Visibility.Archived,
           },
         });
         await ctx.prisma.post.update({

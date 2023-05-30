@@ -23,6 +23,7 @@ import {
   Visibility,
   VisibilityValues,
 } from "./enums";
+import { relations } from "drizzle-orm";
 
 const createdAtCol = timestamp("createdAt", { mode: "date" }).defaultNow();
 const updatedAtCol = timestamp("updatedAt", { mode: "date" }).defaultNow();
@@ -62,6 +63,15 @@ export const comments = pgTable("comments", {
   updatedAt: updatedAtCol,
 });
 
+export const commentsRelations = relations(comments, ({ many, one }) => ({
+  children: many(comments),
+  likes: many(commentLikes),
+  postedBy: one(profiles, {
+    fields: [comments.profileId],
+    references: [profiles.id],
+  }),
+}));
+
 export const commentLikes = pgTable("commentLikes", {
   id: varchar("id", idConfig).primaryKey().notNull(),
   commentId: varchar("commentId", idConfig)
@@ -73,6 +83,8 @@ export const commentLikes = pgTable("commentLikes", {
   createdAt: createdAtCol,
   updatedAt: updatedAtCol,
 });
+
+export const commentLikesRelations = relations(commentLikes, ({ one }) => ({}));
 
 export const posts = pgTable("posts", {
   id: varchar("id", idConfig).primaryKey().notNull(),
