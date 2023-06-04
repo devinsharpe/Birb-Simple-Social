@@ -1,4 +1,5 @@
-import type { ProfileSettings } from "@prisma/client";
+// import type { ProfileSettings } from "@prisma/client";
+import type { ProfileSetting } from "~/server/db/schema/app";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 
@@ -17,7 +18,7 @@ const SettingsPage: NextPage = () => {
   const router = useRouter();
 
   const session = useSession();
-  const [settings, setSettings] = useState<ProfileSettings | null>(null);
+  const [settings, setSettings] = useState<ProfileSetting | null>(null);
   const [storedSettings, setStoredSettings] = useAtom(atoms.settings);
   const updateSettings = trpc.profileSettings.update.useMutation();
 
@@ -30,7 +31,7 @@ const SettingsPage: NextPage = () => {
   const handleSubmit = useCallback(async () => {
     if (settings) {
       const newSettings = await updateSettings.mutateAsync(settings);
-      setStoredSettings(newSettings);
+      setStoredSettings(newSettings ?? undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storedSettings, settings]);
