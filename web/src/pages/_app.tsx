@@ -3,7 +3,7 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "@next/font/google";
 import FeatherIcon from "feather-icons-react";
-
+// TODO: Update next font import
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
@@ -71,7 +71,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <PostModal />
             <button
               type="button"
-              className="fixed right-8 bottom-8 z-10 flex items-center justify-center rounded-full bg-violet-600 p-4 text-white shadow-md shadow-violet-700/50 transition-colors duration-100 hover:bg-violet-700 focus:bg-violet-700"
+              className="fixed z-10 flex items-center justify-center p-4 text-white transition-colors duration-100 rounded-full shadow-md right-8 bottom-8 bg-violet-600 shadow-violet-700/50 hover:bg-violet-700 focus:bg-violet-700"
               onClick={() => setModal(POST_KEY)}
             >
               <FeatherIcon icon="edit-3" size={24} />
@@ -79,9 +79,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </>
         )}
 
-        <main className="hide-scrollbar mx-auto h-screen max-w-2xl overflow-y-scroll pt-16">
+        <main className="h-screen max-w-2xl pt-16 mx-auto overflow-y-scroll hide-scrollbar">
           <Component {...pageProps} />
-          <div className="mt-auto flex items-center justify-center border-t border-zinc-300 pt-16 pb-4 opacity-50 dark:border-zinc-600">
+          <div className="flex items-center justify-center pt-16 pb-4 mt-auto border-t opacity-50 border-zinc-300 dark:border-zinc-600">
             <p className="text-sm">
               made with ❤️ by&nbsp;
               <a
