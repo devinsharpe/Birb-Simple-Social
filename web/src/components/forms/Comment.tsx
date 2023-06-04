@@ -1,4 +1,5 @@
-import type { Comment, Profile } from "@prisma/client";
+// import type { Comment, Profile } from "@prisma/client";
+import type { Comment, Profile } from "~/server/db/schema/app";
 import React from "react";
 
 import FeatherIcon from "feather-icons-react";

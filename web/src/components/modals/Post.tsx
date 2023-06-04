@@ -3,7 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import DialogModal from "../DialogModal";
 import FeatherIcon from "feather-icons-react";
 import PostForm from "../forms/Post";
-import { PostType } from "@prisma/client";
+// import { PostType } from "@prisma/client";
+import { PostType } from "~/server/db/schema/enums";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
@@ -40,7 +41,7 @@ const AvailablePostIndicator: React.FC<AvailablePostIndicatorProps> = ({
               : "border-zinc-300 bg-zinc-100 text-zinc-500 dark:border-zinc-600 dark:bg-zinc-700"
           }`}
         >
-          {type === PostType.TEXT ? (
+          {type === PostType.Text ? (
             <FeatherIcon size={20} icon="align-left" />
           ) : (
             <FeatherIcon size={16} icon="image" />
@@ -84,7 +85,7 @@ const PostModal = () => {
     if (post.text) {
       const newPost = await createPost.mutateAsync({
         ...post,
-        type: post.image.length ? PostType.IMAGE : PostType.TEXT,
+        type: post.image.length ? PostType.Image : PostType.Text,
       });
       setModal(undefined);
       addToast({
@@ -107,22 +108,22 @@ const PostModal = () => {
         >
           <AvailablePostIndicator
             style="zinc"
-            type={PostType.TEXT}
+            type={PostType.Text}
             value={3 - available.text}
           />
           <AvailablePostIndicator
             style="violet"
-            type={PostType.TEXT}
+            type={PostType.Text}
             value={available.text}
           />
           <AvailablePostIndicator
             style="zinc"
-            type={PostType.IMAGE}
+            type={PostType.Image}
             value={1 - available.image}
           />
           <AvailablePostIndicator
             style="violet"
-            type={PostType.IMAGE}
+            type={PostType.Image}
             value={available.image}
           />
         </div>

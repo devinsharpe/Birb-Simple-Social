@@ -10,6 +10,7 @@ import atoms from "../atoms";
 import DialogMenu from "./DialogMenu";
 import { KEY as LOGIN_KEY } from "./modals/Login";
 import { KEY as SEARCH_KEY } from "./modals/Search";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 
 interface NavbarProps {
   brandEl?: JSX.Element;
@@ -85,10 +86,7 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
             {profile ? (
               <div className="h-8 w-8 overflow-hidden rounded-full border border-zinc-800 object-center">
                 <Image
-                  src={
-                    profile.avatarUrl ||
-                    "https://source.unsplash.com/random/600×600/?cat"
-                  }
+                  src={profile.avatarUrl || DEFAULT_AVATAR_URL}
                   alt={`${profile.name}'s avatar image`}
                   className="h-full w-full object-cover object-center"
                   width={96}

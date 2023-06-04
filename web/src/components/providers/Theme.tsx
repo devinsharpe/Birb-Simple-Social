@@ -1,8 +1,9 @@
 import type React from "react";
-import { useEffect } from "react";
-import { useAtomValue } from "jotai";
+// import { Theme } from "@prisma/client";
+import { Theme } from "~/server/db/schema/enums";
 import atoms from "../../atoms";
-import { Theme } from "@prisma/client";
+import { useAtomValue } from "jotai";
+import { useEffect } from "react";
 
 const ThemeProvider: React.FC = () => {
   const settings = useAtomValue(atoms.settings);
@@ -10,9 +11,9 @@ const ThemeProvider: React.FC = () => {
     if (typeof window !== "undefined") {
       if (settings) {
         if (
-          (settings.theme === Theme.AUTO &&
+          (settings.theme === Theme.Auto &&
             window.matchMedia("(prefers-color-scheme: dark)").matches) ||
-          settings.theme === Theme.DARK
+          settings.theme === Theme.Dark
         ) {
           document.documentElement.classList.add("dark");
         } else {
