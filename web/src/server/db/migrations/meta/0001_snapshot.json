@@ -1,0 +1,294 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "id": "bdd9a72b-4ca5-441b-abc5-0ce9a9339639",
+  "prevId": "648ef472-b4ef-4f48-ace5-de651fa26ea0",
+  "tables": {
+    "accounts": {
+      "name": "accounts",
+      "schema": "",
+      "columns": {
+        "userId": {
+          "name": "userId",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "providerAccountId": {
+          "name": "providerAccountId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refresh_token": {
+          "name": "refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_token": {
+          "name": "access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token_type": {
+          "name": "token_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_token": {
+          "name": "id_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "session_state": {
+          "name": "session_state",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "accounts_userId_users_id_fk": {
+          "name": "accounts_userId_users_id_fk",
+          "tableFrom": "accounts",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "accounts_provider_providerAccountId": {
+          "name": "accounts_provider_providerAccountId",
+          "columns": [
+            "provider",
+            "providerAccountId"
+          ]
+        }
+      }
+    },
+    "sessions": {
+      "name": "sessions",
+      "schema": "",
+      "columns": {
+        "sessionToken": {
+          "name": "sessionToken",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "userId": {
+          "name": "userId",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sessions_userId_users_id_fk": {
+          "name": "sessions_userId_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(32)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {}
+    },
+    "verificationToken": {
+      "name": "verificationToken",
+      "schema": "",
+      "columns": {
+        "identifier": {
+          "name": "identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires": {
+          "name": "expires",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "verificationToken_identifier_token": {
+          "name": "verificationToken_identifier_token",
+          "columns": [
+            "identifier",
+            "token"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {
+    "postType": {
+      "name": "postType",
+      "values": {
+        "IMAGE": "IMAGE",
+        "TEXT": "TEXT"
+      }
+    },
+    "reaction": {
+      "name": "reaction",
+      "values": {
+        "DOWNCAST": "DOWNCAST",
+        "FIRE": "FIRE",
+        "HEART": "HEART",
+        "HEART_EYES": "HEART_EYES",
+        "JOY": "JOY",
+        "PINCHED_FINGERS": "PINCHED_FINGERS",
+        "SMILE": "SMILE",
+        "SKULL": "SKULL",
+        "THUMBS_UP": "THUMBS_UP",
+        "WEEPING": "WEEPING"
+      }
+    },
+    "relationshipType": {
+      "name": "relationshipType",
+      "values": {
+        "FOLLOW": "FOLLOW",
+        "BLOCK": "BLOCK"
+      }
+    },
+    "status": {
+      "name": "status",
+      "values": {
+        "PENDING": "PENDING",
+        "ACCEPTED": "ACCEPTED",
+        "CANCELLED": "CANCELLED",
+        "DENIED": "DENIED",
+        "REMOVED": "REMOVED",
+        "FORCE_REMOVED": "FORCE_REMOVED"
+      }
+    },
+    "reviewStatus": {
+      "name": "reviewStatus",
+      "values": {
+        "PROCESSING": "PROCESSING",
+        "APPROVED": "APPROVED",
+        "APPEALED": "APPEALED",
+        "REJECTED_AUTO": "REJECTED_AUTO",
+        "REJECTED_MANUAL": "REJECTED_MANUAL"
+      }
+    },
+    "theme": {
+      "name": "theme",
+      "values": {
+        "AUTO": "AUTO",
+        "LIGHT": "LIGHT",
+        "DARK": "DARK"
+      }
+    },
+    "visibility": {
+      "name": "visibility",
+      "values": {
+        "ACTIVE": "ACTIVE",
+        "ARCHIVED": "ARCHIVED",
+        "Rejected": "Rejected"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}

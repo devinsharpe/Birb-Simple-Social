@@ -1,15 +1,13 @@
-import { init } from "@paralleldrive/cuid2";
 import {
   integer,
   pgTable,
+  primaryKey,
+  text,
   timestamp,
   varchar,
-  text,
-  primaryKey,
 } from "drizzle-orm/pg-core";
-import type { ProviderType } from "next-auth/providers";
 
-export const createId = init({ length: 32 });
+import type { ProviderType } from "next-auth/providers";
 
 export const users = pgTable("users", {
   id: varchar("id", { length: 32 }).primaryKey(),

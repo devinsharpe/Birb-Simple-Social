@@ -1,8 +1,10 @@
+import { Pool, neonConfig } from "@neondatabase/serverless";
+
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { env } from "~/env/server.mjs";
-import { neonConfig, Pool } from "@neondatabase/serverless";
-import { migrate } from "drizzle-orm/neon-serverless/migrator";
 import logger from "./utils/logger";
+import { migrate } from "drizzle-orm/neon-serverless/migrator";
+import schema from "./schema";
 
 if (!process.env.VERCEL_ENV) {
   neonConfig.wsProxy = (host) => `${host}:5433/v1`;
@@ -13,6 +15,7 @@ if (!process.env.VERCEL_ENV) {
 
 const db = drizzle(new Pool({ connectionString: env.POSTGRES_URL }), {
   logger: env.POSTGRES_LOGGING === "true" ? logger : false,
+  schema,
 });
 
 export default db;
