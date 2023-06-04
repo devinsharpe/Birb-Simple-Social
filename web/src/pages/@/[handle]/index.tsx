@@ -1,3 +1,7 @@
+import {
+  DEFAULT_AVATAR_URL,
+  DEFAULT_HEADER_URL,
+} from "~/server/db/schema/constants";
 import type { GetServerSideProps, NextPage } from "next";
 import type {
   Post,
@@ -6,32 +10,44 @@ import type {
   Profile,
   ProfileRelationship,
   RelationshipRequest,
-} from "@prisma/client";
-import { Visibility } from "@prisma/client";
+} from "~/server/db/schema/app";
 import React, { useCallback, useEffect, useState } from "react";
+import ReactionModal, {
+  KEY as REACTION_KEY,
+} from "../../../components/modals/Reaction";
+import RelationshipModal, {
+  KEY_OPTIONS,
+} from "../../../components/modals/Relationships";
+// import type {
+//   Post,
+//   PostMention,
+//   PostReaction,
+//   Profile,
+//   ProfileRelationship,
+//   RelationshipRequest,
+// } from "@prisma/client";
+import { and, desc, eq, gt } from "drizzle-orm";
+import { posts, profiles } from "~/server/db/schema/app";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import DialogConfirm from "../../../components/DialogConfirm";
 import FeatherIcon from "feather-icons-react";
+import Head from "next/head";
 import Image from "next/image";
 import LoginPrompt from "../../../components/LoginPrompt";
 import Navbar from "../../../components/Navbar";
-import RelationshipModal, {
-  KEY_OPTIONS,
-} from "../../../components/modals/Relationships";
+import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
+import PostItem from "../../../components/PostItem";
+import { Visibility } from "~/server/db/schema/enums";
 import atoms from "../../../atoms";
-import { prisma } from "../../../server/db/client";
+import { authOptions } from "../../api/auth/[...nextauth]";
+import db from "~/server/db";
+// import { Visibility } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { trpc } from "../../../utils/trpc";
 import { useRouter } from "next/router";
+// import { prisma } from "../../../server/db/client";
 import { useSession } from "next-auth/react";
-import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
-import ReactionModal, {
-  KEY as REACTION_KEY,
-} from "../../../components/modals/Reaction";
-import PostItem from "../../../components/PostItem";
-import Head from "next/head";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../api/auth/[...nextauth]";
 
 interface PageProps {
   handle: string;
@@ -41,7 +57,7 @@ interface PageProps {
     })[];
     postedBy: Profile;
     reactions: (PostReaction & {
-      profile: Profile;
+      postedBy: Profile;
     })[];
   })[];
   profile: Profile | null;
@@ -120,7 +136,7 @@ const BlankHeader: React.FC<{
       <div className="relative mx-auto mb-16 pt-4">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <Image
-            src="https://source.unsplash.com/random/1920×1080/?cat"
+            src={DEFAULT_HEADER_URL}
             alt={`Missing profile's header image`}
             className="h-full w-full object-cover object-center grayscale"
             width={1080}
@@ -130,7 +146,7 @@ const BlankHeader: React.FC<{
 
         <div className="absolute inset-x-0 -bottom-12 left-1/2 z-[1] h-28 w-28 -translate-x-1/2 transform overflow-hidden rounded-full border-4 border-white object-center dark:border-zinc-900">
           <Image
-            src="https://source.unsplash.com/random/600×600/?cat"
+            src={DEFAULT_AVATAR_URL}
             alt="Missing profile's avatar image"
             className="h-full w-full object-cover object-center grayscale"
             width={256}
@@ -205,10 +221,7 @@ const ProfileHeader: React.FC<{
       <div className="relative mx-auto mb-16 pt-4">
         <div className="relative aspect-[7/3] w-full overflow-hidden sm:rounded-md">
           <Image
-            src={
-              profile.headerUrl ||
-              "https://source.unsplash.com/random/600×600/?cat"
-            }
+            src={profile.headerUrl || DEFAULT_HEADER_URL}
             alt={`${profile.name}'s header image`}
             className="h-full w-full object-cover object-center"
             width={2520}
@@ -218,10 +231,7 @@ const ProfileHeader: React.FC<{
 
         <div className="absolute inset-x-0 -bottom-12 left-1/2 z-[1] h-28 w-28 -translate-x-1/2 transform overflow-hidden rounded-full border-4 border-white object-center dark:border-zinc-900">
           <Image
-            src={
-              profile.avatarUrl ||
-              "https://source.unsplash.com/random/600×600/?cat"
-            }
+            src={profile.avatarUrl || DEFAULT_AVATAR_URL}
             alt={`${profile.name}'s avatar image`}
             className="h-full w-full object-cover object-center"
             width={256}
@@ -348,15 +358,15 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
   const archivePost = trpc.posts.archive.useMutation();
   const cancelFollow = trpc.requests.cancel.useMutation();
   const followProfile = trpc.requests.follow.useMutation();
-  const getRelationship = trpc.relationships.getRelationship.useMutation();
+  const getRelationship = trpc.relationships.get.useMutation();
   const removeFollower = trpc.relationships.removeFollower.useMutation();
   const unfollowProfile = trpc.relationships.unfollow.useMutation();
 
   useEffect(() => {
     if (profile && userProfile) {
-      getRelationship.mutateAsync(profile.id).then((response) => {
-        setRelationship(response.relationship);
-        setRequest(response.request);
+      getRelationship.mutateAsync({ id: profile.id }).then((response) => {
+        setRelationship(response.relationship ?? null);
+        setRequest(response.request ?? null);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -376,7 +386,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
 
   const handleCancelClick = useCallback(async () => {
     if (request) {
-      await cancelFollow.mutateAsync(request.id);
+      await cancelFollow.mutateAsync({ id: request.id });
       setRequest(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -384,7 +394,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
 
   const handleFollowClick = useCallback(async () => {
     if (!request && !relationship && profile) {
-      const newRequest = await followProfile.mutateAsync(profile.id);
+      const newRequest = await followProfile.mutateAsync({ id: profile.id });
       if (newRequest) setRequest(newRequest);
     }
   }, [request, relationship, profile, followProfile]);
@@ -393,12 +403,10 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
     if (relationship && profile) {
       console.log("calling fns");
       await unfollowProfile.mutateAsync({
-        id: relationship.id,
-        followingId: profile.id,
+        id: profile.id,
       });
       setRelationship(null);
-      if (forceUnfollow)
-        await removeFollower.mutateAsync({ followerId: profile.id });
+      if (forceUnfollow) await removeFollower.mutateAsync({ id: profile.id });
       setRequest(null);
     }
     setModal(undefined);
@@ -416,10 +424,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
             <title>{`${profile.name} on Birb`}</title>
             <meta content={profile.biography ?? ""} property="og:description" />
             <meta
-              content={
-                profile.avatarUrl ??
-                "https://source.unsplash.com/random/600×600/?cat"
-              }
+              content={profile.avatarUrl ?? DEFAULT_AVATAR_URL}
               property="og:image"
             />
           </>
@@ -537,57 +542,82 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context
 ) => {
   let profile: Profile | null = null;
-  let posts: (Post & {
+  let profilePosts: (Post & {
     mentions: (PostMention & {
       profile: Profile;
     })[];
     postedBy: Profile;
     reactions: (PostReaction & {
-      profile: Profile;
+      postedBy: Profile;
     })[];
   })[] = [];
   if (context.params && context.params?.handle) {
-    profile = await prisma.profile.findFirst({
-      where: {
-        handle: context.params.handle as string,
-      },
-    });
+    profile =
+      (await db.query.profiles.findFirst({
+        where: eq(profiles.handle, context.params.handle as string),
+      })) ?? null;
+    // profile = await prisma.profile.findFirst({
+    //   where: {
+    //     handle: context.params.handle as string,
+    //   },
+    // });
   }
   const session = await getServerSession(context.req, context.res, authOptions);
   if (profile && session) {
     const date = new Date();
     date.setDate(date.getDate() - 7);
-    posts = await prisma.post.findMany({
-      where: {
-        profileId: profile.id,
-        createdAt: {
-          gt: date,
-        },
-        visibility: Visibility.ACTIVE,
-      },
-      include: {
+    profilePosts = await db.query.posts.findMany({
+      where: and(
+        eq(posts.profileId, profile.id),
+        gt(posts.createdAt, date.toISOString()),
+        eq(posts.visibility, Visibility.Active)
+      ),
+      with: {
         postedBy: true,
         mentions: {
-          include: {
+          with: {
             profile: true,
           },
         },
         reactions: {
-          include: {
-            profile: true,
+          with: {
+            postedBy: true,
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: desc(posts.createdAt),
     });
+    // posts = await prisma.post.findMany({
+    //   where: {
+    //     profileId: profile.id,
+    //     createdAt: {
+    //       gt: date,
+    //     },
+    //     visibility: Visibility.Active,
+    //   },
+    //   include: {
+    //     postedBy: true,
+    //     mentions: {
+    //       include: {
+    //         profile: true,
+    //       },
+    //     },
+    //     reactions: {
+    //       include: {
+    //         profile: true,
+    //       },
+    //     },
+    //   },
+    //   orderBy: {
+    //     createdAt: "desc",
+    //   },
+    // });
   }
   return {
     props: {
       handle: context.params?.handle as string,
       profile,
-      posts,
+      posts: profilePosts,
     },
   };
 };

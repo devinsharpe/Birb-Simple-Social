@@ -1,48 +1,56 @@
+// import type {
+//   Comment,
+//   Post,
+//   PostMention,
+//   PostReaction,
+//   Profile,
+// } from "@prisma/client";
 import type {
   Comment,
   Post,
   PostMention,
   PostReaction,
   Profile,
-} from "@prisma/client";
-import { Visibility } from "@prisma/client";
+} from "~/server/db/schema/app";
+// import { Visibility } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
 import React, { useCallback, useState } from "react";
+import ReactionModal, {
+  KEY as REACTION_KEY,
+} from "../../../../components/modals/Reaction";
+import { and, desc, eq, gt } from "drizzle-orm";
+import { comments, posts } from "~/server/db/schema/app";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import CommentForm from "../../../../components/forms/Comment";
 import CommentItem from "../../../../components/CommentItem";
 import FeatherIcon from "feather-icons-react";
+import Head from "next/head";
 import Link from "next/link";
 import LoginPrompt from "../../../../components/LoginPrompt";
 import Navbar from "../../../../components/Navbar";
 import PostItem from "../../../../components/PostItem";
-import { prisma } from "../../../../server/db/client";
+import { Visibility } from "~/server/db/schema/enums";
+import atoms from "../../../../atoms";
+import { authOptions } from "../../../api/auth/[...nextauth]";
+import db from "~/server/db";
+import { getServerSession } from "next-auth";
+// import { prisma } from "../../../../server/db/client";
 import { trpc } from "../../../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import Head from "next/head";
-import ReactionModal, {
-  KEY as REACTION_KEY,
-} from "../../../../components/modals/Reaction";
-import { useAtomValue, useSetAtom } from "jotai";
-import atoms from "../../../../atoms";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../api/auth/[...nextauth]";
 
 interface PageProps {
   hostname: string | undefined;
   post:
     | (Post & {
         comments: (Comment & {
-          children: (Comment & {
-            postedBy: Profile;
-          })[];
           postedBy: Profile;
         })[];
         mentions: (PostMention & { profile: Profile })[];
         postedBy: Profile;
         reactions: (PostReaction & {
-          profile: Profile;
+          postedBy: Profile;
         })[];
       })
     | null;
@@ -152,15 +160,22 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
             </div>
           )}
           <div className="divide-y divide-zinc-200 overflow-visible dark:divide-zinc-700">
-            {post.comments.map((comment) => (
-              <CommentItem
-                key={comment.id}
-                comment={comment}
-                onArchive={(id) => archiveComment.mutateAsync({ id })}
-                onReply={(comment) => setReplyComment(comment)}
-                sessionUserId={session.data?.user?.id}
-              />
-            ))}
+            {post.comments
+              .filter((cmmnt) => cmmnt.commentId === "")
+              .map((comment) => (
+                <CommentItem
+                  key={comment.id}
+                  comment={{
+                    ...comment,
+                    children: post.comments.filter(
+                      (cmmnt) => cmmnt.commentId === comment.id
+                    ),
+                  }}
+                  onArchive={(id) => archiveComment.mutateAsync({ id })}
+                  onReply={(comment) => setReplyComment(comment)}
+                  sessionUserId={session.data?.user?.id}
+                />
+              ))}
           </div>
         </>
       ) : (
@@ -206,49 +221,86 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   date.setDate(date.getDate() - 7);
   const session = await getServerSession(context.req, context.res, authOptions);
   if (context.params && context.params.postId && session) {
-    const post = await prisma.post.findFirst({
-      where: {
-        id: context.params.postId.toString(),
-        createdAt: {
-          gt: date,
-        },
-        visibility: Visibility.ACTIVE,
-      },
-      include: {
+    // const post = await db
+    //   .select()
+    //   .from(posts)
+    //   .leftJoin(
+    //     comments,
+    //     and(eq(comments.postId, posts.id), eq(comments.commentId, ""))
+    //   )
+    //   .orderBy(desc(comments.createdAt))
+    //   .leftJoin(comments);
+
+    const post = await db.query.posts.findFirst({
+      where: and(
+        eq(posts.id, context.params.postId.toString()),
+        eq(posts.visibility, Visibility.Active),
+        gt(posts.createdAt, date.toISOString())
+      ),
+      with: {
         comments: {
-          where: {
-            commentId: null,
-            visibility: Visibility.ACTIVE,
-          },
-          include: {
-            children: {
-              include: {
-                postedBy: true,
-              },
-              orderBy: {
-                createdAt: "asc",
-              },
-            },
-            postedBy: true,
-          },
-          orderBy: {
-            createdAt: "asc",
-          },
+          where: eq(comments.visibility, Visibility.Active),
+          orderBy: desc(comments.createdAt),
         },
         mentions: {
-          include: {
+          with: {
             profile: true,
           },
         },
         postedBy: true,
         reactions: {
-          include: {
-            profile: true,
+          with: {
+            postedBy: true,
           },
+          orderBy: desc(comments.createdAt),
         },
       },
     });
-    return { props: { hostname: context.req.headers.host, post } };
+    // const post = await prisma.post.findFirst({
+    //   where: {
+    //     id: context.params.postId.toString(),
+    //     createdAt: {
+    //       gt: date,
+    //     },
+    //     visibility: Visibility.Active,
+    //   },
+    //   include: {
+    //     comments: {
+    //       where: {
+    //         commentId: null,
+    //         visibility: Visibility.Active,
+    //       },
+    //       include: {
+    //         children: {
+    //           include: {
+    //             postedBy: true,
+    //           },
+    //           orderBy: {
+    //             createdAt: "asc",
+    //           },
+    //         },
+    //         postedBy: true,
+    //       },
+    //       orderBy: {
+    //         createdAt: "asc",
+    //       },
+    //     },
+    //     mentions: {
+    //       include: {
+    //         profile: true,
+    //       },
+    //     },
+    //     postedBy: true,
+    //     reactions: {
+    //       include: {
+    //         profile: true,
+    //       },
+    //     },
+    //   },
+    // });
+    return {
+      props: { hostname: context.req.headers.host, post: post ?? null },
+    };
   }
   return {
     props: {
