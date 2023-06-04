@@ -36,15 +36,14 @@ const config = {
     ],
   },
   transpilePackages: ["jotai-devtools"],
-  experimental: {
-    swcPlugins: [
-      [
-        'next-superjson-plugin',
-        {
-          excluded: [],
-        },
-      ],
-    ],
-  },
+  // experimental: {
+  //   swcPlugins: [
+  //     [
+  //       'next-superjson-plugin',
+  //       {},
+  //     ],
+  //   ],
+  // },
 };
+// TODO: Fix superjson
 export default config;
