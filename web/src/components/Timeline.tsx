@@ -27,7 +27,7 @@ const Timeline: React.FC = () => {
       })[];
       postedBy: Profile;
       reactions: (PostReaction & {
-        profile: Profile;
+        postedBy: Profile;
       })[];
     })[]
   >([]);
