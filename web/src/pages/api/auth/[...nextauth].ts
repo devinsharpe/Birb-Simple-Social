@@ -89,3 +89,8 @@ export const authOptions: NextAuthOptions = {
 };
 
 export default NextAuth(authOptions);
+
+export const config = {
+  runtime: "edge",
+  regions: ["cle1"],
+};
