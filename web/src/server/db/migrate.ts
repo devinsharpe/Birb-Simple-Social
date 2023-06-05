@@ -16,8 +16,9 @@ const db = drizzle(
   })
 );
 
-migrate(db, { migrationsFolder: "./src/server/db/migrations/" })
+migrate(db, "./drizzle.config.json")
   .then(() => {
+    console.log("migrations applied");
     process.exit(0);
   })
   .catch((err) => {
