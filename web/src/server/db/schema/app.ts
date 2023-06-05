@@ -28,10 +28,16 @@ import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import type { InferModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
 
-const createdAtCol = timestamp("createdAt", { mode: "string" })
+const createdAtCol = timestamp("createdAt", {
+  mode: "string",
+  withTimezone: true,
+})
   .defaultNow()
   .notNull();
-const updatedAtCol = timestamp("updatedAt", { mode: "string" })
+const updatedAtCol = timestamp("updatedAt", {
+  mode: "string",
+  withTimezone: true,
+})
   .defaultNow()
   .notNull();
 
@@ -75,8 +81,14 @@ export const comments = pgTable("comments", {
   commentId: varchar("commentId", idConfig).references(
     (): AnyPgColumn => comments.id
   ),
-  autoReviewedAt: timestamp("autoReviewedAt", { mode: "string" }),
-  manualReviewedAt: timestamp("manualReviewedAt", { mode: "string" }),
+  autoReviewedAt: timestamp("autoReviewedAt", {
+    mode: "string",
+    withTimezone: true,
+  }),
+  manualReviewedAt: timestamp("manualReviewedAt", {
+    mode: "string",
+    withTimezone: true,
+  }),
   createdAt: createdAtCol,
   updatedAt: updatedAtCol,
 });
@@ -85,7 +97,7 @@ export const commentsRelations = relations(comments, ({ many, one }) => ({
     fields: [comments.postId],
     references: [posts.id],
   }),
-  children: many(comments),
+  // children: many(comments),
   // parent: one(comments, {
   //   fields: [comments.commentId],
   //   references: [comments.id],
@@ -143,8 +155,14 @@ export const posts = pgTable("posts", {
   profileId: varchar("profileId", idConfig)
     .references(() => profiles.id)
     .notNull(),
-  autoReviewedAt: timestamp("autoReviewedAt", { mode: "string" }),
-  manualReviewedAt: timestamp("manualReviewedAt", { mode: "string" }),
+  autoReviewedAt: timestamp("autoReviewedAt", {
+    mode: "string",
+    withTimezone: true,
+  }),
+  manualReviewedAt: timestamp("manualReviewedAt", {
+    mode: "string",
+    withTimezone: true,
+  }),
   createdAt: createdAtCol,
   updatedAt: updatedAtCol,
 });
@@ -281,7 +299,10 @@ export const profileRelationships = pgTable("profileRelationships", {
     .references(() => profiles.id)
     .notNull(),
   createdAt: createdAtCol,
-  requestedAt: timestamp("requestedAt", { mode: "string" }).notNull(),
+  requestedAt: timestamp("requestedAt", {
+    mode: "string",
+    withTimezone: true,
+  }).notNull(),
 });
 export const profileRelationshipsRelations = relations(
   profileRelationships,
