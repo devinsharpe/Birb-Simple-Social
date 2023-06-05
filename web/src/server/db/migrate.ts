@@ -12,6 +12,7 @@ const db = drizzle(
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
     port: process.env.VERCEL_ENV ? undefined : 5432,
+    ssl: !!process.env.VERCEL_ENV,
   })
 );
 
