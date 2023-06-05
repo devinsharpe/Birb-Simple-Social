@@ -41,7 +41,7 @@ const RequestNotification: React.FC<{
             &nbsp;would like to follow you.
           </h5>
           <p className="text-xs opacity-75">
-            {request.createdAt.toLocaleDateString()}
+            {new Date(request.createdAt).toLocaleDateString()}
           </p>
         </div>
       </Link>

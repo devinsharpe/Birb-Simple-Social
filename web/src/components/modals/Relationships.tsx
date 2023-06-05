@@ -1,4 +1,5 @@
-import type { Profile, ProfileRelationship } from "@prisma/client";
+// import type { Profile, ProfileRelationship } from "@prisma/client";
+import type { Profile, ProfileRelationship } from "~/server/db/schema/app";
 import React, { useEffect, useState } from "react";
 
 import DialogModal from "../DialogModal";

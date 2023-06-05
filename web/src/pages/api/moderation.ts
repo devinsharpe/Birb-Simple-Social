@@ -24,11 +24,11 @@ export default async function handler(
     const body = bodySchema.parse(req.body);
     for (const result of body) {
       const payloadData: {
-        autoReviewedAt: Date;
+        autoReviewedAt: string;
         reviewStatus: PostReviewStatus;
         visibility?: Visibility;
       } = {
-        autoReviewedAt: new Date(),
+        autoReviewedAt: new Date().toISOString(),
         reviewStatus: result.hasMatch
           ? PostReviewStatus.RejectedAuto
           : PostReviewStatus.Approved,

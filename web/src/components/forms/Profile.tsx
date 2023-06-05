@@ -3,7 +3,8 @@ import React, { useCallback, useRef, useState } from "react";
 
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import type { Profile } from "@prisma/client";
+// import type { Profile } from "@prisma/client";
+import type { Profile } from "~/server/db/schema/app";
 import TextInput from "../inputs/Text";
 import { trpc } from "../../utils/trpc";
 import { useS3Upload } from "next-s3-upload";

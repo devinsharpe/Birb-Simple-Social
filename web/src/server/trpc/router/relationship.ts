@@ -25,20 +25,17 @@ export const relationshipRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const commonQueryParams = {
-        with: {
-          follower: true,
-          following: true,
-        },
-        orderBy: desc(profileRelationships.createdAt),
-      };
       if (input.rel === "FOLLOWING") {
         return await ctx.db.query.profileRelationships.findMany({
           where: and(
             eq(profileRelationships.followerId, input.id),
             eq(profileRelationships.type, input.type)
           ),
-          ...commonQueryParams,
+          with: {
+            follower: true,
+            following: true,
+          },
+          orderBy: desc(profileRelationships.createdAt),
         });
       } else {
         return await ctx.db.query.profileRelationships.findMany({
@@ -46,7 +43,11 @@ export const relationshipRouter = router({
             eq(profileRelationships.followingId, input.id),
             eq(profileRelationships.type, input.type)
           ),
-          ...commonQueryParams,
+          with: {
+            follower: true,
+            following: true,
+          },
+          orderBy: desc(profileRelationships.createdAt),
         });
       }
     }),
