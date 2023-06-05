@@ -112,14 +112,29 @@ const NotificationsPage: NextPage = () => {
   if (session.status === "authenticated")
     return (
       <>
-        {requests.map((req) => (
-          <RequestNotification
-            key={req.id}
-            onClick={handleRequestClick}
-            request={req}
-            loading={updateRequest.isLoading}
-          />
-        ))}
+        {requests.length ? (
+          <>
+            {requests.map((req) => (
+              <RequestNotification
+                key={req.id}
+                onClick={handleRequestClick}
+                request={req}
+                loading={updateRequest.isLoading}
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
+              <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
+                Ahhh... Peace and quiet
+              </h4>
+              <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
+                Follow requests appear here as people find your profile
+              </h5>
+            </div>
+          </>
+        )}
 
         <Navbar
           brandEl={
