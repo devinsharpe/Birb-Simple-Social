@@ -27,6 +27,7 @@ import {
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import type { InferModel } from "drizzle-orm";
 import { relations } from "drizzle-orm";
+import { tsvector } from "../utils/vector";
 
 const createdAtCol = timestamp("createdAt", {
   mode: "string",
@@ -247,6 +248,10 @@ export const profiles = pgTable("profiles", {
   followingCount: integer("followingCount").default(0).notNull(),
   postCount: integer("postCount").default(0).notNull(),
   canChangeHandle: boolean("canChangeHandle").default(true).notNull(),
+  searchVector: tsvector("search", {
+    sources: ["name", "handle"],
+    weighted: true,
+  }),
 });
 export const profileRelations = relations(profiles, ({ one, many }) => ({
   comments: many(comments),
