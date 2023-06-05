@@ -13,10 +13,19 @@ if (!process.env.VERCEL_ENV) {
   neonConfig.pipelineConnect = false;
 }
 
-const db = drizzle(new Pool({ connectionString: env.POSTGRES_URL }), {
-  logger: env.POSTGRES_LOGGING === "true" ? logger : false,
-  schema,
-});
+const db = drizzle(
+  new Pool({
+    host: env.PGHOST,
+    user: env.PGUSER,
+    password: env.PGPASSWORD,
+    database: env.PGDATABASE,
+    port: process.env.VERCEL_ENV ? undefined : 5433,
+  }),
+  {
+    logger: env.POSTGRES_LOGGING === "true" ? logger : false,
+    schema,
+  }
+);
 
 export default db;
 
