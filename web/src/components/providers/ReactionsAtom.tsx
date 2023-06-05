@@ -4,13 +4,14 @@ import { trpc } from "../../utils/trpc";
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import atoms from "../../atoms";
-import { Visibility } from "@prisma/client";
+// import { Visibility } from "@prisma/client";
+import { Visibility } from "~/server/db/schema/enums";
 
 const ReactionsAtomProvider = () => {
   const [reactionsAtom, setReactionsAtom] = useAtom(atoms.reactions);
   const session = useSession();
   const reactions = trpc.profileReactions.list.useQuery(
-    { status: Visibility.ACTIVE },
+    { status: Visibility.Active },
     {
       enabled: session.status === "authenticated",
     }

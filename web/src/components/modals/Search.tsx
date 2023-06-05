@@ -3,11 +3,13 @@ import React, { useEffect, useRef, useState } from "react";
 import DialogModal from "../DialogModal";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import type { Profile } from "@prisma/client";
+// import type { Profile } from "@prisma/client";
+import type { Profile } from "~/server/db/schema/app";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useRouter } from "next/router";
 import { useSetAtom } from "jotai";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 
 export const KEY = "search";
 
@@ -22,10 +24,7 @@ const ProfileSearchItem: React.FC<{
     >
       <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
         <Image
-          src={
-            profile.avatarUrl ||
-            "https //source.unsplash.com/random/600×600/?cat"
-          }
+          src={profile.avatarUrl || DEFAULT_AVATAR_URL}
           alt={`${profile.name}'s avatar image`}
           className="h-full w-full object-cover object-center"
           width={128}

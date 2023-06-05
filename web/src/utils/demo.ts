@@ -1,3 +1,71 @@
+import type { Config } from "unique-names-generator";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
+import type { ILoremIpsumParams } from "lorem-ipsum";
+import { names } from "unique-names-generator";
+
+export const nameConfig: Config = {
+  dictionaries: [
+    [
+      "Affectionate",
+      "Agreeable",
+      "Amiable",
+      "Bright",
+      "Charming",
+      "Creative",
+      "Determined",
+      "Diligent",
+      "Diplomatic",
+      "Dynamic",
+      "Energetic",
+      "Friendly",
+      "Funny",
+      "Generous",
+      "Giving",
+      "Gregarious",
+      "Hardworking",
+      "Helpful",
+      "Kind",
+      "Likable",
+      "Loyal",
+      "Patient",
+      "Polite",
+      "Sincere",
+      "Amazing",
+      "Awesome",
+      "Blithesome",
+      "Excellent",
+      "Fabulous",
+      "Favorable",
+      "Fortuitous",
+      "Gorgeous",
+      "Incredible",
+      "Unique",
+      "Mirthful",
+      "Outstanding",
+      "Perfect",
+      "Philosophical",
+      "Propitious",
+      "Remarkable",
+      "Rousing",
+      "Spectacular",
+      "Splendid",
+      "Stellar",
+      "Super",
+      "Upbeat",
+      "Stunning",
+      "Wondrous",
+    ],
+    names,
+  ],
+  length: 2,
+};
+
+export const textConfig: ILoremIpsumParams = {
+  count: 30,
+  format: "plain",
+  units: "words",
+};
+
 export const examplePosts = [
   {
     text: "Just tried to make my bed and accidentally created a fort. #adultingfail",
@@ -67,11 +135,11 @@ export const examplePosts = [
   },
   {
     text: "I don't think my cat Mittens knows how to walk. She just bounces around the house like a little orange kangaroo.",
-    photo: "https://source.unsplash.com/random/600×600/?orange%20cat",
+    photo: DEFAULT_AVATAR_URL,
   },
   {
     text: "I'm convinced that my cat Mittens is plotting world domination, but she's too cute for anyone to suspect her.",
-    photo: "https://source.unsplash.com/random/600×600/?orange%20cat",
+    photo: DEFAULT_AVATAR_URL,
   },
   {
     text: "I don't think I've ever met a dog who loves belly rubs as much as Oreo. It's like his favorite hobby.",
@@ -143,11 +211,13 @@ export const examplePosts = [
 const ONE_HOUR = 3600;
 const ONE_DAY = ONE_HOUR * 24;
 
-const getTimestamp = (date: Date) => {
+const getTimestamp = (date: Date | string) => {
+  if (typeof date === "string") date = new Date(date);
   return Math.floor(date.getTime() / 1000);
 };
 
-export const getAge = (date: Date) => {
+export const getAge = (date: Date | string) => {
+  if (typeof date === "string") date = new Date(date);
   const today = getTimestamp(new Date());
   const diff = today - getTimestamp(date);
   if (diff < ONE_HOUR) {
@@ -167,3 +237,12 @@ export const getAge = (date: Date) => {
     };
   }
 };
+
+export function shuffle(array: typeof examplePosts) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    [array[i], array[j]] = [array[j]!, array[i]!];
+  }
+  return array;
+}

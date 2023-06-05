@@ -1,0 +1,34 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1685779533994,
+      "tag": "0000_fat_shooting_star",
+      "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1685779678290,
+      "tag": "0001_lonely_smasher",
+      "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1685779687458,
+      "tag": "0002_magical_avengers",
+      "breakpoints": false
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1685939434480,
+      "tag": "0003_rare_prowler",
+      "breakpoints": false
+    }
+  ]
+}

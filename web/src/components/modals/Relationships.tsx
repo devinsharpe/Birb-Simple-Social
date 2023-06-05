@@ -1,4 +1,5 @@
-import type { Profile, ProfileRelationship } from "@prisma/client";
+// import type { Profile, ProfileRelationship } from "@prisma/client";
+import type { Profile, ProfileRelationship } from "~/server/db/schema/app";
 import React, { useEffect, useState } from "react";
 
 import DialogModal from "../DialogModal";
@@ -8,6 +9,11 @@ import Link from "next/link";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
+import { RelationshipType } from "~/server/db/schema/enums";
+import {
+  DEFAULT_AVATAR_URL,
+  DEFAULT_HEADER_URL,
+} from "~/server/db/schema/constants";
 
 export enum KEY_OPTIONS {
   follower = "FOLLOWER",
@@ -73,7 +79,7 @@ const RelationshipModal: React.FC<{
     if (modal === modalKey) {
       getRelationships
         .mutateAsync({
-          type: "FOLLOW",
+          type: RelationshipType.Follow,
           id: profile.id,
           rel: type,
         })
@@ -107,14 +113,14 @@ const RelationshipModal: React.FC<{
                         ? {
                             avatarUrl:
                               relationship.follower.avatarUrl ??
-                              "https://source.unsplash.com/random/600×600/?cat",
+                              DEFAULT_AVATAR_URL,
                             handle: relationship.follower.handle,
                             name: relationship.follower.name,
                           }
                         : {
                             avatarUrl:
                               relationship.following.avatarUrl ??
-                              "https://source.unsplash.com/random/600×600/?cat",
+                              DEFAULT_HEADER_URL,
                             handle: relationship.following.handle,
                             name: relationship.following.name,
                           }

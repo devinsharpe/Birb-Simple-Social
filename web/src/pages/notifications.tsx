@@ -1,5 +1,7 @@
-import type { Profile, RelationshipRequest } from "@prisma/client";
-import { RequestStatus } from "@prisma/client";
+// import type { Profile, RelationshipRequest } from "@prisma/client";
+// import { RequestStatus } from "@prisma/client";
+import type { Profile, RelationshipRequest } from "~/server/db/schema/app";
+import { RequestStatus } from "~/server/db/schema/enums";
 import { useCallback, useEffect, useState } from "react";
 
 import DialogMenu from "../components/DialogMenu";
@@ -12,6 +14,7 @@ import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import Redirect from "../components/Redirect";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 
 const RequestNotification: React.FC<{
   loading: boolean;
@@ -22,10 +25,7 @@ const RequestNotification: React.FC<{
     <div className="flex w-full items-center gap-4 py-2 px-4">
       <div className="h-16 w-16 shrink-0 overflow-hidden rounded-full">
         <Image
-          src={
-            request.follower.avatarUrl ??
-            "https://source.unsplash.com/random/600×600/?cat"
-          }
+          src={request.follower.avatarUrl ?? DEFAULT_AVATAR_URL}
           className="h-full w-full object-cover object-center"
           alt={`${request.follower.name}'s avatar image`}
           width={128}
@@ -41,24 +41,24 @@ const RequestNotification: React.FC<{
             &nbsp;would like to follow you.
           </h5>
           <p className="text-xs opacity-75">
-            {request.createdAt.toLocaleDateString()}
+            {new Date(request.createdAt).toLocaleDateString()}
           </p>
         </div>
       </Link>
-      {request.status === RequestStatus.PENDING && (
+      {request.status === RequestStatus.Pending && (
         <DialogMenu
           items={[
             [
               {
                 icon: "check",
                 text: "Approve",
-                onClick: () => onClick(request.id, RequestStatus.ACCEPTED),
+                onClick: () => onClick(request.id, RequestStatus.Accepted),
                 disabled: loading,
               },
               {
                 icon: "x",
                 text: "Deny",
-                onClick: () => onClick(request.id, RequestStatus.DENIED),
+                onClick: () => onClick(request.id, RequestStatus.Denied),
                 disabled: loading,
               },
             ],
@@ -71,12 +71,12 @@ const RequestNotification: React.FC<{
           )}
         </DialogMenu>
       )}
-      {request.status === RequestStatus.ACCEPTED && (
+      {request.status === RequestStatus.Accepted && (
         <div className="rounded-md bg-violet-700 p-2 text-white dark:bg-violet-400 dark:text-black">
           <FeatherIcon icon="check-circle" size={20} />
         </div>
       )}
-      {request.status === RequestStatus.DENIED && (
+      {request.status === RequestStatus.Denied && (
         <div className="rounded-md bg-zinc-700 p-2 text-white dark:bg-zinc-400 dark:text-black">
           <FeatherIcon icon="x-circle" size={20} />
         </div>
@@ -91,7 +91,6 @@ const NotificationsPage: NextPage = () => {
   >([]);
   const router = useRouter();
   const session = useSession();
-  const [page] = useState(1);
   const listRequests = trpc.requests.list.useMutation();
   const updateRequest = trpc.requests.update.useMutation();
 
@@ -106,9 +105,7 @@ const NotificationsPage: NextPage = () => {
 
   useEffect(() => {
     if (session.status === "authenticated")
-      listRequests
-        .mutateAsync({ count: 10, page })
-        .then((req) => setRequests(req));
+      listRequests.mutateAsync().then((req) => setRequests(req));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -1,14 +1,16 @@
-import type { ProfileSettings } from "@prisma/client";
-import { Reaction, Theme } from "@prisma/client";
+// import type { ProfileSettings } from "@prisma/client";
+import type { ProfileSetting } from "~/server/db/schema/app";
+// import { Reaction, Theme } from "@prisma/client";
+import { Reaction, Theme } from "~/server/db/schema/enums";
 
 import FeatherIcon from "feather-icons-react";
 import React from "react";
 import { Switch } from "@headlessui/react";
 
 interface SettingsFormProps {
-  settings: ProfileSettings;
+  settings: ProfileSetting;
   isLoading: boolean;
-  onChange: (settings: ProfileSettings) => void;
+  onChange: (settings: ProfileSetting) => void;
   onDeleteAccount: () => void;
   onDownloadUserData: () => void;
   onReset: () => void;
@@ -49,17 +51,17 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
               }
               value={settings.reaction}
             >
-              <option value={Reaction.SMILE}>😊 Smile</option>
-              <option value={Reaction.JOY}>😂 Laughing</option>
-              <option value={Reaction.SKULL}>💀 Skull</option>
-              <option value={Reaction.HEART_EYES}>😍 Heart Eyes</option>
-              <option value={Reaction.DOWNCAST}>🙁 Sad</option>
-              <option value={Reaction.WEEPING}>😭 Crying</option>
-              <option value={Reaction.THUMBS_UP}>👍 Thumbs Up</option>
-              <option value={Reaction.PINCHED_FINGERS}>
+              <option value={Reaction.Smile}>😊 Smile</option>
+              <option value={Reaction.Joy}>😂 Laughing</option>
+              <option value={Reaction.Skull}>💀 Skull</option>
+              <option value={Reaction.HeartEyes}>😍 Heart Eyes</option>
+              <option value={Reaction.Downcast}>🙁 Sad</option>
+              <option value={Reaction.Weeping}>😭 Crying</option>
+              <option value={Reaction.ThumbsUp}>👍 Thumbs Up</option>
+              <option value={Reaction.PinchedFingers}>
                 🤌 Pinched Fingers
               </option>
-              <option value={Reaction.FIRE}>🔥 Fire</option>
+              <option value={Reaction.Fire}>🔥 Fire</option>
             </select>
           </fieldset>
           <fieldset className="flex items-center justify-between pr-2">
@@ -108,9 +110,9 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 onChange({ ...settings, theme: e.target.value as Theme })
               }
             >
-              <option value={Theme.AUTO}>Automatic</option>
-              <option value={Theme.LIGHT}>Light</option>
-              <option value={Theme.DARK}>Dark</option>
+              <option value={Theme.Auto}>Automatic</option>
+              <option value={Theme.Light}>Light</option>
+              <option value={Theme.Dark}>Dark</option>
             </select>
           </fieldset>
           <fieldset className="flex items-center justify-between pr-2">

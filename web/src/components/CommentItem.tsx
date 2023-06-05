@@ -1,4 +1,5 @@
-import type { Comment, Profile } from "@prisma/client";
+// import type { Comment, Profile } from "@prisma/client";
+import type { Comment, Profile } from "~/server/db/schema/app";
 import React, { useMemo } from "react";
 
 import DialogMenu from "./DialogMenu";
@@ -6,21 +7,23 @@ import type { DialogMenuItemProps } from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
 import Link from "next/link";
-import { getAge } from "../utils/posts";
+import { getAge } from "../utils/demo";
 import usePostBlocks from "../hooks/postBlocks";
 import { PostDisplay } from "./forms/Post";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
+
 
 interface CommentItemProps {
   comment: Comment & {
-    postedBy: Profile;
-    children?: (Comment & {
-      postedBy: Profile;
-    })[];
+    postedBy?: Profile;
   };
+  replies?: (Comment & {
+    postedBy?: Profile;
+  })[];
   onArchive: (id: string) => void;
   onReply: (
     comment: Comment & {
-      postedBy: Profile;
+      postedBy?: Profile;
     }
   ) => void;
   sessionUserId: string | undefined;
@@ -39,6 +42,7 @@ const formatDay = (date: Date) => {
 
 const CommentItem: React.FC<CommentItemProps> = ({
   comment,
+  replies = [],
   onArchive,
   onReply,
   sessionUserId,
@@ -78,6 +82,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comment.id, comment.commentId, sessionUserId]);
 
+  if (!comment.postedBy) return null;
   return (
     <>
       <article className="px-6 py-4">
@@ -88,10 +93,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               onClick={(e) => e.stopPropagation()}
             >
               <Image
-                src={
-                  comment.postedBy.avatarUrl ??
-                  "https://source.unsplash.com/random/600×600/?cat"
-                }
+                src={comment.postedBy.avatarUrl ?? DEFAULT_AVATAR_URL}
                 alt={`${comment.postedBy.name}'s avatar image`}
                 className="h-full w-full object-cover object-center"
                 width={40}
@@ -126,7 +128,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <h6 className="whitespace-nowrap text-sm font-light opacity-75">
                 &nbsp;&ndash;&nbsp;
                 {age.unit === "d" ? (
-                  <>{formatDay(comment.createdAt)}</>
+                  <>{formatDay(new Date(comment.createdAt))}</>
                 ) : (
                   <>{`${age.value}${age.unit}`}</>
                 )}
@@ -161,9 +163,9 @@ const CommentItem: React.FC<CommentItemProps> = ({
           </div>
         </div>
       </article>
-      {comment.children && comment.children.length > 0 && (
+      {replies && replies.length > 0 && (
         <>
-          {comment.children.map((reply) => (
+          {replies.map((reply) => (
             <div className="pl-8" key={reply.id}>
               <CommentItem
                 comment={reply}

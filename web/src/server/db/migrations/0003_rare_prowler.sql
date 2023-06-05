@@ -1,0 +1,16 @@
+ALTER TABLE "commentLikes" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "commentLikes" ALTER COLUMN "updatedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "comments" ALTER COLUMN "autoReviewedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "comments" ALTER COLUMN "manualReviewedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "comments" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "comments" ALTER COLUMN "updatedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "postReactions" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "posts" ALTER COLUMN "autoReviewedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "posts" ALTER COLUMN "manualReviewedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "posts" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "posts" ALTER COLUMN "updatedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "profileReactions" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "profileRelationships" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "profileRelationships" ALTER COLUMN "requestedAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "relationshipRequests" ALTER COLUMN "createdAt" SET DATA TYPE timestamp with time zone;
+ALTER TABLE "relationshipRequests" ALTER COLUMN "updatedAt" SET DATA TYPE timestamp with time zone;

@@ -1,16 +1,24 @@
-import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
-import { PostType } from "@prisma/client";
+import { CAT_REACTION_MAP, REACTION_MAP } from "./modals/Reaction";
+// import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+import type {
+  Post,
+  PostMention,
+  PostReaction,
+  Profile,
+} from "~/server/db/schema/app";
+// import { PostType } from "@prisma/client";
 import React, { useMemo } from "react";
 
-import type { DialogMenuItemProps } from "./DialogMenu";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 import DialogMenu from "./DialogMenu";
+import type { DialogMenuItemProps } from "./DialogMenu";
 import FeatherIcon from "feather-icons-react";
-import { PostDisplay } from "./forms/Post";
 import Image from "next/image";
 import Link from "next/link";
-import { getAge } from "../utils/posts";
+import { PostDisplay } from "./forms/Post";
+import { PostType } from "~/server/db/schema/enums";
+import { getAge } from "../utils/demo";
 import usePostBlocks from "../hooks/postBlocks";
-import { CAT_REACTION_MAP, REACTION_MAP } from "./modals/Reaction";
 import useToasts from "../hooks/toasts";
 
 interface PostItemProps {
@@ -29,7 +37,7 @@ interface PostItemProps {
     })[];
     postedBy: Profile;
     reactions: (PostReaction & {
-      profile: Profile;
+      postedBy: Profile;
     })[];
   };
   sessionUserId: string | undefined;
@@ -97,10 +105,7 @@ const PostItem: React.FC<PostItemProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <Image
-              src={
-                post.postedBy.avatarUrl ??
-                "https://source.unsplash.com/random/600×600/?cat"
-              }
+              src={post.postedBy.avatarUrl ?? DEFAULT_AVATAR_URL}
               alt={`${post.postedBy.name}'s avatar image`}
               className="h-full w-full object-cover object-center"
               width={40}
@@ -127,7 +132,7 @@ const PostItem: React.FC<PostItemProps> = ({
             {age.unit === "d" && (
               <>
                 &nbsp;&ndash;&nbsp;
-                {post.createdAt.toLocaleDateString()}{" "}
+                {new Date(post.createdAt).toLocaleDateString()}{" "}
               </>
             )}
           </h5>
@@ -141,7 +146,7 @@ const PostItem: React.FC<PostItemProps> = ({
       </div>
 
       <div className="space-y-4 pl-12">
-        {post.type === PostType.IMAGE && (
+        {post.type === PostType.Image && (
           <div className="relative h-48 w-full lg:h-64">
             <Image
               src={post.image}
@@ -230,7 +235,7 @@ const PostItem: React.FC<PostItemProps> = ({
         <div className="flex w-full items-center justify-start gap-6 overflow-x-auto p-2">
           {post.reactions.map((reaction) => (
             <Link
-              href={`/@/${reaction.profile.handle}`}
+              href={`/@/${reaction.postedBy.handle}`}
               className="flex flex-col items-center"
               key={reaction.id}
             >
@@ -250,7 +255,7 @@ const PostItem: React.FC<PostItemProps> = ({
                     : REACTION_MAP[reaction.reaction]}
                 </span>
               </div>
-              <p className="text-xs">{reaction.profile.handle}</p>
+              <p className="text-xs">{reaction.postedBy.handle}</p>
             </Link>
           ))}
         </div>

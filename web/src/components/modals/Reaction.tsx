@@ -1,8 +1,10 @@
 import type { ChangeEvent } from "react";
 import React, { useMemo, useRef, useState } from "react";
 import DialogModal from "../DialogModal";
-import type { ProfileReaction } from "@prisma/client";
-import { Reaction, Visibility } from "@prisma/client";
+import type { ProfileReaction } from "~/server/db/schema/app";
+import { Reaction, Visibility } from "~/server/db/schema/enums";
+// import type { ProfileReaction } from "@prisma/client";
+// import { Reaction, Visibility } from "@prisma/client";
 import FeatherIcon from "feather-icons-react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import atoms from "../../atoms";
@@ -15,16 +17,31 @@ export const KEY = "post-reaction";
 export const REACTION_MAP: {
   [key in Reaction]: string;
 } = {
-  [Reaction.SMILE]: "😊",
-  [Reaction.JOY]: "😂",
-  [Reaction.SKULL]: "💀",
-  [Reaction.HEART_EYES]: "😍",
-  [Reaction.DOWNCAST]: "🙁",
-  [Reaction.WEEPING]: "😭",
-  [Reaction.THUMBS_UP]: "👍",
-  [Reaction.PINCHED_FINGERS]: "🤌",
-  [Reaction.FIRE]: "🔥",
-  [Reaction.HEART]: "❤️",
+  [Reaction.Smile]: "😊",
+  [Reaction.Joy]: "😂",
+  [Reaction.Skull]: "💀",
+  [Reaction.HeartEyes]: "😍",
+  [Reaction.Downcast]: "🙁",
+  [Reaction.Weeping]: "😭",
+  [Reaction.ThumbsUp]: "👍",
+  [Reaction.PinchedFingers]: "🤌",
+  [Reaction.Fire]: "🔥",
+  [Reaction.Heart]: "❤️",
+};
+
+export const CAT_REACTION_MAP: {
+  [key in Reaction]: string;
+} = {
+  [Reaction.Smile]: "😸",
+  [Reaction.Joy]: "😹",
+  [Reaction.Skull]: "💀",
+  [Reaction.HeartEyes]: "😻",
+  [Reaction.Downcast]: "😾",
+  [Reaction.Weeping]: "😿",
+  [Reaction.ThumbsUp]: "👍",
+  [Reaction.PinchedFingers]: "🤌",
+  [Reaction.Fire]: "🔥",
+  [Reaction.Heart]: "❤️",
 };
 
 export const CAT_REACTION_MAP: {
@@ -141,7 +158,7 @@ const ReactionModal: React.FC<ReactionModalProps> = ({ postId }) => {
     if (reactionObj) {
       await updateReaction.mutateAsync({
         id: reactionObj.id,
-        status: Visibility.ARCHIVED,
+        status: Visibility.Archived,
       });
       setReactions(reactions.filter((rct) => rct.id !== reactionObj.id));
     }
@@ -166,12 +183,13 @@ const ReactionModal: React.FC<ReactionModalProps> = ({ postId }) => {
         if (oldReaction)
           await updateReaction.mutateAsync({
             id: oldReaction.id,
-            status: Visibility.ARCHIVED,
+            status: Visibility.Archived,
           });
-        setReactions([
-          ...reactions.filter((rct) => rct.reaction !== currentReaction),
-          reaction,
-        ]);
+        if (reaction)
+          setReactions([
+            ...reactions.filter((rct) => rct.reaction !== currentReaction),
+            reaction,
+          ]);
       }
     }
     setCurrentReaction(undefined);

@@ -3,11 +3,14 @@ import AppleProvider from "next-auth/providers/apple";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 // Prisma adapter for NextAuth, optional and can be removed
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+// import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import jwt from "jsonwebtoken";
 
 import { env } from "../../../env/server.mjs";
-import { prisma } from "../../../server/db/client";
+// import { prisma } from "../../../server/db/client";
+import db from "~/server/db";
+import { DrizzleAdapterPg } from "~/server/db/adapter";
+import authSchema from "~/server/db/schema/auth";
 
 const generateAppleSecret = () =>
   jwt.sign(
@@ -38,7 +41,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
+  // adapter: PrismaAdapter(prisma),
+  adapter: DrizzleAdapterPg(db, authSchema),
   providers: [
     AppleProvider({
       clientId: env.APPLE_SERVICE_ID,

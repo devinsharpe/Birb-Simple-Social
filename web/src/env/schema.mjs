@@ -7,8 +7,15 @@ import { z } from "zod";
  * This way you can ensure the app isn't built with invalid env vars.
  */
 export const serverSchema = z.object({
-  DATABASE_URL: z.string().url(),
+  // DATABASE SETTINGS
+  PGLOGGING: z.enum(["true", "false"]),
+  PGDATABASE: z.string(),
+  PGHOST: z.string(),
+  PGPASSWORD: z.string(),
+  PGUSER: z.string(),
+  // Node Env
   NODE_ENV: z.enum(["development", "test", "production"]),
+  // Next Auth
   NEXTAUTH_SECRET:
     process.env.NODE_ENV === "production"
       ? z.string().min(1)
@@ -20,14 +27,18 @@ export const serverSchema = z.object({
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
     process.env.VERCEL ? z.string() : z.string().url()
   ),
+  // Next Auth - Apple
   APPLE_SERVICE_ID: z.string(),
   APPLE_KEY_ID: z.string(),
   APPLE_PRIVATE_KEY: z.string(),
   APPLE_TEAM_ID: z.string(),
-  EMAIL_URL: z.string(),
+  // Next Auth - Google
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  // Application hosts
+  EMAIL_URL: z.string(),
   MODERATION_URL: z.string().url(),
+  // S3 Settings
   S3_HOST_URL: z.string(),
   S3_UPLOAD_KEY: z.string(),
   S3_UPLOAD_SECRET: z.string(),

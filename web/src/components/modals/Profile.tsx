@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import DialogModal from "../DialogModal";
-import type { Profile } from "@prisma/client";
+// import type { Profile } from "@prisma/client";
+import type { Profile } from "~/server/db/schema/app";
 import ProfileForm from "../forms/Profile";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";

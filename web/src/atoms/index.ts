@@ -1,4 +1,9 @@
-import type { Profile, ProfileReaction, ProfileSettings } from "@prisma/client";
+// import type { Profile, ProfileReaction, ProfileSettings } from "@prisma/client";
+import type {
+  Profile,
+  ProfileReaction,
+  ProfileSetting,
+} from "~/server/db/schema/app";
 
 import { atom } from "jotai";
 import type FeatherIcon from "feather-icons-react";
@@ -12,7 +17,7 @@ export interface Toast {
 const modalAtom = atom<string | undefined>(undefined);
 const profileAtom = atom<Profile | undefined>(undefined);
 const reactionsAtom = atom<ProfileReaction[]>([]);
-const settingsAtom = atom<ProfileSettings | undefined>(undefined);
+const settingsAtom = atom<ProfileSetting | undefined>(undefined);
 const toastsAtom = atom<Toast[]>([]);
 
 modalAtom.debugLabel = "modal";

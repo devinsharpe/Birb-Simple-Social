@@ -1,4 +1,10 @@
-import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+// import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+import type {
+  Post,
+  PostMention,
+  PostReaction,
+  Profile,
+} from "~/server/db/schema/app";
 import React, { useCallback, useEffect, useState } from "react";
 
 import PostItem from "./PostItem";
@@ -21,7 +27,7 @@ const Timeline: React.FC = () => {
       })[];
       postedBy: Profile;
       reactions: (PostReaction & {
-        profile: Profile;
+        postedBy: Profile;
       })[];
     })[]
   >([]);

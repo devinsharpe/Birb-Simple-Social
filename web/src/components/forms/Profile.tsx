@@ -3,10 +3,15 @@ import React, { useCallback, useRef, useState } from "react";
 
 import FeatherIcon from "feather-icons-react";
 import Image from "next/image";
-import type { Profile } from "@prisma/client";
+// import type { Profile } from "@prisma/client";
+import type { Profile } from "~/server/db/schema/app";
 import TextInput from "../inputs/Text";
 import { trpc } from "../../utils/trpc";
 import { useS3Upload } from "next-s3-upload";
+import {
+  DEFAULT_AVATAR_URL,
+  DEFAULT_HEADER_URL,
+} from "~/server/db/schema/constants";
 
 const ProfileForm: React.FC<{
   isLoading: boolean;
@@ -18,7 +23,9 @@ const ProfileForm: React.FC<{
   const [isValidHandle, setIsValidHandle] = useState(true);
   const checkProfileHandle = trpc.profiles.checkProfileHandle.useMutation();
   const checkHandle = useCallback(async () => {
-    const isValid = await checkProfileHandle.mutateAsync(profile.handle);
+    const isValid = await checkProfileHandle.mutateAsync({
+      handle: profile.handle,
+    });
     setIsValidHandle(isValid);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile.handle]);
@@ -77,10 +84,7 @@ const ProfileForm: React.FC<{
         <div className="relative mb-16">
           <div className="relative aspect-[7/3] w-full overflow-hidden rounded-md ">
             <Image
-              src={
-                profile.headerUrl ||
-                "https //source.unsplash.com/random/600×600/?cat"
-              }
+              src={profile.headerUrl || DEFAULT_HEADER_URL}
               width={2520}
               height={1080}
               alt={`${profile.name}'s header image`}
@@ -101,10 +105,7 @@ const ProfileForm: React.FC<{
 
           <div className="absolute left-4 -bottom-12 z-[1] h-28 w-28 overflow-hidden rounded-full border-4 border-white object-center dark:border-zinc-800">
             <Image
-              src={
-                profile.avatarUrl ||
-                "https //source.unsplash.com/random/600×600/?cat"
-              }
+              src={profile.avatarUrl || DEFAULT_AVATAR_URL}
               height={128}
               width={128}
               alt={`${profile.name}'s avatar image`}

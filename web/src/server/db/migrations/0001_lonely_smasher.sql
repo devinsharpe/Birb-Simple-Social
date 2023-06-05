@@ -1,0 +1,41 @@
+DO $$ BEGIN
+ CREATE TYPE postType AS ENUM('IMAGE', 'TEXT');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ CREATE TYPE reaction AS ENUM('DOWNCAST', 'FIRE', 'HEART', 'HEART_EYES', 'JOY', 'PINCHED_FINGERS', 'SMILE', 'SKULL', 'THUMBS_UP', 'WEEPING');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ CREATE TYPE relationshipType AS ENUM('FOLLOW', 'BLOCK');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ CREATE TYPE status AS ENUM('PENDING', 'ACCEPTED', 'CANCELLED', 'DENIED', 'REMOVED', 'FORCE_REMOVED');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ CREATE TYPE reviewStatus AS ENUM('PROCESSING', 'APPROVED', 'APPEALED', 'REJECTED_AUTO', 'REJECTED_MANUAL');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ CREATE TYPE theme AS ENUM('AUTO', 'LIGHT', 'DARK');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+
+DO $$ BEGIN
+ CREATE TYPE visibility AS ENUM('ACTIVE', 'ARCHIVED', 'Rejected');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;

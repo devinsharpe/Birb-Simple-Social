@@ -5,7 +5,8 @@ import { useAtom } from "jotai";
 import atoms from "../../atoms";
 import { useCallback, useEffect, useState } from "react";
 import { trpc } from "../../utils/trpc";
-import type { Profile } from "@prisma/client";
+// import type { Profile } from "@prisma/client";
+import type { Profile } from "~/server/db/schema/app";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -59,12 +60,12 @@ const NewUser: NextPage = () => {
           <h2 className="text-lg font-light md:text-xl">Simple Social</h2>
         </div>
       </section>
-      <section className="space-y-4 pb-8">
+      <section className="pb-8 space-y-4">
         <h3 className="text-3xl font-bold tracking-wide md:text-6xl">
           Let&apos;s get started on your profile 🪄
         </h3>
       </section>
-      <section className="mb-8 space-y-4 rounded-md bg-white py-4 dark:bg-zinc-800">
+      <section className="p-4 py-4 mb-8 space-y-4 bg-white rounded-md dark:bg-zinc-800">
         {newProfile && (
           <ProfileForm
             isLoading={updateProfile.isLoading}
