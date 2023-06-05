@@ -62,7 +62,7 @@ export const postsRouter = router({
     const params = [
       eq(posts.profileId, ctx.session.user.id),
       eq(posts.visibility, Visibility.Active),
-      gt(posts.createdAt, date),
+      gt(posts.createdAt, date.toISOString()),
     ];
     const imagePosts = await ctx.db
       .select()
@@ -179,7 +179,7 @@ export const postsRouter = router({
     date.setDate(date.getDate() - 7);
     const timelinePosts = await ctx.db.query.posts.findMany({
       where: and(
-        gt(posts.createdAt, date),
+        gt(posts.createdAt, date.toISOString()),
         inArray(posts.profileId, [...ids, ctx.session.user.id]),
         eq(posts.visibility, Visibility.Active)
       ),

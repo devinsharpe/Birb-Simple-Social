@@ -45,7 +45,7 @@ export const commentsRouter = router({
     .input(
       z.object({
         postId: z.string(),
-        parentId: z.string().optional(),
+        commentId: z.string().optional(),
         text: z.string(),
       })
     )
@@ -54,10 +54,10 @@ export const commentsRouter = router({
         where: eq(posts.id, input.postId),
       });
       let parent: Comment | null = null;
-      if (input.parentId) {
+      if (input.commentId) {
         parent =
           (await ctx.db.query.comments.findFirst({
-            where: eq(comments.id, input.parentId),
+            where: eq(comments.id, input.commentId),
           })) ?? null;
         if (!parent) return null;
       }
@@ -74,7 +74,7 @@ export const commentsRouter = router({
         await ctx.db
           .update(posts)
           .set({
-            commentCount: sql`commentCount + 1`,
+            commentCount: sql`"commentCount" + 1`,
           })
           .where(eq(posts.id, input.postId));
         return comment;
@@ -91,11 +91,6 @@ export const commentsRouter = router({
       const comment = await ctx.db.query.comments.findFirst({
         where: eq(comments.id, input.id),
         with: {
-          children: {
-            with: {
-              postedBy: true,
-            },
-          },
           postedBy: true,
         },
       });
