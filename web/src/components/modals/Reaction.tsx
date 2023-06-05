@@ -44,21 +44,6 @@ export const CAT_REACTION_MAP: {
   [Reaction.Heart]: "❤️",
 };
 
-export const CAT_REACTION_MAP: {
-  [key in Reaction]: string;
-} = {
-  [Reaction.SMILE]: "😸",
-  [Reaction.JOY]: "😹",
-  [Reaction.SKULL]: "💀",
-  [Reaction.HEART_EYES]: "😻",
-  [Reaction.DOWNCAST]: "😾",
-  [Reaction.WEEPING]: "😿",
-  [Reaction.THUMBS_UP]: "👍",
-  [Reaction.PINCHED_FINGERS]: "🤌",
-  [Reaction.FIRE]: "🔥",
-  [Reaction.HEART]: "❤️",
-};
-
 interface ReactionButtonProps {
   catMode: boolean;
   image?: string;
