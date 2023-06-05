@@ -1,4 +1,4 @@
-import { eq, like, or } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { profileSettings, profiles } from "~/server/db/schema/app";
 import { protectedProcedure, publicProcedure, router } from "../../trpc";
 
@@ -72,10 +72,12 @@ export const profileRouter = router({
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.query.profiles.findMany({
-        where: or(
-          like(profiles.handle, input.trim().replace(/[\s\n\t]/g, ":*&")),
-          like(profiles.name, input.trim().replace(/[\s\n\t]/g, ":*&"))
-        ),
+        where: sql`search @@ to_tsquery(${"'" + input.toLowerCase() + "'"})`,
+        limit: 10,
+        // where: or(
+        //   like(profiles.handle, input.trim().replace(/[\s\n\t]/g, ":*&")),
+        //   like(profiles.name, input.trim().replace(/[\s\n\t]/g, ":*&"))
+        // ),
       });
     }),
   updateProfile: protectedProcedure
