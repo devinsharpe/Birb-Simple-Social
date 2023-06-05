@@ -12,6 +12,7 @@ import usePostBlocks from "../hooks/postBlocks";
 import { PostDisplay } from "./forms/Post";
 import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 
+
 interface CommentItemProps {
   comment: Comment & {
     postedBy?: Profile;

@@ -6,6 +6,7 @@ import type { Comment } from "~/server/db/schema/app";
 import { Visibility } from "~/server/db/schema/enums";
 import { createId } from "~/server/db/utils";
 import { z } from "zod";
+import { env } from "../../../../env/server.mjs";
 
 export const commentsRouter = router({
   archive: protectedProcedure
