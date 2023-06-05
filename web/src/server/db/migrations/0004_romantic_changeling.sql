@@ -1,0 +1,1 @@
+ALTER TABLE "profiles" ADD COLUMN "search" tsvector GENERATED ALWAYS AS (setweight(to_tsvector('english', coalesce(name, '')), 'A') || setweight(to_tsvector('english', coalesce(handle, '')), 'B')) STORED;
