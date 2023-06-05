@@ -3,7 +3,6 @@ import { Pool, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { env } from "~/env/server.mjs";
 import logger from "./utils/logger";
-import { migrate } from "drizzle-orm/neon-serverless/migrator";
 import schema from "./schema";
 
 if (!process.env.VERCEL_ENV) {
@@ -28,13 +27,5 @@ const db = drizzle(
 );
 
 export default db;
-
-migrate(db, { migrationsFolder: "./src/server/db/migrations/" })
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  .then(() => {})
-  .catch((err) => {
-    console.log(err);
-    console.log("migrations failed");
-  });
 
 export type DbClient = typeof db;
