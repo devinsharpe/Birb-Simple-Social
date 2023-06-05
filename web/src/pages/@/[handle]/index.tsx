@@ -168,7 +168,7 @@ const BlankHeader: React.FC<{
         <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
           It seems like not everyone is on Birb yet
         </h5>
-        <div className="flex items-center justify-center pt-12">
+        <div className="flex items-center justify-center py-12">
           <button
             type="button"
             className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
