@@ -8,7 +8,7 @@ import { z } from "zod";
  */
 export const serverSchema = z.object({
   // DATABASE SETTINGS
-  POSTGRES_LOGGING: z.enum(["true", "false"]),
+  PGLOGGING: z.enum(["true", "false"]),
   PGDATABASE: z.string(),
   PGHOST: z.string(),
   PGPASSWORD: z.string(),

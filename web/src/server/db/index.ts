@@ -22,7 +22,7 @@ const db = drizzle(
     port: process.env.VERCEL_ENV ? undefined : 5433,
   }),
   {
-    logger: env.POSTGRES_LOGGING === "true" ? logger : false,
+    logger: env.PGLOGGING === "true" ? logger : false,
     schema,
   }
 );
