@@ -97,9 +97,9 @@ const PostItem: React.FC<PostItemProps> = ({
   }, [sessionUserId]);
 
   return (
-    <article className="p-6 space-y-4 transition-colors duration-150 hover:bg-zinc-800/5 dark:hover:bg-white/5">
+    <article className="space-y-4 p-6 transition-colors duration-150 hover:bg-zinc-800/5 dark:hover:bg-white/5">
       <div className="flex items-center space-x-2">
-        <div className="relative object-center w-10 h-10 overflow-hidden rounded-full shrink-0">
+        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full object-center">
           <Link
             href={`/@/${post.postedBy.handle}`}
             onClick={(e) => e.stopPropagation()}
@@ -107,7 +107,7 @@ const PostItem: React.FC<PostItemProps> = ({
             <Image
               src={post.postedBy.avatarUrl ?? DEFAULT_AVATAR_URL}
               alt={`${post.postedBy.name}'s avatar image`}
-              className="object-cover object-center w-full h-full"
+              className="h-full w-full object-cover object-center"
               width={40}
               height={40}
             />
@@ -116,7 +116,7 @@ const PostItem: React.FC<PostItemProps> = ({
         <div className="w-full">
           <div className="gap-2 md:flex">
             <h4
-              className="font-medium whitespace-nowrap hover:underline"
+              className="whitespace-nowrap font-medium hover:underline"
               title={post.postedBy.handle}
             >
               <Link
@@ -132,7 +132,7 @@ const PostItem: React.FC<PostItemProps> = ({
             {age.unit === "d" && (
               <>
                 &nbsp;&ndash;&nbsp;
-                {post.createdAt.toLocaleDateString()}{" "}
+                {new Date(post.createdAt).toLocaleDateString()}{" "}
               </>
             )}
           </h5>
@@ -145,9 +145,9 @@ const PostItem: React.FC<PostItemProps> = ({
         </DialogMenu>
       </div>
 
-      <div className="pl-12 space-y-4">
+      <div className="space-y-4 pl-12">
         {post.type === PostType.Image && (
-          <div className="relative w-full h-48 lg:h-64">
+          <div className="relative h-48 w-full lg:h-64">
             <Image
               src={post.image}
               alt={post.alt}
@@ -161,17 +161,17 @@ const PostItem: React.FC<PostItemProps> = ({
           <PostDisplay blocks={blocks} />
         </p>
         {post.location && (
-          <div className="flex items-center gap-2 pt-4 text-sm leading-none text-opacity-50 border-t whitespace-nowrap border-zinc-300 text-zinc-800/75 dark:border-zinc-600 dark:text-white/75">
+          <div className="flex items-center gap-2 whitespace-nowrap border-t border-zinc-300 pt-4 text-sm leading-none text-zinc-800/75 text-opacity-50 dark:border-zinc-600 dark:text-white/75">
             <FeatherIcon icon="map-pin" size={16} />
             <p>{post.location}</p>
           </div>
         )}
       </div>
-      <div className="flex items-center pl-12 space-x-6">
+      <div className="flex items-center space-x-6 pl-12">
         {post.profileId !== sessionUserId && (
           <button
             type="button"
-            className="p-2 rounded"
+            className="rounded p-2"
             onClick={onReactionClick}
           >
             <FeatherIcon icon="smile" size={16} />
@@ -179,7 +179,7 @@ const PostItem: React.FC<PostItemProps> = ({
         )}
         <Link
           href={`/@/${post.postedBy.handle}/post/${post.id}`}
-          className="flex items-center gap-2 p-2 rounded"
+          className="flex items-center gap-2 rounded p-2"
         >
           {!!post.commentCount && (
             <span className="text-sm leading-none">{post.commentCount}</span>
@@ -188,7 +188,7 @@ const PostItem: React.FC<PostItemProps> = ({
         </Link>
         <button
           type="button"
-          className="p-2 rounded"
+          className="rounded p-2"
           onClick={() => {
             if (navigator.share) {
               navigator
@@ -213,16 +213,16 @@ const PostItem: React.FC<PostItemProps> = ({
           <FeatherIcon icon="share-2" size={16} />
         </button>
         {!expandedReactions && (
-          <div className="flex justify-end w-full -space-x-3 items center">
+          <div className="items center flex w-full justify-end -space-x-3">
             {post.reactions.map((reaction) => (
               <div
-                className="w-8 h-8 overflow-hidden border-2 rounded-full border-zinc-200 dark:border-zinc-900"
+                className="h-8 w-8 overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-900"
                 key={reaction.id}
               >
                 <Image
                   src={reaction.image}
                   alt="reaction image"
-                  className="w-full h-full"
+                  className="h-full w-full"
                   width={64}
                   height={64}
                 />
@@ -232,19 +232,19 @@ const PostItem: React.FC<PostItemProps> = ({
         )}
       </div>
       {expandedReactions && !!post.reactions.length && (
-        <div className="flex items-center justify-start w-full gap-6 p-2 overflow-x-auto">
+        <div className="flex w-full items-center justify-start gap-6 overflow-x-auto p-2">
           {post.reactions.map((reaction) => (
             <Link
               href={`/@/${reaction.postedBy.handle}`}
               className="flex flex-col items-center"
               key={reaction.id}
             >
-              <div className="relative w-12 h-12">
-                <div className="w-full h-full overflow-hidden border-2 rounded-full border-zinc-200 dark:border-zinc-800">
+              <div className="relative h-12 w-12">
+                <div className="h-full w-full overflow-hidden rounded-full border-2 border-zinc-200 dark:border-zinc-800">
                   <Image
                     src={reaction.image}
                     alt="reaction image"
-                    className="object-cover object-center w-full h-full"
+                    className="h-full w-full object-cover object-center"
                     width={64}
                     height={64}
                   />

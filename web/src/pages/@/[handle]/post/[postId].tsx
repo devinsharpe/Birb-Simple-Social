@@ -14,11 +14,11 @@ import type {
 } from "~/server/db/schema/app";
 // import { Visibility } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ReactionModal, {
   KEY as REACTION_KEY,
 } from "../../../../components/modals/Reaction";
-import { and, desc, eq, gt } from "drizzle-orm";
+import { and, asc, desc, eq, gt } from "drizzle-orm";
 import { comments, posts } from "~/server/db/schema/app";
 import { useAtomValue, useSetAtom } from "jotai";
 
@@ -44,9 +44,6 @@ interface PageProps {
   hostname: string | undefined;
   post:
     | (Post & {
-        comments: (Comment & {
-          postedBy: Profile;
-        })[];
         mentions: (PostMention & { profile: Profile })[];
         postedBy: Profile;
         reactions: (PostReaction & {
@@ -54,20 +51,22 @@ interface PageProps {
         })[];
       })
     | null;
+  postComments: (Comment & {
+    postedBy?: Profile;
+  })[];
 }
 
-const PostPage: NextPage<PageProps> = ({ post }) => {
+const PostPage: NextPage<PageProps> = ({ post, postComments }) => {
   const [commentText, setCommentText] = useState("");
   const [replyComment, setReplyComment] = useState<
     | (Comment & {
-        postedBy: Profile;
+        postedBy?: Profile;
       })
     | null
   >(null);
   const archiveComment = trpc.comments.archive.useMutation();
   const archivePost = trpc.posts.archive.useMutation();
   const createComment = trpc.comments.create.useMutation();
-  const getComment = trpc.comments.get.useMutation();
   const setModal = useSetAtom(atoms.modal);
   const settings = useAtomValue(atoms.settings);
   const router = useRouter();
@@ -81,30 +80,38 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const { filteredComments, filteredReplies } = useMemo(() => {
+    return {
+      filteredComments: postComments.filter((cmmnt) => !cmmnt.commentId),
+      filteredReplies: postComments
+        .filter((cmmnt) => cmmnt.commentId)
+        .reduce<Record<string, (Comment & { postedBy?: Profile })[]>>(
+          (prev, curr) => {
+            if (!curr.commentId) return prev;
+            if (!curr.postedBy) return prev;
+            if (prev[curr.commentId])
+              return {
+                ...prev,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                [curr.commentId]: [...prev[curr.commentId]!, curr],
+              };
+            else return { ...prev, [curr.commentId]: [curr] };
+          },
+          {}
+        ),
+    };
+  }, [postComments]);
+
   const handleSubmit = useCallback(
     async (val: string) => {
       if (post && val) {
-        const simpleComment = await createComment.mutateAsync({
+        await createComment.mutateAsync({
           postId: post.id,
           text: val,
-          parentId: replyComment ? replyComment.id : undefined,
+          commentId: replyComment ? replyComment.id : undefined,
         });
-        if (simpleComment) {
-          const comment = await getComment.mutateAsync({
-            id: simpleComment.id,
-          });
-          if (comment && !comment.postId) {
-            post.comments.push(comment);
-          } else if (comment && comment.postId) {
-            const index = post.comments.findIndex(
-              (com) => com.id === comment.id
-            );
-            if (index && post.comments[index])
-              post.comments[index]?.children.push();
-          }
-          setCommentText("");
-          setReplyComment(null);
-        }
+        setCommentText("");
+        setReplyComment(null);
       }
       return null;
     },
@@ -151,7 +158,7 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
             replyComment={replyComment}
             value={commentText}
           />
-          {post.comments.length === 0 && (
+          {postComments.length === 0 && (
             <div className="flex h-32 flex-col items-center justify-center opacity-75">
               <h4 className="text-lg font-semibold">
                 It&apos;s all quiet here...
@@ -160,22 +167,16 @@ const PostPage: NextPage<PageProps> = ({ post }) => {
             </div>
           )}
           <div className="divide-y divide-zinc-200 overflow-visible dark:divide-zinc-700">
-            {post.comments
-              .filter((cmmnt) => cmmnt.commentId === "")
-              .map((comment) => (
-                <CommentItem
-                  key={comment.id}
-                  comment={{
-                    ...comment,
-                    children: post.comments.filter(
-                      (cmmnt) => cmmnt.commentId === comment.id
-                    ),
-                  }}
-                  onArchive={(id) => archiveComment.mutateAsync({ id })}
-                  onReply={(comment) => setReplyComment(comment)}
-                  sessionUserId={session.data?.user?.id}
-                />
-              ))}
+            {filteredComments.map((comment) => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                replies={filteredReplies[comment.id]}
+                onArchive={(id) => archiveComment.mutateAsync({ id })}
+                onReply={(comment) => setReplyComment(comment)}
+                sessionUserId={session.data?.user?.id}
+              />
+            ))}
           </div>
         </>
       ) : (
@@ -221,16 +222,6 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   date.setDate(date.getDate() - 7);
   const session = await getServerSession(context.req, context.res, authOptions);
   if (context.params && context.params.postId && session) {
-    // const post = await db
-    //   .select()
-    //   .from(posts)
-    //   .leftJoin(
-    //     comments,
-    //     and(eq(comments.postId, posts.id), eq(comments.commentId, ""))
-    //   )
-    //   .orderBy(desc(comments.createdAt))
-    //   .leftJoin(comments);
-
     const post = await db.query.posts.findFirst({
       where: and(
         eq(posts.id, context.params.postId.toString()),
@@ -238,10 +229,6 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         gt(posts.createdAt, date.toISOString())
       ),
       with: {
-        comments: {
-          where: eq(comments.visibility, Visibility.Active),
-          orderBy: desc(comments.createdAt),
-        },
         mentions: {
           with: {
             profile: true,
@@ -256,6 +243,45 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         },
       },
     });
+    let postComments: (Comment & { postedBy?: Profile })[];
+    if (post) {
+      postComments = await db.query.comments.findMany({
+        where: and(
+          eq(comments.postId, post.id),
+          eq(comments.visibility, Visibility.Active)
+        ),
+        with: {
+          postedBy: true,
+        },
+        orderBy: asc(comments.createdAt),
+      });
+    } else postComments = [];
+
+    // const post = await db.query.posts.findFirst({
+    //   where: and(
+    //     eq(posts.id, context.params.postId.toString()),
+    //     eq(posts.visibility, Visibility.Active),
+    //     gt(posts.createdAt, date.toISOString())
+    //   ),
+    //   with: {
+    //     comments: {
+    //       where: eq(comments.visibility, Visibility.Active),
+    //       orderBy: desc(comments.createdAt),
+    //     },
+    //     mentions: {
+    //       with: {
+    //         profile: true,
+    //       },
+    //     },
+    //     postedBy: true,
+    //     reactions: {
+    //       with: {
+    //         postedBy: true,
+    //       },
+    //       orderBy: desc(comments.createdAt),
+    //     },
+    //   },
+    // });
     // const post = await prisma.post.findFirst({
     //   where: {
     //     id: context.params.postId.toString(),
@@ -299,13 +325,18 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     //   },
     // });
     return {
-      props: { hostname: context.req.headers.host, post: post ?? null },
+      props: {
+        hostname: context.req.headers.host,
+        post: post ?? null,
+        postComments,
+      },
     };
   }
   return {
     props: {
       hostname: context.req.headers.host,
       post: null,
+      postComments: [],
     },
   };
 };

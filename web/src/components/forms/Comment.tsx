@@ -13,7 +13,7 @@ interface CommentFormProps {
   onSubmit: () => void;
   replyComment:
     | (Comment & {
-        postedBy: Profile;
+        postedBy?: Profile;
       })
     | null;
   value: string;
@@ -35,7 +35,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
       }}
       className="border-y border-zinc-300 p-4 dark:border-zinc-600"
     >
-      {replyComment && (
+      {replyComment && replyComment.postedBy && (
         <div className="flex items-center gap-4 ">
           {/* <div className="relative object-center w-10 h-10 overflow-hidden rounded-full shrink-0">
             <Link
