@@ -19,7 +19,6 @@ import { createId } from "~/server/db/utils";
 import { loremIpsum } from "lorem-ipsum";
 import { uniqueNamesGenerator } from "unique-names-generator";
 import { z } from "zod";
-import { env } from "../../../../env/server.mjs";
 
 export const IMAGE_POST_LIMIT = 1;
 export const TEXT_POST_LIMIT = 3;
