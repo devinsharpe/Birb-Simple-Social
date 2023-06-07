@@ -31,6 +31,7 @@ export const env = createEnv({
         APPLE_SERVICE_ID: z.string(),
         APPLE_KEY_ID: z.string(),
         APPLE_PRIVATE_KEY: z.string(),
+        APPLE_SECRET: z.string(),
         APPLE_TEAM_ID: z.string(),
         // Next Auth - Google
         GOOGLE_CLIENT_ID: z.string(),
@@ -73,6 +74,7 @@ export const env = createEnv({
         APPLE_SERVICE_ID: process.env.APPLE_SERVICE_ID,
         APPLE_KEY_ID: process.env.APPLE_KEY_ID,
         APPLE_PRIVATE_KEY: process.env.APPLE_PRIVATE_KEY,
+        APPLE_SECRET: process.env.APPLE_SECRET,
         APPLE_TEAM_ID: process.env.APPLE_TEAM_ID,
         GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
         GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,

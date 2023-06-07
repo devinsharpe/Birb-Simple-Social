@@ -9,6 +9,7 @@
     "lint": "next lint",
     "start": "next start",
     "generate": "drizzle-kit generate:pg --config=./drizzle.config.json",
+    "generate-apple": "node --loader ts-node/esm src/server/auth/apple.ts",
     "migrate": "node --loader ts-node/esm src/server/db/migrate.ts"
   },
   "dependencies": {
