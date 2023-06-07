@@ -18,13 +18,27 @@ import LoginModal from "../components/modals/Login";
 import { useAtomValue, useSetAtom } from "jotai";
 import atoms from "../atoms";
 import PostModal, { KEY as POST_KEY } from "../components/modals/Post";
-import { DevTools } from "jotai-devtools";
+// import { DevTools } from "jotai-devtools";
+import dynamic from "next/dynamic";
 import ThemeProvider from "../components/providers/Theme";
 import NProgressProvider from "../components/providers/NProgress";
 import ReactionsAtomProvider from "../components/providers/ReactionsAtom";
-import { env } from "../env/client.mjs";
+import { env } from "~/env.mjs";
 import SecondaryNav from "../components/navigation/SecondaryNav";
 import ToastsAtomProvider from "../components/providers/ToastsAtom";
+
+const JotaiDevtools = dynamic(
+  async () => {
+    if (env.NODE_ENV === "development") {
+      const { DevTools } = await import("jotai-devtools");
+      return DevTools;
+    }
+    const stub = () => <p className="hidden">Jotai Devtools Stub</p>;
+    stub.displayName = "Jotai Devtools Stub";
+    return stub;
+  },
+  { ssr: false }
+);
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +60,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
           content="Birb, a different type of social network"
         />
       </Head>
-      {env.NEXT_PUBLIC_ENV === "development" && <DevTools />}
+      {/* {env.NEXT_PUBLIC_ENV === "development" && <DevTools />} */}
+      <JotaiDevtools />
       <SessionProvider session={session}>
         <style jsx global>
           {`
@@ -71,7 +86,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <PostModal />
             <button
               type="button"
-              className="fixed z-10 flex items-center justify-center p-4 text-white transition-colors duration-100 rounded-full shadow-md right-8 bottom-8 bg-violet-600 shadow-violet-700/50 hover:bg-violet-700 focus:bg-violet-700"
+              className="fixed right-8 bottom-8 z-10 flex items-center justify-center rounded-full bg-violet-600 p-4 text-white shadow-md shadow-violet-700/50 transition-colors duration-100 hover:bg-violet-700 focus:bg-violet-700"
               onClick={() => setModal(POST_KEY)}
             >
               <FeatherIcon icon="edit-3" size={24} />
@@ -79,9 +94,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </>
         )}
 
-        <main className="h-screen max-w-2xl pt-16 mx-auto overflow-y-scroll hide-scrollbar">
+        <main className="hide-scrollbar mx-auto h-screen max-w-2xl overflow-y-scroll pt-16">
           <Component {...pageProps} />
-          <div className="flex items-center justify-center pt-16 pb-4 mt-auto border-t opacity-50 border-zinc-300 dark:border-zinc-600">
+          <div className="mt-auto flex items-center justify-center border-t border-zinc-300 pt-16 pb-4 opacity-50 dark:border-zinc-600">
             <p className="text-sm">
               made with ❤️ by&nbsp;
               <a
