@@ -48,7 +48,6 @@ export class PgTSVectorBuilder<
     table: AnyPgTable<{ name: TTableName }>
   ): PgTSVector<TTableName, TData> {
     const xyz = new PgTSVector(table, this.config);
-    console.log(xyz);
     return xyz;
   }
 }
