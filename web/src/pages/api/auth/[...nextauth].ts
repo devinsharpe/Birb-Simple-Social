@@ -6,7 +6,8 @@ import GoogleProvider from "next-auth/providers/google";
 // import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import jwt from "jsonwebtoken";
 
-import { env } from "../../../env/server.mjs";
+// import { env } from "../../../env/server.mjs";
+import { env } from "~/env.mjs";
 // import { prisma } from "../../../server/db/client";
 import db from "~/server/db";
 import { DrizzleAdapterPg } from "~/server/db/adapter";

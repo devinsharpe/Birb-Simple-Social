@@ -1,7 +1,8 @@
 import { Pool, neonConfig } from "@neondatabase/serverless";
 
 import { drizzle } from "drizzle-orm/neon-serverless";
-import { env } from "~/env/server.mjs";
+// import { env } from "~/env/server.mjs";
+import { env } from "~/env.mjs";
 import logger from "./utils/logger";
 import schema from "./schema";
 
