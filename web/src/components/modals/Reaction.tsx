@@ -1,16 +1,14 @@
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { Camera, Check, Loader, X } from "lucide-react";
+import Image from "next/image";
 import type { ChangeEvent } from "react";
 import React, { useMemo, useRef, useState } from "react";
-import DialogModal from "../DialogModal";
 import type { ProfileReaction } from "~/server/db/schema/app";
 import { Reaction, Visibility } from "~/server/db/schema/enums";
-// import type { ProfileReaction } from "@prisma/client";
-// import { Reaction, Visibility } from "@prisma/client";
-import FeatherIcon from "feather-icons-react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import atoms from "../../atoms";
 import useUpload from "../../hooks/upload";
 import { trpc } from "../../utils/trpc";
-import Image from "next/image";
+import DialogModal from "../DialogModal";
 
 export const KEY = "post-reaction";
 
@@ -75,7 +73,7 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({
           className="absolute -bottom-0 -left-3 z-[1] flex h-9 w-9 items-center justify-center rounded-full bg-zinc-200 dark:bg-zinc-900 dark:text-white"
           onClick={() => onReset(reaction)}
         >
-          <FeatherIcon icon="x" size={20} />
+          <X size={20} />
         </button>
       ) : (
         <button
@@ -84,9 +82,9 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({
           onClick={() => onUploadClick(reaction)}
         >
           {isLoading ? (
-            <FeatherIcon icon="loader" size={20} className="animate-spin" />
+            <Loader size={20} className="animate-spin" />
           ) : (
-            <FeatherIcon icon="camera" size={20} />
+            <Camera size={20} />
           )}
         </button>
       )}
@@ -97,7 +95,7 @@ const ReactionButton: React.FC<ReactionButtonProps> = ({
           onClick={() => onReactionClick(reaction)}
         >
           <span className="absolute inset-0 hidden h-full w-full items-center justify-center rounded-full bg-zinc-900/50 text-white group-hover:flex">
-            <FeatherIcon icon="check" size={30} />
+            <Check size={30} />
           </span>
           <Image
             src={image}

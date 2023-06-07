@@ -1,8 +1,9 @@
-import DialogModal from "../DialogModal";
+import { Mail } from "lucide-react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
+import DialogModal from "../DialogModal";
 import TextInput from "../inputs/Text";
-import { signIn } from "next-auth/react";
 
 export const KEY = "login";
 
@@ -66,7 +67,7 @@ const LoginModal = () => {
         </div>
         <TextInput
           autoComplete="email"
-          icon="mail"
+          icon={Mail}
           id="auth-email"
           label="Email Address"
           name="email"

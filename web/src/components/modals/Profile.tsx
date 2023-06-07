@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import DialogModal from "../DialogModal";
-// import type { Profile } from "@prisma/client";
-import type { Profile } from "~/server/db/schema/app";
-import ProfileForm from "../forms/Profile";
-import atoms from "../../atoms";
-import { trpc } from "../../utils/trpc";
 import { useAtom } from "jotai";
+import { Camera } from "lucide-react";
+import type { Profile } from "~/server/db/schema/app";
+import atoms from "../../atoms";
 import useToasts from "../../hooks/toasts";
+import { trpc } from "../../utils/trpc";
+import ProfileForm from "../forms/Profile";
 
 export const KEY = "profile-edit";
 
@@ -41,7 +41,7 @@ const ProfileModal = () => {
       addToast({
         id: "profile-update",
         content: "Looking good!",
-        icon: "camera",
+        icon: Camera,
       });
     }
   }, [profile, saveProfileMutation, setModal, setProfileAtom, addToast]);

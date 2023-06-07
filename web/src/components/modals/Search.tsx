@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import DialogModal from "../DialogModal";
-import FeatherIcon from "feather-icons-react";
+import { useSetAtom } from "jotai";
+import { Search } from "lucide-react";
 import Image from "next/image";
-// import type { Profile } from "@prisma/client";
+import { useRouter } from "next/router";
 import type { Profile } from "~/server/db/schema/app";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 import atoms from "../../atoms";
 import { trpc } from "../../utils/trpc";
-import { useRouter } from "next/router";
-import { useSetAtom } from "jotai";
-import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
+import DialogModal from "../DialogModal";
 
 export const KEY = "search";
 
@@ -80,7 +79,7 @@ const SearchModal = () => {
       <>
         <div className="relative">
           <span className="absolute left-3 top-0 bottom-0 flex items-center">
-            <FeatherIcon icon="search" size={16} />
+            <Search size={16} />
           </span>
           <input
             type="text"

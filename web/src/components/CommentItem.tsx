@@ -1,17 +1,21 @@
-// import type { Comment, Profile } from "@prisma/client";
-import type { Comment, Profile } from "~/server/db/schema/app";
 import React, { useMemo } from "react";
+import type { Comment, Profile } from "~/server/db/schema/app";
 
-import DialogMenu from "./DialogMenu";
-import type { DialogMenuItemProps } from "./DialogMenu";
-import FeatherIcon from "feather-icons-react";
+import {
+  Archive,
+  Flag,
+  Heart,
+  MessageCircle,
+  MoreHorizontal,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { getAge } from "../utils/demo";
-import usePostBlocks from "../hooks/postBlocks";
-import { PostDisplay } from "./forms/Post";
 import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
-
+import usePostBlocks from "../hooks/postBlocks";
+import { getAge } from "../utils/demo";
+import type { DialogMenuItemProps } from "./DialogMenu";
+import DialogMenu from "./DialogMenu";
+import { PostDisplay } from "./forms/Post";
 
 interface CommentItemProps {
   comment: Comment & {
@@ -53,14 +57,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
     const items: DialogMenuItemProps[][] = [
       [
         {
-          icon: "heart",
+          icon: Heart,
           text: "Like Comment",
           onClick: console.log,
         },
       ],
       [
         {
-          icon: "flag",
+          icon: Flag,
           text: "Report Comment",
           onClick: console.log,
         },
@@ -68,13 +72,13 @@ const CommentItem: React.FC<CommentItemProps> = ({
     ];
     if (!comment.commentId && items[0])
       items[0].push({
-        icon: "message-circle",
+        icon: MessageCircle,
         text: "Reply",
         onClick: () => onReply(comment),
       });
     if (comment.profileId === sessionUserId && items[1])
       items[1].unshift({
-        icon: "archive",
+        icon: Archive,
         text: "Archive Comment",
         onClick: () => onArchive(comment.id),
       });
@@ -143,14 +147,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
         </div>
         <div className="flex w-full items-center gap-4 pt-2 pl-10">
           <button type="button" className="px-2 py-1">
-            <FeatherIcon icon="heart" size={16} />
+            <Heart size={16} />
           </button>
           <button
             type="button"
             className="px-2 py-1"
             onClick={() => onReply(comment)}
           >
-            <FeatherIcon icon="message-circle" size={16} />
+            <MessageCircle size={16} />
           </button>
           <div className="w-full"></div>
           <div>
@@ -158,7 +162,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               className="px-2 py-1 text-zinc-600 dark:text-zinc-400"
               items={dialogItems}
             >
-              <FeatherIcon icon="more-horizontal" size={16} />
+              <MoreHorizontal size={16} />
             </DialogMenu>
           </div>
         </div>

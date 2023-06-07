@@ -1,18 +1,17 @@
-// import type { ProfileSettings } from "@prisma/client";
-import type { ProfileSetting } from "~/server/db/schema/app";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
+import type { ProfileSetting } from "~/server/db/schema/app";
 
-import FeatherIcon from "feather-icons-react";
-import Head from "next/head";
-import Navbar from "../../components/Navbar";
+import { ArrowLeft } from "lucide-react";
 import type { NextPage } from "next";
-import SettingsForm from "../../components/forms/Settings";
-import atoms from "../../atoms";
-import { trpc } from "../../utils/trpc";
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import atoms from "../../atoms";
+import Navbar from "../../components/Navbar";
 import Redirect from "../../components/Redirect";
+import SettingsForm from "../../components/forms/Settings";
+import { trpc } from "../../utils/trpc";
 
 const SettingsPage: NextPage = () => {
   const router = useRouter();
@@ -70,7 +69,7 @@ const SettingsPage: NextPage = () => {
                 className="p-1"
                 onClick={() => router.back()}
               >
-                <FeatherIcon icon="arrow-left" size={24} />
+                <ArrowLeft size={24} />
               </button>
               <h4 className="text-xl font-bold tracking-wide">Settings</h4>
             </div>

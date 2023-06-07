@@ -1,25 +1,33 @@
-import { CAT_REACTION_MAP, REACTION_MAP } from "./modals/Reaction";
-// import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+import React, { useMemo } from "react";
 import type {
   Post,
   PostMention,
   PostReaction,
   Profile,
 } from "~/server/db/schema/app";
-// import { PostType } from "@prisma/client";
-import React, { useMemo } from "react";
+import { CAT_REACTION_MAP, REACTION_MAP } from "./modals/Reaction";
 
-import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
-import DialogMenu from "./DialogMenu";
-import type { DialogMenuItemProps } from "./DialogMenu";
-import FeatherIcon from "feather-icons-react";
+import {
+  Archive,
+  AtSign,
+  Flag,
+  LinkIcon,
+  MapPin,
+  MessageSquare,
+  MoreHorizontal,
+  Share,
+  Smile,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { PostDisplay } from "./forms/Post";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 import { PostType } from "~/server/db/schema/enums";
-import { getAge } from "../utils/demo";
 import usePostBlocks from "../hooks/postBlocks";
 import useToasts from "../hooks/toasts";
+import { getAge } from "../utils/demo";
+import type { DialogMenuItemProps } from "./DialogMenu";
+import DialogMenu from "./DialogMenu";
+import { PostDisplay } from "./forms/Post";
 
 interface PostItemProps {
   catMode?: boolean;
@@ -60,17 +68,17 @@ const PostItem: React.FC<PostItemProps> = ({
     const items: DialogMenuItemProps[][] = [
       [
         {
-          icon: "smile",
+          icon: Smile,
           text: "Add Reaction",
           onClick: onReactionClick,
         },
         {
-          icon: "message-square",
+          icon: MessageSquare,
           text: "View Comments",
           onClick: () => onClick(post),
         },
         {
-          icon: "at-sign",
+          icon: AtSign,
           text: "View Mentions",
           onClick: console.log,
           disabled: !post.mentions.length,
@@ -78,7 +86,7 @@ const PostItem: React.FC<PostItemProps> = ({
       ],
       [
         {
-          icon: "flag",
+          icon: Flag,
           text: "Report Post",
           onClick: console.log,
         },
@@ -87,7 +95,7 @@ const PostItem: React.FC<PostItemProps> = ({
     if (post.profileId === sessionUserId && items[0] && items[1]) {
       items[0].shift();
       items[1].unshift({
-        icon: "archive",
+        icon: Archive,
         text: "Archive Post",
         onClick: () => onArchive(post.id),
       });
@@ -141,7 +149,7 @@ const PostItem: React.FC<PostItemProps> = ({
           className="px-2 py-1 text-zinc-600 dark:text-zinc-400"
           items={dialogItems}
         >
-          <FeatherIcon icon="more-horizontal" size={24} />
+          <MoreHorizontal size={24} />
         </DialogMenu>
       </div>
 
@@ -162,7 +170,7 @@ const PostItem: React.FC<PostItemProps> = ({
         </p>
         {post.location && (
           <div className="flex items-center gap-2 whitespace-nowrap border-t border-zinc-300 pt-4 text-sm leading-none text-zinc-800/75 text-opacity-50 dark:border-zinc-600 dark:text-white/75">
-            <FeatherIcon icon="map-pin" size={16} />
+            <MapPin size={16} />
             <p>{post.location}</p>
           </div>
         )}
@@ -174,7 +182,7 @@ const PostItem: React.FC<PostItemProps> = ({
             className="rounded p-2"
             onClick={onReactionClick}
           >
-            <FeatherIcon icon="smile" size={16} />
+            <Smile size={16} />
           </button>
         )}
         <Link
@@ -184,7 +192,7 @@ const PostItem: React.FC<PostItemProps> = ({
           {!!post.commentCount && (
             <span className="text-sm leading-none">{post.commentCount}</span>
           )}
-          <FeatherIcon icon="message-square" size={16} />
+          <MessageSquare size={16} />
         </Link>
         <button
           type="button"
@@ -204,13 +212,13 @@ const PostItem: React.FC<PostItemProps> = ({
               navigator.clipboard.writeText(path);
               addToast({
                 id: "post-link-copy",
+                icon: LinkIcon,
                 content: "Post link copied to clipboard",
-                icon: "link",
               });
             }
           }}
         >
-          <FeatherIcon icon="share-2" size={16} />
+          <Share size={16} />
         </button>
         {!expandedReactions && (
           <div className="items center flex w-full justify-end -space-x-3">

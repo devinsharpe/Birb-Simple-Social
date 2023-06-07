@@ -1,19 +1,19 @@
 // import type { Post, PostMention, PostReaction, Profile } from "@prisma/client";
+import React, { useCallback, useEffect, useState } from "react";
 import type {
   Post,
   PostMention,
   PostReaction,
   Profile,
 } from "~/server/db/schema/app";
-import React, { useCallback, useEffect, useState } from "react";
 
-import PostItem from "./PostItem";
-import { trpc } from "../utils/trpc";
-import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import FeatherIcon from "feather-icons-react";
 import { useSetAtom } from "jotai";
+import { Edit3 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import atoms from "../atoms";
+import { trpc } from "../utils/trpc";
+import PostItem from "./PostItem";
 
 import { KEY as POST_KEY } from "./modals/Post";
 import ReactionModal, { KEY as REACTION_KEY } from "./modals/Reaction";
@@ -74,7 +74,7 @@ const Timeline: React.FC = () => {
             className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
             onClick={() => setModal(POST_KEY)}
           >
-            <FeatherIcon icon="edit-3" size={16} />
+            <Edit3 size={16} />
             <span>Add Post</span>
           </button>
         </div>
