@@ -18,7 +18,7 @@ const generateAppleSecret = () => {
     {
       audience: "https://appleid.apple.com",
       issuer: process.env.APPLE_TEAM_ID,
-      expiresIn: process.env.NODE_ENV === "development" ? "24h" : "2h",
+      expiresIn: "180d",
       header: {
         alg: "ES256",
         kid: process.env.APPLE_KEY_ID,
