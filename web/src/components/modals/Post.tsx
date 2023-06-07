@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 
-import DialogModal from "../DialogModal";
-import FeatherIcon from "feather-icons-react";
-import PostForm from "../forms/Post";
-// import { PostType } from "@prisma/client";
+import { useAtom } from "jotai";
+import { AlignLeft, ImageIcon, Smile } from "lucide-react";
 import { PostType } from "~/server/db/schema/enums";
 import atoms from "../../atoms";
-import { trpc } from "../../utils/trpc";
-import { useAtom } from "jotai";
 import useToasts from "../../hooks/toasts";
+import { trpc } from "../../utils/trpc";
+import DialogModal from "../DialogModal";
+import PostForm from "../forms/Post";
 
 export const KEY = "post-new";
 
@@ -42,9 +41,9 @@ const AvailablePostIndicator: React.FC<AvailablePostIndicatorProps> = ({
           }`}
         >
           {type === PostType.Text ? (
-            <FeatherIcon size={20} icon="align-left" />
+            <AlignLeft size={20} />
           ) : (
-            <FeatherIcon size={16} icon="image" />
+            <ImageIcon size={16} />
           )}
         </div>
       ))}
@@ -91,7 +90,7 @@ const PostModal = () => {
       addToast({
         id: "post-new",
         content: "Thanks for sharing!",
-        icon: "smile",
+        icon: Smile,
       });
       return newPost;
     }

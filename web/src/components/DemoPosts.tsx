@@ -1,8 +1,17 @@
-import DialogMenu from "./DialogMenu";
-import FeatherIcon from "feather-icons-react";
+import {
+  Flag,
+  MessageSquare,
+  MoreHorizontal,
+  Share,
+  ThumbsUp,
+  User,
+  UserMinus,
+  XOctagon,
+} from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { trpc } from "../utils/trpc";
+import DialogMenu from "./DialogMenu";
 
 const DemoPost: React.FC<{
   post: {
@@ -22,7 +31,7 @@ const DemoPost: React.FC<{
     <article className="space-y-4 px-6 pt-4 pb-4">
       <div className="flex items-center space-x-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-600 text-white">
-          <FeatherIcon icon="user" size={24} />
+          <User size={24} />
         </div>
         <div className="w-full">
           <h4 className="font-medium" title={post.profile.handle}>
@@ -37,24 +46,24 @@ const DemoPost: React.FC<{
           items={[
             [
               {
-                icon: "user-minus",
+                icon: UserMinus,
                 text: `Unfollow ${post.profile.name}`,
                 onClick: console.log,
               },
               {
-                icon: "x-octagon",
+                icon: XOctagon,
                 text: `Block ${post.profile.name}`,
                 onClick: console.log,
               },
               {
-                icon: "flag",
+                icon: Flag,
                 text: "Report Post",
                 onClick: console.log,
               },
             ],
           ]}
         >
-          <FeatherIcon icon="more-horizontal" size={24} />
+          <MoreHorizontal size={24} />
         </DialogMenu>
       </div>
       <div className="space-y-4 pl-12">
@@ -73,18 +82,18 @@ const DemoPost: React.FC<{
       </div>
       <div className="flex items-center space-x-6 pl-12">
         <button type="button" className="rounded p-2">
-          <FeatherIcon
-            icon="thumbs-up"
+          <ThumbsUp
             size={16}
-            className={`${post.likedByUser && "fill-zinc-800 dark:fill-zinc-200"
-              }`}
+            className={`${
+              post.likedByUser && "fill-zinc-800 dark:fill-zinc-200"
+            }`}
           />
         </button>
         <button type="button" className="rounded p-2">
-          <FeatherIcon icon="message-square" size={16} />
+          <MessageSquare size={16} />
         </button>
         <button type="button" className="rounded p-2">
-          <FeatherIcon icon="share-2" size={16} />
+          <Share size={16} />
         </button>
         <p className="w-full text-right text-sm font-semibold text-zinc-600 dark:text-zinc-400">
           {post.commentCount} Comment{post.commentCount !== 1 && "s"}

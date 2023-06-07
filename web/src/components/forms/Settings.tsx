@@ -1,11 +1,20 @@
-// import type { ProfileSettings } from "@prisma/client";
 import type { ProfileSetting } from "~/server/db/schema/app";
-// import { Reaction, Theme } from "@prisma/client";
 import { Reaction, Theme } from "~/server/db/schema/enums";
 
-import FeatherIcon from "feather-icons-react";
-import React from "react";
 import { Switch } from "@headlessui/react";
+import {
+  Bell,
+  Download,
+  Eye,
+  Loader,
+  Power,
+  RefreshCw,
+  Save,
+  Smile,
+  Trash,
+  User,
+} from "lucide-react";
+import React from "react";
 
 interface SettingsFormProps {
   settings: ProfileSetting;
@@ -34,7 +43,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
     >
       <section className="w-full px-6 py-4">
         <h2 className="flex items-center gap-4 text-lg font-semibold tracking-wide md:text-2xl">
-          <FeatherIcon icon="smile" />
+          <Smile />
           <span>Reactions</span>
         </h2>
         <div className="space-y-2 pt-4">
@@ -93,7 +102,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
       </section>
       <section className="w-full px-6 py-4">
         <h2 className="flex items-center gap-4 text-lg font-semibold tracking-wide md:text-2xl">
-          <FeatherIcon icon="eye" />
+          <Eye />
           <span>Appearance</span>
         </h2>
         <div className="space-y-2 pt-4">
@@ -149,7 +158,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
       </section>
       <section className="w-full px-6 py-4">
         <h2 className="flex items-center gap-4 text-lg font-semibold tracking-wide md:text-2xl">
-          <FeatherIcon icon="bell" />
+          <Bell />
           <span>Notifications</span>
         </h2>
         <div className="flex flex-col items-center space-y-4 pt-4">
@@ -157,14 +166,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             type="button"
             className="mx-auto flex w-full max-w-lg items-center justify-center gap-2 rounded border border-zinc-300 bg-zinc-200 py-2 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           >
-            <FeatherIcon icon="power" size={20} />
+            <Power size={20} />
             <span>Enable PWA Notifications</span>
           </button>
         </div>
       </section>
       <section className="w-full px-6 py-4">
         <h2 className="flex items-center gap-4 text-lg font-semibold tracking-wide md:text-2xl">
-          <FeatherIcon icon="user" />
+          <User />
           <span>Profile</span>
         </h2>
         <div className="flex flex-col items-center space-y-4 pt-4">
@@ -172,14 +181,14 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             type="button"
             className="mx-auto flex w-full max-w-lg items-center justify-center gap-2 rounded border border-zinc-300 bg-zinc-200 py-2 hover:bg-zinc-300 dark:border-zinc-700 dark:bg-zinc-800 dark:hover:bg-zinc-700"
           >
-            <FeatherIcon icon="download" size={20} />
+            <Download size={20} />
             <span>Download User Data</span>
           </button>
           <button
             type="button"
             className="mx-auto flex w-full max-w-lg items-center justify-center gap-2 rounded border border-rose-300 bg-rose-200 py-2 hover:bg-rose-300 dark:border-rose-700 dark:bg-rose-800 dark:hover:bg-rose-700"
           >
-            <FeatherIcon icon="trash" size={20} />
+            <Trash size={20} />
             <span>Delete Account</span>
           </button>
         </div>
@@ -190,7 +199,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           onClick={onReset}
           type="button"
         >
-          <FeatherIcon icon="refresh-cw" size={20} />
+          <RefreshCw size={20} />
           <span>Reset</span>
         </button>
         <button
@@ -199,16 +208,12 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           }`}
           type="submit"
         >
-          <FeatherIcon icon="save" size={20} />
+          <Save size={20} />
           <span>Save Settings</span>
 
           {isLoading && (
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
-              <FeatherIcon
-                icon="loader"
-                className="text-white dark:text-zinc-800"
-                size={16}
-              />
+              <Loader className="text-white dark:text-zinc-800" size={16} />
             </span>
           )}
         </button>

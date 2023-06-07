@@ -1,10 +1,9 @@
+import { Transition } from "@headlessui/react";
 import { useAtom } from "jotai";
+import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Toast } from "../../atoms";
 import atoms from "../../atoms";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import FeatherIcon from "feather-icons-react";
-import { Transition } from "@headlessui/react";
 
 const ToastsAtomProvider = () => {
   const [currentToast, setCurrentToast] = useState<Toast | null>(null);
@@ -43,6 +42,11 @@ const ToastsAtomProvider = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toasts]);
 
+  const CurrentIcon = useMemo(() => {
+    if (currentToast && currentToast.icon) return currentToast.icon;
+    else return null;
+  }, [currentToast]);
+
   if (typeof window !== "undefined")
     return createPortal(
       <>
@@ -57,9 +61,7 @@ const ToastsAtomProvider = () => {
         >
           {currentToast && (
             <div className="pointer-events-none fixed -bottom-16 z-[1] ml-[50vw] flex w-auto -translate-x-1/2 items-center gap-4 rounded-md  bg-zinc-800 px-4 py-2 text-white shadow">
-              {currentToast.icon && (
-                <FeatherIcon icon={currentToast.icon} size={20} />
-              )}
+              {CurrentIcon && <CurrentIcon size={20} />}
               <span className="whitespace-nowrap">{currentToast.content}</span>
             </div>
           )}

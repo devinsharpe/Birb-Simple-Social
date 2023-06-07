@@ -1,20 +1,26 @@
-// import type { Profile, RelationshipRequest } from "@prisma/client";
-// import { RequestStatus } from "@prisma/client";
+import { useCallback, useEffect, useState } from "react";
 import type { Profile, RelationshipRequest } from "~/server/db/schema/app";
 import { RequestStatus } from "~/server/db/schema/enums";
-import { useCallback, useEffect, useState } from "react";
 
-import DialogMenu from "../components/DialogMenu";
-import FeatherIcon from "feather-icons-react";
+import {
+  ArrowLeft,
+  Check,
+  CheckCircle,
+  Loader,
+  MoreVertical,
+  X,
+  XCircle,
+} from "lucide-react";
+import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "../components/Navbar";
-import type { NextPage } from "next";
-import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
-import Redirect from "../components/Redirect";
 import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
+import DialogMenu from "../components/DialogMenu";
+import Navbar from "../components/Navbar";
+import Redirect from "../components/Redirect";
+import { trpc } from "../utils/trpc";
 
 const RequestNotification: React.FC<{
   loading: boolean;
@@ -50,13 +56,13 @@ const RequestNotification: React.FC<{
           items={[
             [
               {
-                icon: "check",
+                icon: Check,
                 text: "Approve",
                 onClick: () => onClick(request.id, RequestStatus.Accepted),
                 disabled: loading,
               },
               {
-                icon: "x",
+                icon: X,
                 text: "Deny",
                 onClick: () => onClick(request.id, RequestStatus.Denied),
                 disabled: loading,
@@ -65,20 +71,20 @@ const RequestNotification: React.FC<{
           ]}
         >
           {loading ? (
-            <FeatherIcon icon="loader" className="animate-spin" />
+            <Loader className="animate-spin" />
           ) : (
-            <FeatherIcon icon="more-vertical" size={20} />
+            <MoreVertical size={20} />
           )}
         </DialogMenu>
       )}
       {request.status === RequestStatus.Accepted && (
         <div className="rounded-md bg-violet-700 p-2 text-white dark:bg-violet-400 dark:text-black">
-          <FeatherIcon icon="check-circle" size={20} />
+          <CheckCircle size={20} />
         </div>
       )}
       {request.status === RequestStatus.Denied && (
         <div className="rounded-md bg-zinc-700 p-2 text-white dark:bg-zinc-400 dark:text-black">
-          <FeatherIcon icon="x-circle" size={20} />
+          <XCircle size={20} />
         </div>
       )}
     </div>
@@ -144,7 +150,7 @@ const NotificationsPage: NextPage = () => {
                 className="p-1"
                 onClick={() => router.back()}
               >
-                <FeatherIcon icon="arrow-left" size={24} />
+                <ArrowLeft size={24} />
               </button>
               <h4 className="text-xl font-bold tracking-wide">Notifications</h4>
             </div>

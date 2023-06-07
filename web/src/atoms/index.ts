@@ -6,11 +6,11 @@ import type {
 } from "~/server/db/schema/app";
 
 import { atom } from "jotai";
-import type FeatherIcon from "feather-icons-react";
+import type { LucideIcon } from "lucide-react";
 
 export interface Toast {
   id: string;
-  icon?: FeatherIcon.Icon;
+  icon?: LucideIcon;
   content: string;
 }
 

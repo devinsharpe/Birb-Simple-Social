@@ -1,19 +1,18 @@
-// import type { Profile, ProfileRelationship } from "@prisma/client";
-import type { Profile, ProfileRelationship } from "~/server/db/schema/app";
 import React, { useEffect, useState } from "react";
+import type { Profile, ProfileRelationship } from "~/server/db/schema/app";
 
-import DialogModal from "../DialogModal";
-import FeatherIcon from "feather-icons-react";
+import { useAtom } from "jotai";
+import { Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import atoms from "../../atoms";
-import { trpc } from "../../utils/trpc";
-import { useAtom } from "jotai";
-import { RelationshipType } from "~/server/db/schema/enums";
 import {
   DEFAULT_AVATAR_URL,
   DEFAULT_HEADER_URL,
 } from "~/server/db/schema/constants";
+import { RelationshipType } from "~/server/db/schema/enums";
+import atoms from "../../atoms";
+import { trpc } from "../../utils/trpc";
+import DialogModal from "../DialogModal";
 
 export enum KEY_OPTIONS {
   follower = "FOLLOWER",
@@ -98,7 +97,7 @@ const RelationshipModal: React.FC<{
       <section className="h-full divide-y divide-zinc-300 overflow-y-auto dark:divide-zinc-600">
         {getRelationships.isLoading ? (
           <div className="flex h-14 w-full items-center justify-center">
-            <FeatherIcon icon="loader" className="animate-spin" />
+            <Loader className="animate-spin" />
           </div>
         ) : (
           <>

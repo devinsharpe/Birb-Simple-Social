@@ -1,11 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 
-import FeatherIcon from "feather-icons-react";
+import { useAtom } from "jotai";
+import { X } from "lucide-react";
 import type { RefObject } from "react";
 import { Fragment } from "react";
-import atoms from "../atoms/";
-import { useAtom } from "jotai";
 import { createPortal } from "react-dom";
+import atoms from "../atoms/";
 
 const DialogModal: React.FC<{
   name: string;
@@ -78,7 +78,7 @@ const DialogModal: React.FC<{
                         className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-600 dark:hover:text-zinc-200"
                         onClick={() => setModal(undefined)}
                       >
-                        <FeatherIcon icon="x" size={20} />
+                        <X size={20} />
                       </button>
                     ) : (
                       <div className="h-8"></div>

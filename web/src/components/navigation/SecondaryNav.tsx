@@ -1,10 +1,20 @@
-import FeatherIcon from "feather-icons-react";
-import { KEY as LOGIN_KEY } from "../modals/Login";
-import Link from "next/link";
-import { KEY as POST_KEY } from "../modals/Post";
-import React from "react";
-import { KEY as WELCOME_KEY } from "../modals/Welcome";
+import {
+  Bell,
+  Edit3,
+  HelpCircle,
+  Home,
+  LogIn,
+  LogOut,
+  MessageCircle,
+  Settings,
+  User,
+} from "lucide-react";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
+import React from "react";
+import { KEY as LOGIN_KEY } from "../modals/Login";
+import { KEY as POST_KEY } from "../modals/Post";
+import { KEY as WELCOME_KEY } from "../modals/Welcome";
 
 interface SecondaryNavProps {
   onModalClick: (modal: string) => void;
@@ -17,10 +27,10 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
 }) => {
   return (
     <>
-      <nav className="fixed flex-col items-start justify-between hidden py-2 mx-auto bottom-4 top-20 left-4 lg:flex">
+      <nav className="fixed bottom-4 top-20 left-4 mx-auto hidden flex-col items-start justify-between py-2 lg:flex">
         <div className="">
           <Link className="flex items-center gap-2 px-6 py-3" href="/">
-            <FeatherIcon icon="home" size={20} className="shrink-0" />
+            <Home size={20} className="shrink-0" />
             <span className="whitespace-nowrap">Home</span>
           </Link>
 
@@ -30,7 +40,7 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
                 className="flex items-center gap-2 px-6 py-3"
                 href="/notifications"
               >
-                <FeatherIcon icon="bell" size={20} className="shrink-0" />
+                <Bell size={20} className="shrink-0" />
                 <span className="whitespace-nowrap">Notifications</span>
               </Link>
               <Link
@@ -38,18 +48,14 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
                 href="/"
                 aria-disabled
               >
-                <FeatherIcon
-                  icon="message-circle"
-                  size={20}
-                  className="shrink-0"
-                />
+                <MessageCircle size={20} className="shrink-0" />
                 <span className="whitespace-nowrap">Messages</span>
               </Link>
               <Link
                 className="flex items-center gap-2 px-6 py-3"
                 href={`/@/${profileHandle}`}
               >
-                <FeatherIcon icon="user" size={20} className="shrink-0" />
+                <User size={20} className="shrink-0" />
                 <span className="whitespace-nowrap">Profile</span>
               </Link>
               <button
@@ -57,7 +63,7 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
                 className="flex items-center gap-2 px-6 py-3"
                 onClick={() => onModalClick(POST_KEY)}
               >
-                <FeatherIcon icon="edit-3" size={20} className="shrink-0" />
+                <Edit3 size={20} className="shrink-0" />
                 <span className="whitespace-nowrap">New Post</span>
               </button>
             </>
@@ -70,7 +76,7 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
                 className="flex items-center gap-2 px-6 py-3"
                 href="/settings"
               >
-                <FeatherIcon icon="settings" size={20} className="shrink-0" />
+                <Settings size={20} className="shrink-0" />
                 <span className="whitespace-nowrap">Settings</span>
               </Link>
             </>
@@ -81,7 +87,7 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
             className="flex items-center gap-2 px-6 py-3"
             onClick={() => onModalClick(WELCOME_KEY)}
           >
-            <FeatherIcon icon="help-circle" size={20} className="shrink-0" />
+            <HelpCircle size={20} className="shrink-0" />
             <span className="whitespace-nowrap">About Birb</span>
           </button>
           <button
@@ -93,12 +99,12 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
           >
             {profileHandle ? (
               <>
-                <FeatherIcon icon="log-out" size={20} className="shrink-0" />
+                <LogOut size={20} className="shrink-0" />
                 <span className="whitespace-nowrap">Log Out</span>
               </>
             ) : (
               <>
-                <FeatherIcon icon="log-in" size={20} className="shrink-0" />
+                <LogIn size={20} className="shrink-0" />
                 <span className="whitespace-nowrap">Log In</span>
               </>
             )}
@@ -110,21 +116,21 @@ const SecondaryNav: React.FC<SecondaryNavProps> = ({
         <nav className="fixed inset-x-0 bottom-0 z-[3] flex w-full items-center justify-around bg-white/50 py-2 px-4 pr-24 backdrop-blur-md dark:bg-zinc-900/50 lg:hidden">
           <Link
             href="/"
-            className="p-3 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800"
+            className="rounded-full p-3 hover:bg-zinc-200 dark:hover:bg-zinc-800"
           >
-            <FeatherIcon size={24} icon="home" />
+            <Home size={24} />
           </Link>
           <Link
             href="/notifications"
-            className="p-3 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800"
+            className="rounded-full p-3 hover:bg-zinc-200 dark:hover:bg-zinc-800"
           >
-            <FeatherIcon size={24} icon="bell" />
+            <Bell size={24} />
           </Link>
           <Link
             href={`/@/${profileHandle}`}
-            className="p-3 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800"
+            className="rounded-full p-3 hover:bg-zinc-200 dark:hover:bg-zinc-800"
           >
-            <FeatherIcon size={24} icon="user" />
+            <User size={24} />
           </Link>
         </nav>
       )}

@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import FeatherIcon from "feather-icons-react";
+import { Home } from "lucide-react";
 
 const VerifyPage: NextPage = () => {
   return (
@@ -38,7 +38,7 @@ const VerifyPage: NextPage = () => {
             href="/"
             className="flex items-center justify-center gap-2 rounded-md bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
           >
-            <FeatherIcon icon="home" size={20} />
+            <Home size={20} />
             <span>Return Home</span>
           </Link>
         </div>

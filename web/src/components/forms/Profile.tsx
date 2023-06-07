@@ -1,17 +1,24 @@
 import type { ChangeEvent, MouseEvent } from "react";
 import React, { useCallback, useRef, useState } from "react";
 
-import FeatherIcon from "feather-icons-react";
-import Image from "next/image";
-// import type { Profile } from "@prisma/client";
-import type { Profile } from "~/server/db/schema/app";
-import TextInput from "../inputs/Text";
-import { trpc } from "../../utils/trpc";
+import {
+  AtSign,
+  Camera,
+  Gift,
+  LinkIcon,
+  Loader,
+  MapPin,
+  X,
+} from "lucide-react";
 import { useS3Upload } from "next-s3-upload";
+import Image from "next/image";
+import type { Profile } from "~/server/db/schema/app";
 import {
   DEFAULT_AVATAR_URL,
   DEFAULT_HEADER_URL,
 } from "~/server/db/schema/constants";
+import { trpc } from "../../utils/trpc";
+import TextInput from "../inputs/Text";
 
 const ProfileForm: React.FC<{
   isLoading: boolean;
@@ -96,9 +103,9 @@ const ProfileForm: React.FC<{
               onClick={(e) => handleClick(e, "headerUrl")}
             >
               {currentPicKey === "headerUrl" ? (
-                <FeatherIcon icon="loader" className="animate-spin" />
+                <Loader className="animate-spin" />
               ) : (
-                <FeatherIcon icon="camera" />
+                <Camera />
               )}
             </button>
           </div>
@@ -117,9 +124,9 @@ const ProfileForm: React.FC<{
               onClick={(e) => handleClick(e, "avatarUrl")}
             >
               {currentPicKey === "avatarUrl" ? (
-                <FeatherIcon icon="loader" className="animate-spin" />
+                <Loader className="animate-spin" />
               ) : (
-                <FeatherIcon icon="camera" />
+                <Camera />
               )}
             </button>
           </div>
@@ -134,7 +141,7 @@ const ProfileForm: React.FC<{
           value={profile.name}
         />
         <TextInput
-          icon={isValidHandle ? "at-sign" : "x"}
+          icon={isValidHandle ? AtSign : X}
           id="profile-handle"
           isValid={isValidHandle}
           label="Handle"
@@ -160,7 +167,7 @@ const ProfileForm: React.FC<{
           value={profile.biography || ""}
         />
         <TextInput
-          icon={"map-pin"}
+          icon={MapPin}
           id="profile-location"
           label="Location"
           maxLength={50}
@@ -177,11 +184,11 @@ const ProfileForm: React.FC<{
           name="birthdate"
           onChange={(val) => onChange({ ...profile, birthdate: val })}
           value={profile.birthdate || new Date().toLocaleDateString()}
-          icon="gift"
+          icon={Gift}
           type="date"
         />
         <TextInput
-          icon="link"
+          icon={LinkIcon}
           id="profile-website"
           label="Website"
           name="website"
@@ -199,8 +206,7 @@ const ProfileForm: React.FC<{
             </span>
             {isLoading && (
               <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
-                <FeatherIcon
-                  icon="loader"
+                <Loader
                   className="animate-spin text-white dark:text-zinc-800"
                   size={16}
                 />

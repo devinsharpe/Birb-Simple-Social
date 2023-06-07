@@ -1,6 +1,6 @@
 import type { ChangeEvent } from "react";
 import React, { useCallback, useRef, useState } from "react";
-import FeatherIcon from "feather-icons-react";
+import { Type, X, MapPin, Edit3, Loader, Camera } from "lucide-react";
 import type { SimplePost } from "../modals/Post";
 import Link from "next/link";
 import type { PostBlock } from "../../hooks/postBlocks";
@@ -163,11 +163,7 @@ const PostForm: React.FC<PostFormProps> = ({
               post.location.length > 128 ? "text-rose-600" : ""
             }`}
           >
-            <FeatherIcon
-              icon="type"
-              size={16}
-              className="absolute left-0 opacity-50"
-            />
+            <Type size={16} className="absolute left-0 opacity-50" />
             <input
               type="text"
               className="w-full rounded border-none bg-transparent pl-8 outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
@@ -183,7 +179,7 @@ const PostForm: React.FC<PostFormProps> = ({
               className="flex h-full items-center justify-center px-2 opacity-50"
               onClick={() => onChange({ ...post, alt: "", image: "" })}
             >
-              <FeatherIcon icon="x" size={20} />
+              <X size={20} />
             </button>
           </fieldset>
           <div className="mx-w-xl relative mx-auto h-32 w-full overflow-hidden lg:h-48">
@@ -218,11 +214,7 @@ const PostForm: React.FC<PostFormProps> = ({
           className="rounded-md p-1"
           onClick={() => setShowLocationInput(!showLocationInput)}
         >
-          {showLocationInput ? (
-            <FeatherIcon icon="x" size={16} />
-          ) : (
-            <FeatherIcon icon="map-pin" size={16} />
-          )}
+          {showLocationInput ? <X size={16} /> : <MapPin size={16} />}
         </button>
       </div>
 
@@ -232,11 +224,7 @@ const PostForm: React.FC<PostFormProps> = ({
             post.location.length > 32 ? "text-rose-600" : ""
           }`}
         >
-          <FeatherIcon
-            icon="map-pin"
-            size={16}
-            className="absolute left-0 opacity-50"
-          />
+          <MapPin size={16} className="absolute left-0 opacity-50" />
           <input
             type="text"
             className="w-full rounded border-none bg-transparent pl-8 outline-none placeholder:text-zinc-800/50 focus:ring-0 dark:placeholder:text-white/50"
@@ -257,7 +245,7 @@ const PostForm: React.FC<PostFormProps> = ({
           className="flex aspect-square shrink-0 items-center justify-center rounded-full bg-zinc-200 px-2 py-1 text-zinc-800 transition-colors duration-100 hover:bg-zinc-300 focus:bg-zinc-700 dark:bg-zinc-600 dark:text-white dark:hover:bg-zinc-700"
           onClick={onCancel}
         >
-          <FeatherIcon icon="x" size={20} />
+          <X size={20} />
           <span className="sr-only">Close</span>
         </button>
         <button
@@ -269,11 +257,11 @@ const PostForm: React.FC<PostFormProps> = ({
             post.text.length > 300 || post.text.length === 0 || isLoading
           }
         >
-          <FeatherIcon icon="edit-3" size={20} />
+          <Edit3 size={20} />
           <span>Post</span>
           {isLoading && (
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
-              <FeatherIcon icon="loader" className="text-white" size={16} />
+              <Loader className="text-white" size={16} />
             </span>
           )}
         </button>
@@ -284,9 +272,9 @@ const PostForm: React.FC<PostFormProps> = ({
           onClick={handleImageClick}
         >
           {isImageLoading ? (
-            <FeatherIcon icon="loader" className="animate-spin" size={20} />
+            <Loader className="animate-spin" size={20} />
           ) : (
-            <FeatherIcon icon="camera" size={20} />
+            <Camera size={20} />
           )}
           <span className="sr-only">Add Photo</span>
         </button>

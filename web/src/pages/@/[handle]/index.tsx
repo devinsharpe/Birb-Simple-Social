@@ -1,8 +1,7 @@
-import {
-  DEFAULT_AVATAR_URL,
-  DEFAULT_HEADER_URL,
-} from "~/server/db/schema/constants";
+import { and, desc, eq, gt } from "drizzle-orm";
+import { useAtomValue, useSetAtom } from "jotai";
 import type { GetServerSideProps, NextPage } from "next";
+import React, { useCallback, useEffect, useState } from "react";
 import type {
   Post,
   PostMention,
@@ -11,44 +10,34 @@ import type {
   ProfileRelationship,
   RelationshipRequest,
 } from "~/server/db/schema/app";
-import React, { useCallback, useEffect, useState } from "react";
+import { posts, profiles } from "~/server/db/schema/app";
+import {
+  DEFAULT_AVATAR_URL,
+  DEFAULT_HEADER_URL,
+} from "~/server/db/schema/constants";
 import ReactionModal, {
   KEY as REACTION_KEY,
 } from "../../../components/modals/Reaction";
 import RelationshipModal, {
   KEY_OPTIONS,
 } from "../../../components/modals/Relationships";
-// import type {
-//   Post,
-//   PostMention,
-//   PostReaction,
-//   Profile,
-//   ProfileRelationship,
-//   RelationshipRequest,
-// } from "@prisma/client";
-import { and, desc, eq, gt } from "drizzle-orm";
-import { posts, profiles } from "~/server/db/schema/app";
-import { useAtomValue, useSetAtom } from "jotai";
 
-import DialogConfirm from "../../../components/DialogConfirm";
-import FeatherIcon from "feather-icons-react";
+import { Clock, Gift, Home, LinkIcon, MapPin, User, Zap } from "lucide-react";
+import { getServerSession } from "next-auth";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
-import LoginPrompt from "../../../components/LoginPrompt";
-import Navbar from "../../../components/Navbar";
-import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
-import PostItem from "../../../components/PostItem";
-import { Visibility } from "~/server/db/schema/enums";
-import atoms from "../../../atoms";
-// import { authOptions } from "../../api/auth/[...nextauth]";
+import { useRouter } from "next/router";
 import authOptions from "~/server/auth/options";
 import db from "~/server/db";
-// import { Visibility } from "@prisma/client";
-import { getServerSession } from "next-auth";
+import { Visibility } from "~/server/db/schema/enums";
+import atoms from "../../../atoms";
+import DialogConfirm from "../../../components/DialogConfirm";
+import LoginPrompt from "../../../components/LoginPrompt";
+import Navbar from "../../../components/Navbar";
+import PostItem from "../../../components/PostItem";
+import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
 import { trpc } from "../../../utils/trpc";
-import { useRouter } from "next/router";
-// import { prisma } from "../../../server/db/client";
-import { useSession } from "next-auth/react";
 
 interface PageProps {
   handle: string;
@@ -88,7 +77,7 @@ const ProfileActionButton: React.FC<{
         className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
         onClick={onEditClick}
       >
-        <FeatherIcon icon="user" size={20} />
+        <User size={20} />
         <span>Edit</span>
       </button>
     );
@@ -99,7 +88,7 @@ const ProfileActionButton: React.FC<{
         className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
         onClick={onUnfollow}
       >
-        <FeatherIcon icon="zap" size={20} />
+        <Zap size={20} />
         <span>Following</span>
       </button>
     );
@@ -110,7 +99,7 @@ const ProfileActionButton: React.FC<{
         className="flex items-center gap-2 rounded-full bg-zinc-600 px-6 py-2 text-white hover:bg-zinc-700 dark:hover:bg-zinc-500"
         onClick={onCancel}
       >
-        <FeatherIcon icon="clock" size={20} />
+        <Clock size={20} />
         <span>Pending</span>
       </button>
     );
@@ -121,7 +110,7 @@ const ProfileActionButton: React.FC<{
         className="flex items-center gap-2 rounded-full bg-violet-600 px-6 py-2 text-white hover:bg-violet-700 dark:hover:bg-violet-500"
         onClick={onFollow}
       >
-        <FeatherIcon icon="zap" size={20} />
+        <Zap size={20} />
         <span>Follow</span>
       </button>
     );
@@ -175,7 +164,7 @@ const BlankHeader: React.FC<{
             className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
             onClick={() => router.push("/")}
           >
-            <FeatherIcon icon="home" />
+            <Home />
             <span>Return Home</span>
           </button>
         </div>
@@ -269,7 +258,7 @@ const ProfileHeader: React.FC<{
         <div className="flex flex-wrap items-center gap-4 px-4 py-2 text-zinc-600 dark:text-zinc-400">
           {!!profile.website && (
             <div className="flex items-center gap-2 underline">
-              <FeatherIcon icon="link" size={16} />
+              <LinkIcon size={16} />
               <h4>
                 <a
                   href={formatUrl(profile.website).toString()}
@@ -284,14 +273,14 @@ const ProfileHeader: React.FC<{
 
           {!!profile.location && (
             <div className="flex items-center gap-2">
-              <FeatherIcon icon="map-pin" size={16} />
+              <MapPin size={16} />
               <h4>{profile.location}</h4>
             </div>
           )}
 
           {!!profile.birthdate && (
             <div className="flex items-center gap-2">
-              <FeatherIcon icon="gift" size={16} />
+              <Gift size={16} />
               <h4>
                 {new Date(
                   profile.birthdate.replaceAll("-", "/")
@@ -557,11 +546,6 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       (await db.query.profiles.findFirst({
         where: eq(profiles.handle, context.params.handle as string),
       })) ?? null;
-    // profile = await prisma.profile.findFirst({
-    //   where: {
-    //     handle: context.params.handle as string,
-    //   },
-    // });
   }
   const session = await getServerSession(context.req, context.res, authOptions);
   if (profile && session) {
@@ -588,31 +572,6 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       },
       orderBy: desc(posts.createdAt),
     });
-    // posts = await prisma.post.findMany({
-    //   where: {
-    //     profileId: profile.id,
-    //     createdAt: {
-    //       gt: date,
-    //     },
-    //     visibility: Visibility.Active,
-    //   },
-    //   include: {
-    //     postedBy: true,
-    //     mentions: {
-    //       include: {
-    //         profile: true,
-    //       },
-    //     },
-    //     reactions: {
-    //       include: {
-    //         profile: true,
-    //       },
-    //     },
-    //   },
-    //   orderBy: {
-    //     createdAt: "desc",
-    //   },
-    // });
   }
   return {
     props: {

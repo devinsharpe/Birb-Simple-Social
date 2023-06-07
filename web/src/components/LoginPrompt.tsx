@@ -1,9 +1,9 @@
-import FeatherIcon from "feather-icons-react";
+import { useSetAtom } from "jotai";
+import { HelpCircle } from "lucide-react";
 import React from "react";
 import atoms from "../atoms";
-import { useSetAtom } from "jotai";
-import { KEY as WELCOME_KEY } from "./modals/Welcome";
 import { KEY as LOGIN_KEY } from "./modals/Login";
+import { KEY as WELCOME_KEY } from "./modals/Welcome";
 
 const LoginPrompt = () => {
   const setModal = useSetAtom(atoms.modal);
@@ -24,7 +24,7 @@ const LoginPrompt = () => {
           className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white font-semibold text-zinc-700 hover:bg-zinc-100 hover:text-black md:h-9 md:w-9"
           onClick={() => setModal(WELCOME_KEY)}
         >
-          <FeatherIcon icon="help-circle" size={20} />
+          <HelpCircle size={20} />
         </button>
         <button
           type="button"

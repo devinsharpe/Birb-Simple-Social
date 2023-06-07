@@ -1,8 +1,7 @@
-// import type { Comment, Profile } from "@prisma/client";
-import type { Comment, Profile } from "~/server/db/schema/app";
 import React from "react";
+import type { Comment, Profile } from "~/server/db/schema/app";
 
-import FeatherIcon from "feather-icons-react";
+import { Loader, MessageSquare, X } from "lucide-react";
 import Link from "next/link";
 import { PostEditor } from "./Post";
 
@@ -37,23 +36,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
     >
       {replyComment && replyComment.postedBy && (
         <div className="flex items-center gap-4 ">
-          {/* <div className="relative object-center w-10 h-10 overflow-hidden rounded-full shrink-0">
-            <Link
-              href={`/@/${replyComment.postedBy.handle}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Image
-                src={
-                  replyComment.postedBy.avatarUrl ??
-                  "https://source.unsplash.com/random/600×600/?cat"
-                }
-                alt={`${replyComment.postedBy.name}'s avatar image`}
-                className="object-cover object-center w-full h-full"
-                width={40}
-                height={40}
-              />
-            </Link>
-          </div> */}
           <div className="w-full">
             <p className="text-sm font-light text-zinc-500 dark:text-zinc-400">
               Replying to&nbsp;
@@ -92,7 +74,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
             }`}
             onClick={onReplyCancel}
           >
-            <FeatherIcon icon="x" size={20} />
+            <X size={20} />
           </button>
         )}
 
@@ -102,11 +84,11 @@ const CommentForm: React.FC<CommentFormProps> = ({
             isLoading ? "text-transparent" : ""
           }`}
         >
-          <FeatherIcon icon="message-square" size={20} />
+          <MessageSquare size={20} />
           <span className="hidden md:inline-block">Post</span>
           {isLoading && (
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform ">
-              <FeatherIcon icon="loader" className="text-white" size={16} />
+              <Loader className="text-white" size={16} />
             </span>
           )}
         </button>

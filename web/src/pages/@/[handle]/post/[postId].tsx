@@ -1,10 +1,3 @@
-// import type {
-//   Comment,
-//   Post,
-//   PostMention,
-//   PostReaction,
-//   Profile,
-// } from "@prisma/client";
 import type {
   Comment,
   Post,
@@ -12,32 +5,29 @@ import type {
   PostReaction,
   Profile,
 } from "~/server/db/schema/app";
-// import { Visibility } from "@prisma/client";
 import type { GetServerSideProps, NextPage } from "next";
 import React, { useCallback, useMemo, useState } from "react";
 import ReactionModal, {
   KEY as REACTION_KEY,
-} from "../../../../components/modals/Reaction";
+} from "~/components/modals/Reaction";
 import { and, asc, desc, eq, gt } from "drizzle-orm";
 import { comments, posts } from "~/server/db/schema/app";
 import { useAtomValue, useSetAtom } from "jotai";
 
-import CommentForm from "../../../../components/forms/Comment";
-import CommentItem from "../../../../components/CommentItem";
-import FeatherIcon from "feather-icons-react";
+import CommentForm from "~/components/forms/Comment";
+import CommentItem from "~/components/CommentItem";
+import { Home, ArrowLeft } from "lucide-react";
 import Head from "next/head";
 import Link from "next/link";
-import LoginPrompt from "../../../../components/LoginPrompt";
-import Navbar from "../../../../components/Navbar";
-import PostItem from "../../../../components/PostItem";
+import LoginPrompt from "~/components/LoginPrompt";
+import Navbar from "~/components/Navbar";
+import PostItem from "~/components/PostItem";
 import { Visibility } from "~/server/db/schema/enums";
-import atoms from "../../../../atoms";
-// import { authOptions } from "../../../api/auth/[...nextauth]";
+import atoms from "~/atoms";
 import authOptions from "~/server/auth/options";
 import db from "~/server/db";
 import { getServerSession } from "next-auth";
-// import { prisma } from "../../../../server/db/client";
-import { trpc } from "../../../../utils/trpc";
+import { trpc } from "~/utils/trpc";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
@@ -193,7 +183,7 @@ const PostPage: NextPage<PageProps> = ({ post, postComments }) => {
               href="/"
               className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
             >
-              <FeatherIcon icon="home" />
+              <Home />
               <span>Return Home</span>
             </Link>
           </div>
@@ -204,7 +194,7 @@ const PostPage: NextPage<PageProps> = ({ post, postComments }) => {
         brandEl={
           <div className="flex items-center gap-2">
             <button type="button" className="p-1" onClick={() => router.back()}>
-              <FeatherIcon icon="arrow-left" size={24} />
+              <ArrowLeft size={24} />
             </button>
             <h4 className="text-xl font-bold tracking-wide">Post</h4>
           </div>
@@ -257,74 +247,6 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         orderBy: asc(comments.createdAt),
       });
     } else postComments = [];
-
-    // const post = await db.query.posts.findFirst({
-    //   where: and(
-    //     eq(posts.id, context.params.postId.toString()),
-    //     eq(posts.visibility, Visibility.Active),
-    //     gt(posts.createdAt, date.toISOString())
-    //   ),
-    //   with: {
-    //     comments: {
-    //       where: eq(comments.visibility, Visibility.Active),
-    //       orderBy: desc(comments.createdAt),
-    //     },
-    //     mentions: {
-    //       with: {
-    //         profile: true,
-    //       },
-    //     },
-    //     postedBy: true,
-    //     reactions: {
-    //       with: {
-    //         postedBy: true,
-    //       },
-    //       orderBy: desc(comments.createdAt),
-    //     },
-    //   },
-    // });
-    // const post = await prisma.post.findFirst({
-    //   where: {
-    //     id: context.params.postId.toString(),
-    //     createdAt: {
-    //       gt: date,
-    //     },
-    //     visibility: Visibility.Active,
-    //   },
-    //   include: {
-    //     comments: {
-    //       where: {
-    //         commentId: null,
-    //         visibility: Visibility.Active,
-    //       },
-    //       include: {
-    //         children: {
-    //           include: {
-    //             postedBy: true,
-    //           },
-    //           orderBy: {
-    //             createdAt: "asc",
-    //           },
-    //         },
-    //         postedBy: true,
-    //       },
-    //       orderBy: {
-    //         createdAt: "asc",
-    //       },
-    //     },
-    //     mentions: {
-    //       include: {
-    //         profile: true,
-    //       },
-    //     },
-    //     postedBy: true,
-    //     reactions: {
-    //       include: {
-    //         profile: true,
-    //       },
-    //     },
-    //   },
-    // });
     return {
       props: {
         hostname: context.req.headers.host,

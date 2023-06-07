@@ -1,4 +1,4 @@
-import FeatherIcon from "feather-icons-react";
+import { Aperture } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -26,7 +26,7 @@ const Hero = () => {
             />
           </div>
           <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 transform rounded-full bg-violet-700 p-3 text-white shadow-lg shadow-violet-700/50 dark:bg-violet-400 dark:text-black">
-            <FeatherIcon icon="aperture" size={28} />
+            <Aperture size={28} />
           </div>
         </div>
 

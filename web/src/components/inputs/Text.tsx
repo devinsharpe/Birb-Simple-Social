@@ -1,9 +1,9 @@
-import FeatherIcon from "feather-icons-react";
-import React from "react";
+import type { LucideIcon } from "lucide-react";
+import React, { useMemo } from "react";
 
 const TextInput: React.FC<{
   fieldsetClassName?: string;
-  icon?: FeatherIcon.Icon;
+  icon?: LucideIcon;
   id: string;
   isTextArea?: boolean;
   isValid?: boolean;
@@ -28,6 +28,10 @@ const TextInput: React.FC<{
   value,
   ...props
 }) => {
+  const IconEl = useMemo(() => {
+    if (icon) return icon;
+    return null;
+  }, [icon]);
   return (
     <fieldset
       className={`relative focus-within:text-violet-600 dark:focus-within:text-violet-400 ${
@@ -73,9 +77,8 @@ const TextInput: React.FC<{
         />
       )}
 
-      {icon && (
-        <FeatherIcon
-          icon={icon}
+      {IconEl && (
+        <IconEl
           className="absolute bottom-[13px] left-3 text-zinc-600 dark:text-zinc-300"
           size={16}
         />

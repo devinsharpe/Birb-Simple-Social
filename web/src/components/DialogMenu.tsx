@@ -1,11 +1,11 @@
 import { Menu, Transition } from "@headlessui/react";
 
-import FeatherIcon from "feather-icons-react";
-import { Fragment } from "react";
+import type { LucideIcon } from "lucide-react";
+import { Fragment, useMemo } from "react";
 
 export interface DialogMenuItemProps {
   disabled?: boolean;
-  icon: FeatherIcon.Icon;
+  icon: LucideIcon;
   onClick: () => void;
   text: string;
 }
@@ -16,6 +16,9 @@ const DialogMenuItem: React.FC<DialogMenuItemProps> = ({
   onClick,
   text,
 }) => {
+  const IconEl = useMemo(() => {
+    return icon;
+  }, [icon]);
   return (
     <Menu.Item disabled={disabled}>
       {({ active }) => (
@@ -29,8 +32,7 @@ const DialogMenuItem: React.FC<DialogMenuItemProps> = ({
           } group flex w-full items-center gap-4 rounded px-2 py-2 text-sm`}
           onClick={onClick}
         >
-          <FeatherIcon
-            icon={icon}
+          <IconEl
             size={20}
             className={`shrink-0 ${
               !disabled && "dark:group-hover:text-violet-400"

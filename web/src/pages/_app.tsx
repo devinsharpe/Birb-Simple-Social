@@ -1,30 +1,29 @@
-import { type AppType } from "next/app";
+// TODO: Update next font import
+import { Inter } from "@next/font/google";
+import { Edit3 } from "lucide-react";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { Inter } from "@next/font/google";
-import FeatherIcon from "feather-icons-react";
-// TODO: Update next font import
+import { type AppType } from "next/app";
 import { trpc } from "../utils/trpc";
 
+import { useAtomValue, useSetAtom } from "jotai";
+import Head from "next/head";
+import React from "react";
+import atoms from "../atoms";
+import LoginModal from "../components/modals/Login";
+import PostModal, { KEY as POST_KEY } from "../components/modals/Post";
+import ProfileModal from "../components/modals/Profile";
+import SearchModal from "../components/modals/Search";
+import WelcomeModal from "../components/modals/Welcome";
+import ProfileAtomProvider from "../components/providers/ProfileAtom";
 import "../styles/globals.css";
 import "../styles/nprogress.css";
-import React from "react";
-import Head from "next/head";
-import ProfileAtomProvider from "../components/providers/ProfileAtom";
-import ProfileModal from "../components/modals/Profile";
-import WelcomeModal from "../components/modals/Welcome";
-import SearchModal from "../components/modals/Search";
-import LoginModal from "../components/modals/Login";
-import { useAtomValue, useSetAtom } from "jotai";
-import atoms from "../atoms";
-import PostModal, { KEY as POST_KEY } from "../components/modals/Post";
-// import { DevTools } from "jotai-devtools";
 import dynamic from "next/dynamic";
-import ThemeProvider from "../components/providers/Theme";
-import NProgressProvider from "../components/providers/NProgress";
-import ReactionsAtomProvider from "../components/providers/ReactionsAtom";
 import { env } from "~/env.mjs";
 import SecondaryNav from "../components/navigation/SecondaryNav";
+import NProgressProvider from "../components/providers/NProgress";
+import ReactionsAtomProvider from "../components/providers/ReactionsAtom";
+import ThemeProvider from "../components/providers/Theme";
 import ToastsAtomProvider from "../components/providers/ToastsAtom";
 
 const JotaiDevtools = dynamic(
@@ -89,7 +88,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
               className="fixed right-8 bottom-8 z-10 flex items-center justify-center rounded-full bg-violet-600 p-4 text-white shadow-md shadow-violet-700/50 transition-colors duration-100 hover:bg-violet-700 focus:bg-violet-700"
               onClick={() => setModal(POST_KEY)}
             >
-              <FeatherIcon icon="edit-3" size={24} />
+              <Edit3 size={24} />
             </button>
           </>
         )}

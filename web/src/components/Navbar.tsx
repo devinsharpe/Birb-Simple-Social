@@ -1,16 +1,16 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { signOut, useSession } from "next-auth/react";
 
-import FeatherIcon from "feather-icons-react";
+import { LogIn, LogOut, Menu, Search, Settings, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 import atoms from "../atoms";
 import DialogMenu from "./DialogMenu";
 import { KEY as LOGIN_KEY } from "./modals/Login";
 import { KEY as SEARCH_KEY } from "./modals/Search";
-import { DEFAULT_AVATAR_URL } from "~/server/db/schema/constants";
 
 interface NavbarProps {
   brandEl?: JSX.Element;
@@ -45,17 +45,13 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
             className="rounded-md p-2"
             onClick={() => setModal(SEARCH_KEY)}
           >
-            <FeatherIcon
-              icon="search"
-              size={24}
-              className="text-black dark:text-white"
-            />
+            <Search size={24} className="text-black dark:text-white" />
           </button>
           <DialogMenu
             items={[
               [
                 {
-                  icon: "user",
+                  icon: User,
                   text: profile?.name ?? "Profile",
                   onClick: () => {
                     if (profile) router.push(`/@/${profile.handle}`);
@@ -65,14 +61,13 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
               ],
               [
                 {
-                  icon: "settings",
+                  icon: Settings,
                   text: "Settings",
                   onClick: () => router.push("/settings"),
                   disabled: session.status !== "authenticated",
                 },
                 {
-                  icon:
-                    session.status === "authenticated" ? "log-out" : "log-in",
+                  icon: session.status === "authenticated" ? LogOut : LogIn,
                   text:
                     session.status === "authenticated" ? "Log Out" : "Log In",
                   onClick:
@@ -94,11 +89,10 @@ const Navbar: React.FC<NavbarProps> = ({ brandEl }) => {
                 />
               </div>
             ) : (
-              <FeatherIcon
-                icon="menu"
-                size={24}
-                aria-hidden="true"
+              <Menu
+                aria-hidden
                 className="text-black dark:text-white"
+                size={24}
               />
             )}
           </DialogMenu>

@@ -1,7 +1,7 @@
+import { Home } from "lucide-react";
 import type { NextPage } from "next";
-import Navbar from "../components/Navbar";
 import Link from "next/link";
-import FeatherIcon from "feather-icons-react";
+import Navbar from "../components/Navbar";
 
 const Custom404Page: NextPage = () => {
   return (
@@ -14,7 +14,7 @@ const Custom404Page: NextPage = () => {
             href="/"
             className="relative flex items-center gap-2 rounded-full bg-zinc-800 px-6 py-2 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-800 dark:hover:bg-zinc-100"
           >
-            <FeatherIcon icon="home" />
+            <Home />
             <span>Return Home</span>
           </Link>
         </div>
