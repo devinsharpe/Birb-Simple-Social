@@ -36,6 +36,20 @@
       "when": 1685999874128,
       "tag": "0004_romantic_changeling",
       "breakpoints": false
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1688184242785,
+      "tag": "0005_parallel_silver_samurai",
+      "breakpoints": false
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1688189724291,
+      "tag": "0006_left_phalanx",
+      "breakpoints": false
     }
   ]
 }

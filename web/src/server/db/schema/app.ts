@@ -149,6 +149,7 @@ export const posts = pgTable("posts", {
     .default(PostReviewStatus.Processing)
     .notNull(),
   visibility: visibilityEnum("visibility").default(Visibility.Active).notNull(),
+  pinned: boolean("pinned").default(false).notNull(),
   likeCount: integer("likeCount").default(0).notNull(),
   commentCount: integer("commentCount").default(0).notNull(),
   reactionCount: integer("reactionCount").default(0).notNull(),
