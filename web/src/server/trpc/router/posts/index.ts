@@ -4,7 +4,7 @@ import {
   RelationshipType,
   Visibility,
 } from "~/server/db/schema/enums";
-import { and, desc, eq, gt, inArray, or, sql } from "drizzle-orm";
+import { and, desc, eq, gt, inArray, or, sql, not } from "drizzle-orm";
 import { examplePosts, nameConfig, shuffle, textConfig } from "~/utils/demo";
 import {
   postMentions,
@@ -166,43 +166,139 @@ export const postsRouter = router({
       };
     });
   }),
-  getTimeline: protectedProcedure.mutation(async ({ ctx }) => {
-    const ids = (
-      await ctx.db.query.profileRelationships.findMany({
-        columns: {
-          followingId: true,
-        },
-        where: and(
-          eq(profileRelationships.followerId, ctx.session.user.id),
-          eq(profileRelationships.type, RelationshipType.Follow)
-        ),
-      })
-    ).map((relationship) => relationship.followingId);
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    const timelinePosts = await ctx.db.query.posts.findMany({
-      where: and(
-        gt(posts.createdAt, date.toISOString()),
-        inArray(posts.profileId, [...ids, ctx.session.user.id]),
-        eq(posts.visibility, Visibility.Active)
-      ),
-      with: {
-        mentions: {
+  getTimeline: protectedProcedure
+    .input(z.object({ profileId: z.string() }).optional())
+    .mutation(async ({ ctx, input }) => {
+      if (input) {
+        if (input.profileId !== ctx.session.user.id) {
+          const relationship =
+            await ctx.db.query.profileRelationships.findFirst({
+              where: and(
+                eq(profileRelationships.followerId, ctx.session.user.id),
+                eq(profileRelationships.type, RelationshipType.Follow)
+              ),
+            });
+          if (!relationship) return [];
+        }
+        const pinnedPost = await ctx.db.query.posts.findFirst({
+          where: and(
+            eq(posts.profileId, input.profileId),
+            eq(posts.visibility, Visibility.Active),
+            eq(posts.pinned, true)
+          ),
           with: {
-            profile: true,
-          },
-        },
-        postedBy: true,
-        reactions: {
-          with: {
+            mentions: {
+              with: {
+                profile: true,
+              },
+            },
             postedBy: true,
+            reactions: {
+              with: {
+                postedBy: true,
+              },
+            },
           },
-        },
-      },
-      orderBy: desc(posts.createdAt),
-    });
-    return timelinePosts;
-  }),
+        });
+        const timelinePosts = await ctx.db.query.posts.findMany({
+          where: and(
+            eq(posts.profileId, input.profileId),
+            eq(posts.visibility, Visibility.Active),
+            eq(posts.pinned, false)
+          ),
+          with: {
+            mentions: {
+              with: {
+                profile: true,
+              },
+            },
+            postedBy: true,
+            reactions: {
+              with: {
+                postedBy: true,
+              },
+            },
+          },
+          orderBy: desc(posts.createdAt),
+          limit: 100,
+        });
+        if (pinnedPost) return [pinnedPost, ...timelinePosts];
+        return timelinePosts;
+      } else {
+        const ids = (
+          await ctx.db.query.profileRelationships.findMany({
+            columns: {
+              followingId: true,
+            },
+            where: and(
+              eq(profileRelationships.followerId, ctx.session.user.id),
+              eq(profileRelationships.type, RelationshipType.Follow)
+            ),
+          })
+        ).map((relationship) => relationship.followingId);
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+        const timelinePosts = await ctx.db.query.posts.findMany({
+          where: and(
+            gt(posts.createdAt, date.toISOString()),
+            inArray(posts.profileId, [...ids, ctx.session.user.id]),
+            eq(posts.visibility, Visibility.Active)
+          ),
+          with: {
+            mentions: {
+              with: {
+                profile: true,
+              },
+            },
+            postedBy: true,
+            reactions: {
+              with: {
+                postedBy: true,
+              },
+            },
+          },
+          orderBy: desc(posts.createdAt),
+          limit: 100,
+        });
+        return timelinePosts;
+      }
+    }),
+  pin: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        val: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.query.posts.findFirst({
+        where: eq(posts.id, input.id),
+      });
+      if (post && post.profileId === ctx.session.user.id) {
+        const newPost = await ctx.db
+          .update(posts)
+          .set({
+            pinned: input.val,
+          })
+          .where(eq(posts.id, input.id))
+          .returning()
+          .then((psts) => psts[0]);
+        if (input.val)
+          await ctx.db
+            .update(posts)
+            .set({
+              pinned: false,
+            })
+            .where(
+              and(
+                eq(posts.profileId, ctx.session.user.id),
+                not(eq(posts.id, input.id))
+              )
+            );
+        return newPost;
+      }
+      return null;
+    }),
 });
 
 // export const postsRouterOld = router({
