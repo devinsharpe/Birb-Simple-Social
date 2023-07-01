@@ -58,6 +58,7 @@ const PostPage: NextPage<PageProps> = ({ post, postComments }) => {
   const archiveComment = trpc.comments.archive.useMutation();
   const archivePost = trpc.posts.archive.useMutation();
   const createComment = trpc.comments.create.useMutation();
+  const pinPost = trpc.posts.pin.useMutation();
   const setModal = useSetAtom(atoms.modal);
   const settings = useAtomValue(atoms.settings);
   const router = useRouter();
@@ -68,6 +69,11 @@ const PostPage: NextPage<PageProps> = ({ post, postComments }) => {
       const archivedPost = await archivePost.mutateAsync({ id: post.id });
       if (archivedPost) router.push(`/@/${post.postedBy.handle}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handlePin = useCallback(async (id: string, val: boolean) => {
+    await pinPost.mutateAsync({ id, val });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -138,6 +144,7 @@ const PostPage: NextPage<PageProps> = ({ post, postComments }) => {
             post={post}
             onArchive={handleArchive}
             onClick={console.log}
+            onPin={handlePin}
             onReactionClick={() => setModal(REACTION_KEY)}
             sessionUserId={session.data?.user?.id}
           />
