@@ -1,55 +1,37 @@
-import { and, desc, eq, gt } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { useAtomValue, useSetAtom } from "jotai";
-import type { GetServerSideProps, NextPage } from "next";
-import React, { useCallback, useEffect, useState } from "react";
-import type {
-  Post,
-  PostMention,
-  PostReaction,
-  Profile,
-  ProfileRelationship,
-  RelationshipRequest,
-} from "~/server/db/schema/app";
-import { posts, profiles } from "~/server/db/schema/app";
-import {
-  DEFAULT_AVATAR_URL,
-  DEFAULT_HEADER_URL,
-} from "~/server/db/schema/constants";
-import ReactionModal, {
-  KEY as REACTION_KEY,
-} from "../../../components/modals/Reaction";
-import RelationshipModal, {
-  KEY_OPTIONS,
-} from "../../../components/modals/Relationships";
-
 import { Clock, Gift, Home, LinkIcon, MapPin, User, Zap } from "lucide-react";
-import { getServerSession } from "next-auth";
+import type { GetServerSideProps, NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import authOptions from "~/server/auth/options";
+import React, { useCallback, useEffect, useState } from "react";
+import Timeline from "~/components/Timeline";
 import db from "~/server/db";
-import { Visibility } from "~/server/db/schema/enums";
+import type {
+  Profile,
+  ProfileRelationship,
+  RelationshipRequest,
+} from "~/server/db/schema/app";
+import { profiles } from "~/server/db/schema/app";
+import {
+  DEFAULT_AVATAR_URL,
+  DEFAULT_HEADER_URL,
+} from "~/server/db/schema/constants";
 import atoms from "../../../atoms";
 import DialogConfirm from "../../../components/DialogConfirm";
 import LoginPrompt from "../../../components/LoginPrompt";
 import Navbar from "../../../components/Navbar";
-import PostItem from "../../../components/PostItem";
 import { KEY as PROFILE_KEY } from "../../../components/modals/Profile";
+import ReactionModal from "../../../components/modals/Reaction";
+import RelationshipModal, {
+  KEY_OPTIONS,
+} from "../../../components/modals/Relationships";
 import { trpc } from "../../../utils/trpc";
 
 interface PageProps {
   handle: string;
-  posts: (Post & {
-    mentions: (PostMention & {
-      profile: Profile;
-    })[];
-    postedBy: Profile;
-    reactions: (PostReaction & {
-      postedBy: Profile;
-    })[];
-  })[];
   profile: Profile | null;
 }
 
@@ -333,7 +315,7 @@ const ProfileHeader: React.FC<{
 
 const UNFOLLOW_KEY = "profile-confirm-unfollow";
 
-const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
+const ProfilePage: NextPage<PageProps> = ({ handle, profile }) => {
   const router = useRouter();
   const session = useSession();
   const userProfile = useAtomValue(atoms.profile);
@@ -345,7 +327,6 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
   );
   const [request, setRequest] = useState<RelationshipRequest | null>(null);
 
-  const archivePost = trpc.posts.archive.useMutation();
   const cancelFollow = trpc.requests.cancel.useMutation();
   const followProfile = trpc.requests.follow.useMutation();
   const getRelationship = trpc.relationships.get.useMutation();
@@ -361,18 +342,6 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, userProfile]);
-
-  const handleArchive = useCallback(
-    async (id: string) => {
-      const post = posts.find((p) => p.id === id);
-      if (post) {
-        const archivedPost = await archivePost.mutateAsync({ id: post.id });
-        if (archivedPost) router.reload();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [posts, router]
-  );
 
   const handleCancelClick = useCallback(async () => {
     if (request) {
@@ -477,19 +446,8 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
           <section className="container mx-auto max-w-2xl divide-y divide-zinc-300 pt-4 dark:divide-zinc-600">
             {session.status === "authenticated" ? (
               <>
-                {posts.length === 0 ? (
-                  <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
-                    <h4 className="text-center text-2xl font-bold text-black dark:text-white md:text-4xl">
-                      Shhhh! It&apos;s almost like a library here.
-                    </h4>
-                    <h5 className="text-center text-xl font-medium text-zinc-700 dark:text-zinc-400 md:text-2xl">
-                      Peace and quiet is good, let&apos;s use this time to take
-                      a break.
-                    </h5>
-                  </div>
-                ) : (
-                  <>
-                    {posts.map((post) => (
+                <Timeline profileId={profile.id} />
+                {/* {posts.map((post) => (
                       <PostItem
                         onArchive={handleArchive}
                         onClick={() =>
@@ -502,9 +460,7 @@ const ProfilePage: NextPage<PageProps> = ({ handle, posts, profile }) => {
                         sessionUserId={session.data?.user?.id}
                         key={post.id}
                       />
-                    ))}
-                  </>
-                )}
+                    ))} */}
               </>
             ) : (
               <div className="flex h-64 w-full flex-col items-center justify-center gap-4 px-6">
@@ -532,52 +488,43 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   context
 ) => {
   let profile: Profile | null = null;
-  let profilePosts: (Post & {
-    mentions: (PostMention & {
-      profile: Profile;
-    })[];
-    postedBy: Profile;
-    reactions: (PostReaction & {
-      postedBy: Profile;
-    })[];
-  })[] = [];
   if (context.params && context.params?.handle) {
     profile =
       (await db.query.profiles.findFirst({
         where: eq(profiles.handle, context.params.handle as string),
       })) ?? null;
   }
-  const session = await getServerSession(context.req, context.res, authOptions);
-  if (profile && session) {
-    const date = new Date();
-    date.setDate(date.getDate() - 7);
-    profilePosts = await db.query.posts.findMany({
-      where: and(
-        eq(posts.profileId, profile.id),
-        gt(posts.createdAt, date.toISOString()),
-        eq(posts.visibility, Visibility.Active)
-      ),
-      with: {
-        postedBy: true,
-        mentions: {
-          with: {
-            profile: true,
-          },
-        },
-        reactions: {
-          with: {
-            postedBy: true,
-          },
-        },
-      },
-      orderBy: desc(posts.createdAt),
-    });
-  }
+  // const session = await getServerSession(context.req, context.res, authOptions);
+  // if (profile && session) {
+  //   const date = new Date();
+  //   date.setDate(date.getDate() - 7);
+  //   profilePosts = await db.query.posts.findMany({
+  //     where: and(
+  //       eq(posts.profileId, profile.id),
+  //       gt(posts.createdAt, date.toISOString()),
+  //       eq(posts.visibility, Visibility.Active)
+  //     ),
+  //     with: {
+  //       postedBy: true,
+  //       mentions: {
+  //         with: {
+  //           profile: true,
+  //         },
+  //       },
+  //       reactions: {
+  //         with: {
+  //           postedBy: true,
+  //         },
+  //       },
+  //     },
+  //     orderBy: desc(posts.createdAt),
+  //   });
+  // }
   return {
     props: {
       handle: context.params?.handle as string,
       profile,
-      posts: profilePosts,
+      // posts: profilePosts,
     },
   };
 };
