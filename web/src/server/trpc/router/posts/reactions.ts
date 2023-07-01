@@ -41,7 +41,7 @@ export const PostReactionsRouter = router({
           image: profileReaction.image,
         });
         await ctx.db.update(posts).set({
-          reactionCount: sql`${posts.reactionCount.name} - ${deletedRows.length} + 1`,
+          reactionCount: sql`${posts.reactionCount} - ${deletedRows.length} + 1`,
         });
         return postReaction;
       }

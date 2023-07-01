@@ -74,7 +74,7 @@ export const commentsRouter = router({
         await ctx.db
           .update(posts)
           .set({
-            commentCount: sql`"commentCount" + 1`,
+            commentCount: sql`${posts.commentCount} + 1`,
           })
           .where(eq(posts.id, input.postId));
         return comment;

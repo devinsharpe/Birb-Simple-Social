@@ -49,7 +49,7 @@ export const postsRouter = router({
         await ctx.db
           .update(profiles)
           .set({
-            postCount: sql`${profiles.postCount.name} - 1`,
+            postCount: sql`${profiles.postCount} - 1`,
           })
           .where(eq(profiles.id, ctx.session.user.id));
         return post;
@@ -130,10 +130,13 @@ export const postsRouter = router({
               profileId: profile.id,
             });
         }
+      }
+      if (post) {
+        console.log("updating profile");
         await ctx.db
           .update(profiles)
           .set({
-            postCount: sql`${profiles.postCount.name} + 1`,
+            postCount: sql`${profiles.postCount} + 1`,
           })
           .where(eq(profiles.id, ctx.session.user.id));
         const result = await ctx.db.query.posts.findFirst({
@@ -143,7 +146,7 @@ export const postsRouter = router({
           },
         });
         return result ?? null;
-      }
+      } else return null;
     }),
   getDemoPosts: publicProcedure.query(() => {
     const posts = shuffle([...examplePosts]);
