@@ -15,6 +15,8 @@ import {
   MapPin,
   MessageSquare,
   MoreHorizontal,
+  Pin,
+  PinOff,
   Share,
   Smile,
 } from "lucide-react";
@@ -38,6 +40,7 @@ interface PostItemProps {
       postedBy: Profile;
     }
   ) => void;
+  onPin: (id: string, val: boolean) => void;
   onReactionClick: () => void;
   post: Post & {
     mentions: (PostMention & {
@@ -56,6 +59,7 @@ const PostItem: React.FC<PostItemProps> = ({
   expandedReactions = false,
   onArchive,
   onClick,
+  onPin,
   onReactionClick,
   post,
   sessionUserId,
@@ -67,11 +71,16 @@ const PostItem: React.FC<PostItemProps> = ({
   const dialogItems = useMemo(() => {
     const items: DialogMenuItemProps[][] = [
       [
-        {
-          icon: Smile,
-          text: "Add Reaction",
-          onClick: onReactionClick,
-        },
+        ...(post.profileId !== sessionUserId
+          ? [
+              {
+                icon: Smile,
+                text: "Add Reaction",
+                onClick: onReactionClick,
+              },
+            ]
+          : []),
+
         {
           icon: MessageSquare,
           text: "View Comments",
@@ -91,21 +100,28 @@ const PostItem: React.FC<PostItemProps> = ({
           onClick: console.log,
         },
       ],
+      [
+        ...(post.profileId === sessionUserId
+          ? [
+              {
+                icon: post.pinned ? PinOff : Pin,
+                text: post.pinned ? "Unpin Post" : "Pin Post",
+                onClick: () => onPin(post.id, !post.pinned),
+              },
+              {
+                icon: Archive,
+                text: "Archive Post",
+                onClick: () => onArchive(post.id),
+              },
+            ]
+          : []),
+      ],
     ];
-    if (post.profileId === sessionUserId && items[0] && items[1]) {
-      items[0].shift();
-      items[1].unshift({
-        icon: Archive,
-        text: "Archive Post",
-        onClick: () => onArchive(post.id),
-      });
-    }
     return items;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionUserId]);
+  }, [onArchive, onClick, onPin, onReactionClick, post, sessionUserId]);
 
   return (
-    <article className="space-y-4 p-6 transition-colors duration-150 hover:bg-zinc-800/5 dark:hover:bg-white/5">
+    <article className="space-y-4 p-6 transition-colors duration-150 hover:bg-zinc-100/25 dark:hover:bg-zinc-800/25">
       <div className="flex items-center space-x-2">
         <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full object-center">
           <Link
@@ -135,15 +151,24 @@ const PostItem: React.FC<PostItemProps> = ({
               </Link>
             </h4>
           </div>
-          <h5 className="text-sm text-zinc-600 dark:text-zinc-400">
-            {`${age.value}${age.unit}`}
-            {age.unit === "d" && (
-              <>
-                &nbsp;&ndash;&nbsp;
-                {new Date(post.createdAt).toLocaleDateString()}{" "}
-              </>
+          <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+            {post.pinned && (
+              <div>
+                <Pin size={14} />
+                <p className="sr-only">Pinned Post</p>
+              </div>
             )}
-          </h5>
+
+            <h5 className="text-sm ">
+              {`${age.value}${age.unit}`}
+              {age.unit === "d" && (
+                <>
+                  &nbsp;&ndash;&nbsp;
+                  {new Date(post.createdAt).toLocaleDateString()}{" "}
+                </>
+              )}
+            </h5>
+          </div>
         </div>
         <DialogMenu
           className="px-2 py-1 text-zinc-600 dark:text-zinc-400"

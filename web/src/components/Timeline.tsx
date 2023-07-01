@@ -18,7 +18,11 @@ import PostItem from "./PostItem";
 import { KEY as POST_KEY } from "./modals/Post";
 import ReactionModal, { KEY as REACTION_KEY } from "./modals/Reaction";
 
-const Timeline: React.FC = () => {
+export interface TimelineProps {
+  profileId?: string;
+}
+
+const Timeline: React.FC<TimelineProps> = ({ profileId }) => {
   const getTimeline = trpc.posts.getTimeline.useMutation();
   const [posts, setPosts] = useState<
     (Post & {
@@ -37,6 +41,7 @@ const Timeline: React.FC = () => {
   const setModal = useSetAtom(atoms.modal);
 
   const archivePost = trpc.posts.archive.useMutation();
+  const pinPost = trpc.posts.pin.useMutation();
 
   const handleArchive = useCallback(
     async (id: string) => {
@@ -50,10 +55,28 @@ const Timeline: React.FC = () => {
     [posts]
   );
 
+  const handlePin = useCallback(
+    async (id: string, val: boolean) => {
+      const updatedPost = posts.find((p) => p.id === id);
+      if (updatedPost) {
+        if (updatedPost) await pinPost.mutateAsync({ id, val });
+        router.reload();
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [posts]
+  );
+
   useEffect(() => {
     if (session.status === "authenticated") {
       getTimeline
-        .mutateAsync()
+        .mutateAsync(
+          profileId
+            ? {
+                profileId,
+              }
+            : undefined
+        )
         .then((timelinePosts) => setPosts(timelinePosts));
     }
     setPosts([]);
@@ -88,6 +111,7 @@ const Timeline: React.FC = () => {
           onClick={() =>
             router.push(`/@/${post.postedBy.handle}/post/${post.id}`)
           }
+          onPin={handlePin}
           onReactionClick={() => {
             setCurrentPost(post.id);
             setModal(REACTION_KEY);
